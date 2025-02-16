@@ -1,0 +1,783 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+}
+
+/* Genel Sayfa Genişliği Problemini Çözme */
+html, body {
+    overflow-x: hidden; /* Sağa kaymayı engeller */
+    max-width: 100%;
+}
+
+/* Tüm Öğelerin Taşmasını Engelle */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Sayfanın İçeriği Taşmasını Önleme */
+.container {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+
+
+
+
+/* Genel Header Stili */
+.anka-header {
+    width: 100%;
+    /* background-color: #ffffff; */
+    background-image: url("img/chill_bg.jpg");
+    background-size: cover;
+    padding: 1px 0;
+    text-align: center;
+    border-bottom: 2px solid #f5a623;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Logo ve Başlık */
+.anka-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.anka-logo img {
+    width: 250px;
+    height: 250px;
+}
+
+.anka-logo h1 {
+    font-size: 72px;
+    color: #f5a623;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+}
+
+/* Navigasyon Menüsü */
+.anka-nav {
+    margin-top: 10px;
+}
+
+.anka-nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+}
+
+.anka-nav ul li {
+    display: inline;
+    transition: 0.6s;
+}
+
+.anka-nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px;
+    transition: color 0.3s ease-in-out;
+}
+
+.anka-nav ul li a:hover {
+    color: #f5a623;
+}
+
+
+
+/* Dropdown Menü */
+.dropdown {
+    position: relative;
+    z-index: 9999;
+    transition: 0.6s;
+}
+
+/* Dropdown Menü İlk Başta Tamamen Gizli */
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    display: none; /* İlk başta tamamen görünmez olacak */
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+    border-radius: 5px;
+    width: 300px; /* Masaüstü için varsayılan genişlik */
+    max-height: 400px; /* Aşırı büyük açılmasını engeller */
+    overflow-y: auto; /* Çok uzun olursa kaydırma ekler */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    transition: 0.6s;
+}
+
+/* Mobilde dropdown menüyü sınırla ve ekrana sığdır */
+@media (max-width: 768px) {
+    .dropdown-menu {
+        width: 70%; /* Ekrana daha iyi sığdır */
+        max-height: 250px; /* Daha küçük olmasını sağlar */
+        overflow-y: auto; /* Uzun listelerde kaydırma ekler */
+        position: relative; /* Mobilde dropdown taşmasını engeller */
+        left: 14%;
+        transition: 0.6s;
+    }
+
+    .dropdown-menu li {
+        text-align: center;
+        padding: 8px;
+        font-size: 12px; /* Mobilde daha küçük yazı */
+        transition: 0.6s;
+    }
+}
+
+
+/* Dropdown Menü Öğeleri */
+.dropdown-menu li {
+    padding: 10px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.dropdown-menu li a {
+    display: block;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease-in-out;
+}
+
+.dropdown-menu li a:hover {
+    color: #f5a623;
+}
+
+/* Hover Yapınca Dropdown Açılır */
+.dropdown:hover .dropdown-menu {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    transition: 0.6s;
+}
+
+
+
+
+
+/* Genel Bölüm Stili */
+section {
+    padding: 50px 10%;
+    text-align: center;
+}
+
+/* Haberler Bölümü */
+.news-section {
+    background-color: #ffffff;
+    padding: 40px 10%;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Slider Container */
+.news-slider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+}
+
+/* Haberler Ana Konteyner */
+.news-container {
+    width: 80%;
+    overflow: hidden;
+    position: relative;
+    border-radius: 20px;
+}
+
+/* Haberler Track (Kayan Kısım) */
+.news-track {
+    display: flex;
+    transition: transform 0.6s ease-in-out;
+    width: 100%; /* Kayan kısım tam olarak kapsayıcı genişliğinde olacak */
+}
+
+/* Haber Kartları */
+.news-item {
+    width: calc((100% / 3) - 35px); /* 3 haber yan yana tam görünmeli */ 
+    flex-shrink: 0;
+    background: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    opacity: 0.8;
+}
+
+.news-item img {
+    height: 100px;
+    width: auto;
+}
+
+/* Ok Butonları */
+.news-prev,
+.news-next {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: background 0.3s;
+    border-radius: 5px;
+    z-index: 10;
+}
+
+.news-prev:hover,
+.news-next:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.news-prev {
+    left: 20px;
+}
+
+.news-next {
+    right: 20px;
+}
+
+/* Slider Dots */
+.news-dots {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.news-dot {
+    width: 10px;
+    height: 10px;
+    background: #ccc;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.news-dot.active {
+    background: #f5a623;
+}
+
+
+
+/* Devamını Oku Butonu */
+.read-more {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 15px;
+    background: #f5a623;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out;
+}
+
+.read-more:hover {
+    background: #d18e1f;
+}
+
+/* Projeler Bölümü */
+.projects-section {
+    background-color: #f8f9fa;
+    padding: 40px 10%;
+}
+
+.projects-section h2 {
+    font-size: 28px;
+    color: #333;
+}
+
+.projects-section p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.projects-section .read-more {
+    background: #007BFF;
+}
+
+.projects-section .read-more:hover {
+    background: #0056b3;
+}
+
+/* Üye Ol Bölümü */
+.join-section {
+    background: linear-gradient(135deg, #f5a623, #ff6f00);
+    color: white;
+    padding: 40px 10%;
+}
+
+.join-section h2 {
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.join-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background: white;
+    color: #f5a623;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+    margin: 10px;
+}
+
+.join-button:hover {
+    background: #fff3e0;
+    color: #d18e1f;
+}
+
+
+
+/* Partnerlerimiz Bölümü */
+.partners-section {
+    background-color: #ffffff;
+    padding: 40px 10%;
+    text-align: center;
+}
+
+.partners-section h2 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Sonsuz kayan slider */
+.partners-slider {
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.partners-track {
+    display: flex;
+    gap: 40px;
+    animation: none; /* JavaScript ile hareket ettireceğiz */
+    width: max-content;
+}
+
+.partners-track img {
+    height: 80px;
+    width: auto;
+    display: inline-block;
+    /* filter: grayscale(100%); */
+    transition: filter 0.3s ease-in-out;
+}
+
+/* Logoların üzerine gelince renkli hale getirme */
+.partners-track img:hover {
+    filter: grayscale(0%);
+}
+
+
+/* Footer Bölümü */
+/* =========================== */
+/* İletişim Bölümü Tasarımı */
+/* =========================== */
+.contact-section {
+    background: url('img/chill_bg.jpg') center/cover no-repeat;
+    color: white;
+    padding: 50px 10%;
+    text-align: center;
+}
+
+.contact-container {
+    /* background: rgba(255, 255, 255, 0.9); */
+    padding: 30px;
+    border-radius: 10px;
+    max-width: 800px;
+    margin: auto;
+}
+
+.contact-section h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.contact-container p {
+    font-size: 18px;
+    /* color: #333; */
+    color: #f5a623;
+    font-weight: bold;
+}
+
+.contact-info,
+.social-media {
+    margin-top: 20px;
+}
+
+.contact-info h3,
+.social-media h3 {
+    font-size: 18px;
+    color: black;
+    font-weight: bold;
+}
+
+.contact-info a,
+.social-media a {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    display: block;
+}
+
+.social-media a {
+    font-size: 24px;
+    margin: 0 10px;
+    color: black;
+}
+
+.social-media a:hover {
+    color: #f5a623;
+}
+
+/* =========================== */
+/* Footer Tasarımı */
+/* =========================== */
+.footer {
+    background-color: #222;
+    color: white;
+    padding: 40px 0;
+    text-align: center;
+}
+
+.footer-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    max-width: 1100px;
+    margin: auto;
+}
+
+.footer-column {
+    flex: 1;
+    min-width: 200px;
+    margin: 10px;
+}
+
+.footer-column a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.footer-column h3 {
+    font-size: 18px;
+    color: #f5a623;
+    margin-bottom: 10px;
+}
+
+.footer-column ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-column ul li {
+    margin: 5px 0;
+}
+
+.footer-column ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.footer-column ul li a:hover {
+    color: #f5a623;
+}
+
+.footer-column img {
+    width: 120px;
+    margin-top: 10px;
+}
+
+.footer-copy {
+    margin-top: 20px;
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+
+
+@media (max-width: 768px) {
+    .anka-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .anka-logo img {
+        width: 150px; /* Mobilde logoyu küçült */
+        height: auto;
+    }
+
+    .anka-logo h1 {
+        font-size: 36px; /* Yazıyı da küçült */
+    }
+
+    .anka-header nav ul {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .anka-header nav ul li {
+        text-align: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .news-slider {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+
+    .news-slider .slide {
+        display: inline-block;
+        width: 90%; /* Mobilde daha küçük genişlik */
+        margin: 0 auto;
+    }
+
+    .swiper-button-prev, .swiper-button-next {
+        width: 30px;
+        height: 30px;
+        font-size: 14px;
+    }
+}
+
+
+
+
+
+/* Slider genel yapı */
+.news-container {
+    width: 100%;
+    overflow: hidden; /* Taşmayı önler */
+    position: relative;
+}
+
+/* Slider içeriği */
+.news-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    will-change: transform;
+}
+
+/* Slider haber kartları */
+.news-item {
+    min-width: 33.33%; /* Masaüstünde 3 haber göster */
+    flex-shrink: 0;
+    text-align: center;
+    padding: 15px;
+    box-sizing: border-box;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Mobilde tek haber göster */
+@media (max-width: 768px) {
+    .news-item {
+        min-width: 100%; /* Mobilde 1 haber tam genişlik olacak */
+    }
+}
+
+/* Slider butonları */
+.news-prev, .news-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    z-index: 1000;
+}
+
+.news-prev { left: 10px; }
+.news-next { right: 10px; }
+
+.news-prev:hover,
+.news-next:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Slider noktaları */
+.news-dots {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.news-dots span {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 5px;
+    background-color: gray;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.news-dots .active {
+    background-color: orange;
+}
+
+
+
+
+
+
+
+
+/* Menü butonu */
+.menu-toggle {
+    transition: 0.6s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    color: #333;
+    font-size: 18px;
+    font-weight: bold;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1001;
+}
+
+/* Hamburger Menü */
+.hamburger {
+    transition: 0.6s;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.hamburger div {
+    transition: 0.6s;
+    width: 25px;
+    height: 3px;
+    background: #333;
+    transition: all 0.3s ease;
+}
+
+/* Menü Açılınca Arka Plan Bulanık Olsun */
+body.menu-active .content-wrapper {
+    transition: 0.6s;
+    filter: blur(8px);
+    -webkit-filter: blur(8px);
+    backdrop-filter: blur(8px) !important;
+    transition: filter 0.3s ease-in-out;
+}
+
+/* Menü Açıldığında Görünen Kısım */
+.menu-overlay {
+    transition: 0.6s;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(77, 79, 87, 0.9);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 99999;
+}
+
+/* Menü Açıkken Görünür Hale Getir */
+.menu-overlay.active {
+    display: flex;
+}
+
+/* Menü İçeriği */
+.menu-nav ul {
+    list-style: none;
+    padding: 0;
+    text-align: center;
+    transition: 0.6s;
+}
+
+.menu-nav ul li {
+    transition: 0.6s;
+    color: #333;
+    margin: 20px 0;
+    font-size: 24px;
+}
+
+.menu-nav ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.menu-nav ul li a:hover {
+    transition: 0.6s;
+    color: #f5a623;
+}
+
+/* Başla Butonu */
+.menu-button {
+    transition: 0.6s;
+    display: inline-block;
+    padding: 15px 30px;
+    background: white;
+    color: #1a1e38;
+    font-size: 20px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+/* Mobil için uyumlu hale getirme */
+@media (max-width: 768px) {
+    .menu-toggle {
+        transition: 0.6s;
+        right: 15px;
+    }
+
+    .menu-nav ul li {
+        transition: 0.6s;
+        font-size: 20px;
+    }
+
+    .menu-button {
+        transition: 0.6s;
+        font-size: 18px;
+        padding: 12px 25px;
+    }
+}
+

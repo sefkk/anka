@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kurucu Üyeler - Anka</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+</head>
+<body>
+
+    <!-- Header Başlangıcı -->
+    <header class="anka-header">
+        <div class="anka-logo">
+            <a href="../index.html">
+                <img src="../img/anka-tp.png" alt="Anka Logo">
+            </a>
+        </div>
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <span>MENU</span>
+            <div class="hamburger">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    
+        <div class="menu-overlay">
+            <nav class="menu-nav">
+                <ul>
+                    <li><a href="../index.html"><i class="fas fa-home"></i>Ana Sayfa</a></li>
+                    <li><a href="../about-us/about-us.html"></i> Hakkımızda</a></li>
+                    <li><a href="../join/join.html">Üye Ol</a></li>
+                    <li class="dropdown">
+                        <a href="#">Komitelerimiz</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="../committees/it-committee.html">IT Komitesi</a></li>
+                            <!-- <li><a href="../committees/marketing-committee.html">Marketing Komitesi</a></li>
+                            <li><a href="../committees/hr-committee.html">HR Komitesi</a></li>
+                            <li><a href="../committees/entrepreneurship-committee.html">Girişimcilik Komitesi</a></li>
+                            <li><a href="../committees/international-relations-committee.html">Uluslararası İşbirliği ve Proje  Komitesi</a></li>
+                            <li><a href="../committees/law-committee.html">Hukuk Danışmanlık Komitesi</a></li>
+                            <li><a href="../committees/event-planning-committee.html">Etkinlik Düzenleme  Komitesi</a></li>
+                            <li><a href="../committees/academic-committee.html">Kabul Sonrası ve Akademik Destek Komitesi</a></li> -->
+                        </ul>
+                    </li>
+                    <li><a href="#footer">İletişim</a></li>
+                </ul>
+            </nav>
+        </div>
+        
+    </header>
+    <!-- Header Bitişi -->
+
+    <section class="slider-container">
+        <div class="slider-wrapper">
+            <div class="slider">
+
+                <div class="slide">
+                    <img src="img/kerem.JPG" alt="Kurucu Üye 1">
+                    <h3>Kerem Peker</h3>
+                    <p>Kurucu Başkan</p>
+                </div>
+
+                <div class="slide">
+                    <img src="img/orkun-min.JPG" alt="Kurucu Üye 2">
+                    <h3>Orkun Şefik</h3>
+                    <p>IT Komitesi Başkanı</p>
+                    <a href="../committees/it-committee.html" class="to-committee">
+                        <button>IT Komitesi</button>
+                    </a>
+                </div>
+
+                <div class="slide">
+                    <img src="img/mayra.JPG" alt="Kurucu Üye 3">
+                    <h3>Mayra Mitrani</h3>
+                    <p>Marketing Komitesi Başkanı</p>
+                    <a href="committees/marketing-committee.html" class="to-committee">
+                        <button>Marketing Komitesi</button>
+                    </a>
+                </div>
+
+                <div class="slide">
+                    <img src="img/basak.JPG" alt="Kurucu Üye 4">
+                    <h3>Başak Günal</h3>
+                    <p>HR Komitesi Başkanı</p>
+                    <a href="committees/hr-committee.html" class="to-committee">
+                        <button>HR Komitesi</button>
+                    </a>
+                </div>
+
+                <div class="slide">
+                    <img src="img/omer.JPG" alt="Kurucu Üye 5">
+                    <h3>Ömer Başer</h3>
+                    <p>Girişimcilik Komitesi Başkanı</p>
+                    <a href="committees/entrepreneurship-committee.html" class="to-committee">
+                        <button>Girişimcilik Komitesi</button>
+                    </a>
+                </div>
+
+                <div class="slide">
+                    <img src="img/ceren.JPG" alt="Kurucu Üye 6">
+                    <h3>Ceren Özselanik</h3>
+                    <p>Uluslararası İşbirliği ve Proje Komitesi Başkanı</p>
+                    <a href="committees/international-relations-committee.html" class="to-committee">
+                        <button>Uluslararası İşbirliği ve Proje Komitesi</button>
+                    </a>
+                </div>
+
+                <div class="slide">
+                    <img src="img/robin.JPG" alt="Kurucu Üye 7">
+                    <h3>Robin Pola Ertan</h3>
+                    <p>Hukuk Danışmanlık Komitesi Başkanı</p>
+                    <a href="committees/law-committee.html" class="to-committee">
+                        <button>Hukuk Danışmanlık Komitesi</button>
+                    </a>
+                </div>
+
+                <div class="slide">
+                    <img src="img/maya.JPG" alt="Kurucu Üye 8">
+                    <h3>Maya Özagar</h3>
+                    <p>Etkinlik Düzenleme Komitesi Başkanı</p>
+                    <a href="committees/event-planning-committee.html" class="to-committee">
+                        <button>Etkinlik Düzenleme Komitesi</button>
+                    </a>
+                </div>
+
+                <div class="slide">
+                    <img src="img/ela.JPG" alt="Kurucu Üye 9">
+                    <h3>Ela Tanır</h3>
+                    <p>Kabul Sonrası ve Akademik Destek Komitesi Başkanı</p>
+                    <a href="committees/academic-committee.html" class="to-committee">
+                        <button>Kabul Sonrası ve Akademik Destek Komitesi</button>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Önceki/Sonraki Butonlar -->
+        <div class="button-container">
+            <button class="prev" onclick="prevSlide()">&#10094;</button>
+            <button class="next" onclick="nextSlide()">&#10095;</button>
+        </div>
+
+    </section>
+
+    <!-- Footer Başlangıcı -->
+    <footer class="footer" id="footer">
+        <div class="footer-container">
+            <div class="footer-logo">
+                <img src="../img/anka-tp.png" alt="Anka Logo">
+                <h2>Anka</h2>
+            </div>
+            <!-- <div class="footer-links">
+                <ul>
+                    <li><a href="index.html">Anasayfa</a></li>
+                    <li><a href="projects.html">Projelerimiz</a></li>
+                    <li><a href="join.html">Üye Ol</a></li>
+                    <li><a href="committees.html">Komitelerimiz</a></li>
+                    <li><a href="contact.html">İletişim</a></li>
+                </ul>
+            </div> -->
+        </div>
+        <p class="footer-copy">&copy; 2025 Anka. Tüm Hakları Saklıdır.</p>
+    </footer>
+    <!-- Footer Bitişi -->
+
+    <script src="script.js"></script>
+</body>
+</html>

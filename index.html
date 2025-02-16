@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANKA Association</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
+
+</head>
+<body>
+
+    <header class="anka-header">
+        <div class="anka-logo">
+            <a href="index.html">
+                <img src="img/anka-tp.png" alt="Anka Logo">
+            </a>
+        </div>
+        <div class="menu-toggle" onclick="toggleMenu()">
+            <span>MENU</span>
+            <div class="hamburger">
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
+        </div>
+    
+        <div class="menu-overlay">
+            <nav class="menu-nav">
+                <ul>
+                    <li><a href="index.html"><i class="fas fa-home"></i>Ana Sayfa</a></li>
+                    <li><a href="about-us/about-us.html">Hakkımızda</a></li>
+                    <li><a href="join/join.html">Üye Ol</a></li>
+                    <li class="dropdown">
+                        <a href="#">Komitelerimiz</a>
+                        <ul class="dropdown-menu">
+                            <li><a href="committees/it-committee.html">IT Komitesi</a></li>
+                            <!-- <li><a href="committees/marketing-committee.html">Marketing Komitesi</a></li>
+                            <li><a href="committees/hr-committee.html">HR Komitesi</a></li>
+                            <li><a href="committees/entrepreneurship-committee.html">Girişimcilik Komitesi</a></li>
+                            <li><a href="committees/international-relations-committee.html">Uluslararası İşbirliği ve Proje  Komitesi</a></li>
+                            <li><a href="committees/law-committee.html">Hukuk Danışmanlık Komitesi</a></li>
+                            <li><a href="committees/event-planning-committee.html">Etkinlik Düzenleme  Komitesi</a></li>
+                            <li><a href="committees/academic-committee.html">Kabul Sonrası ve Akademik Destek Komitesi</a></li> -->
+                        </ul>
+                    </li>
+                    <li><a href="#footer">İletişim</a></li>
+                </ul>
+            </nav>
+        </div>
+        
+    </header>
+
+
+<!-- Haberler Bölümü -->
+<section class="news-section">
+    <h2>Haberler</h2>
+    <div class="news-slider">
+        <button class="news-prev">&#10094;</button> <!-- Sol Ok -->
+        
+        <div class="news-container">
+            <div class="news-track">
+                <article class="news-item">
+                    <img src="img/placeholder.jpg" alt="Haber 1">
+                    <h3>Yeni Etkinlik Duyurusu</h3>
+                    <p>Yaklaşan etkinliğimiz hakkında bilgi almak için tıklayın.</p>
+                    <a href="news1.html" class="read-more">Devamını Oku</a>
+                </article>
+                <article class="news-item">
+                    <img src="img/placeholder.jpg" alt="Haber 2">
+                    <h3>Üye Kayıtları Başladı</h3>
+                    <p>Yeni dönem için üye kayıtlarımız başladı! Hemen kaydolun.</p>
+                    <a href="news2.html" class="read-more">Devamını Oku</a>
+                </article>
+                <article class="news-item">
+                    <img src="img/placeholder.jpg" alt="Haber 3">
+                    <h3>Komite Çalışmaları Devam Ediyor</h3>
+                    <p>Projelerimiz hakkında güncellemeleri takip edin.</p>
+                    <a href="news3.html" class="read-more">Devamını Oku</a>
+                </article>
+                <article class="news-item">
+                    <img src="img/placeholder.jpg" alt="Haber 4">
+                    <h3>Yeni Proje Açıklandı</h3>
+                    <p>Topluluk olarak yeni projemizi duyurduk.</p>
+                    <a href="news4.html" class="read-more">Devamını Oku</a>
+                </article>
+                <article class="news-item">
+                    <img src="img/placeholder.jpg" alt="Haber 5">
+                    <h3>Yeni İş Birlikleri</h3>
+                    <p>Önemli markalarla partnerlikler yapıldı.</p>
+                    <a href="news5.html" class="read-more">Devamını Oku</a>
+                </article>
+            </div>
+        </div>
+
+        <button class="news-next">&#10095;</button> <!-- Sağ Ok -->
+    </div>
+
+    <!-- Slider Dots -->
+    <div class="news-dots"></div>
+</section>
+
+
+
+        <!-- Partnerlerimiz Bölümü -->
+        <section class="partners-section">
+            <h2>Partnerlerimiz</h2>
+            <div class="partners-slider">
+                <div class="partners-track">
+                    <img src="img/ibility_app_logo.jpeg" alt="Partner 1">
+                    <img src="img/Rabobank_logo.svg.png" alt="Partner 2">
+                    <!-- <img src="img/partner3.png" alt="Partner 3">
+                    <img src="img/partner4.png" alt="Partner 4">
+                    <img src="img/partner5.png" alt="Partner 5">
+                    <img src="img/partner6.png" alt="Partner 6">
+                    <img src="img/partner7.png" alt="Partner 7">
+                    <img src="img/partner8.png" alt="Partner 8"> -->
+                </div>
+            </div>
+        </section>
+
+
+
+
+    <!-- Diğer Bölümler -->
+    <section class="projects-section">
+        <h2>Projelerimiz</h2>
+        <p>Gerçekleştirdiğimiz ve devam eden projeler hakkında bilgi alın.</p>
+        <a href="projects.html" class="read-more">Tüm Projeler</a>
+    </section>
+
+    <section class="join-section">
+        <h2>Bize Katılın</h2>
+        <p>Anka ailesinin bir parçası olun!</p>
+        <a href="https://forms.gle/UpiV2x2YeGo9hvz46" class="join-button">
+            ANKA'lı ol
+        </a>
+    </section>
+
+
+
+
+<!-- İletişim Kısmı -->
+<section class="contact-section">
+    <h2>ANKA için bir fikrin mi var?</h2>
+    <div class="contact-container">
+        <p>ANKA topluluğu için etki yaratacağını düşündüğün bir fikrin veya projen varsa her zaman bizimle iletişime geçebilirsin. Sensiz bir kişi eksiğiz!</p>
+        <div class="contact-info">
+            <h3>İletişime Geç</h3>
+            <a href="mailto:iletisim@anka.org">info@associationanka.nl</a>
+        </div>
+        <div class="social-media">
+            <h3>Bizi Takip Et!</h3>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer" id="footer">
+    <div class="footer-container">
+        <div class="footer-column">
+            <h3>Kurumsal</h3>
+            <ul>
+                <!-- <li><a href="#">Fayda Havuzu</a></li> -->
+                <li><a href="join/join.html">ANKA Üyesi Ol</a></li>
+                <!-- <li><a href="#">Bağışçı Ol</a></li> -->
+                <!-- <li><a href="#">SSS</a></li> -->
+                <li><a href="about-us/about-us.html">Hakkımızda</a></li>
+                <!-- <li><a href="#">Kullanım ve Gizlilik Politikası</a></li> -->
+            </ul>
+        </div>
+        <div class="footer-column">
+            <h3>İletişim</h3>
+            <a href="mailto:iletisim@anka.org">info@associationanka.nl</a>
+            <p><a href="https://www.anka.org">www.anka.org</a></p>
+        </div>
+        <div class="footer-column">
+            <h3>ANKA App</h3>
+            <a href="#"><img src="img/anka-tp.png" alt="App Store"></a>
+            <!-- <a href="#"><img src="img/googleplay.png" alt="Google Play"></a> -->
+        </div>
+        <div class="footer-column">
+            <h3>Sosyal Medya</h3>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <!-- <a href="#"><img src="img/insta.png" alt="instagram"></a> -->
+            <a href="#"><i class="fab fa-x-twitter"></i></a>
+            <a href="#"><i class="fab fa-linkedin"></i></a>
+        </div>
+    </div>
+    <p class="footer-copy">&copy; 2025 ANKA. Tüm Hakları Saklıdır.</p>
+</footer>
+
+    
+
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
