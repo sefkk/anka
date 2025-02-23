@@ -34,7 +34,7 @@ html, body {
 .anka-header {
     width: 100%;
     /* background-color: #ffffff; */
-    background-image: url("img/chill_bg.jpg");
+    /* background-image: url("img/chill_bg.jpg"); */
     background-size: cover;
     padding: 1px 0;
     text-align: center;
