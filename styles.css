@@ -3,8 +3,8 @@ body {
     text-align: center;
     margin: 0;
     padding: 0;
-    /* background-color: #f8f9fa; */
-    background-color: #1a1e38;
+    background-color: #f8f9fa;
+    /* background-color: #1a1e38; */
 }
 
 /* Genel Sayfa Genişliği Problemini Çözme */
@@ -33,7 +33,7 @@ html, body {
 /* Genel Header Stili */
 .anka-header {
     width: 100%;
-    /* background-color: #ffffff; */
+    background-color: #ffffff;
     /* background-image: url("img/chill_bg.jpg"); */
     background-size: cover;
     padding: 1px 0;
@@ -46,20 +46,23 @@ html, body {
 .anka-logo {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: left;
     gap: 10px;
 }
 
 .anka-logo img {
-    width: 250px;
-    height: 250px;
+    width: 150px;
+    height: auto;
 }
 
 .anka-logo h1 {
-    font-size: 72px;
-    color: #f5a623;
+    font-size: 36px;
+    color: #383b45;
     font-weight: bold;
     font-family: Arial, sans-serif;
+    justify-content: center;
+    align-items: center;
+    margin-left: 120px;
 }
 
 /* Navigasyon Menüsü */
