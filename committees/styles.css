@@ -1,12 +1,11 @@
-
 body {
-    font-family: Arial, sans-serif;
+    /* font-family: Arial, sans-serif; */
+    font-family: 'Futura', 'Trebuchet MS', sans-serif;
     text-align: center;
     margin: 0;
     padding: 0;
-    background-color: #f8f9fa;
+    background-image: url("img/bg-texture.jpg");
 }
-
 
 /* Menü butonu */
 .menu-toggle {
@@ -117,19 +116,57 @@ body.menu-active .content-wrapper {
     }
 }
 
-
-
-/* Komite Sayfası Genel Stil */
+/* Genel Komite Bölümü Stili */
 .committee-section {
+    max-width: 90%;
+    margin: 30px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-    padding: 50px 10%;
-    background-color: #ffffff;
 }
 
+/* Başlık Stilleri */
 .committee-section h2 {
-    font-size: 32px;
+    font-size: 40px;
+    font-weight: bold;
+    color: #1a1e38;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background-color: #d7d8dc6a;
+    border-radius: 15px;
+    padding: 10px;
+    width: 500px;
+    margin: auto;
+}
+
+.committee-section h3 {
+    font-size: 30px;
+    font-weight: bold;
     color: #f5a623;
-    margin-bottom: 20px;
+    margin: 20px;
+    text-transform: uppercase;
+    background-color: #f5a52328;
+    border-radius: 10px;
+    padding: 10px;
+    width: 400px;
+    margin: auto;
+    margin-top: 70px;
+}
+
+/* Misyon ve Amaçlar Yazısı */
+.committee-section p {
+    font-size: 18px;
+    line-height: 1.6;
+    text-align: justify;
+    color: #333;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 10px 15px;
+    background: rgba(245, 166, 35, 0.1);
+    border-left: 5px solid #f5a623;
+    border-radius: 5px;
 }
 
 /* Yönetim Kurulu ve Üyeler */
@@ -141,26 +178,47 @@ body.menu-active .content-wrapper {
     margin-top: 20px;
 }
 
-.member {
-    width: 150px;
+/* Misyon ve Amaçlar Başlığı */
+.committee-section p span {
+    font-size: 20px;
+    font-weight: bold;
+    color: #1a1e38;
+    display: block;
+    margin-bottom: 10px;
     text-align: center;
 }
 
+.member {
+    text-align: center;
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 10px;
+    width: 250px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .member img {
-    width: 100px;
-    height: 100px;
+    width: 200px;
+    height: 200px;
     border-radius: 50%;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     margin-bottom: 10px;
 }
 
-.member p {
+.member h4{
     font-weight: bold;
-    font-size: 16px;
+    font-size: 20px;
+    background-color: #e0ddd86d;
+    padding: 2%;
+    border-radius: 5px;
 }
 
-
-
+.member p {
+    font-size: 16px;
+    font-weight: bold;
+    color: #1a1e38;
+    margin-top: 10px;
+}
 
 /* Genel Header Stili */
 .anka-header {
@@ -187,16 +245,16 @@ body.menu-active .content-wrapper {
     height: 250px;
 }
 
-.anka-logo h1 {
-    font-size: 72px;
-    color: #f5a623;
-    font-weight: bold;
-    font-family: Arial, sans-serif;
-}
-
 /* Navigasyon Menüsü */
 .anka-nav {
     margin-top: 10px;
+    background-color: #ffffff49;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 5px;
+    width: auto;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border-radius: 5px;
 }
 
 .anka-nav ul {
@@ -209,6 +267,11 @@ body.menu-active .content-wrapper {
 
 .anka-nav ul li {
     display: inline;
+    transition: 0.6s;
+    border-radius: 5px;
+    padding-left: 50px;
+    margin-left: 3%;
+    margin-right: 3%;
 }
 
 .anka-nav ul li a {
@@ -218,13 +281,154 @@ body.menu-active .content-wrapper {
     font-weight: bold;
     padding: 10px;
     transition: color 0.3s ease-in-out;
+    transition: 0.4s;
+    white-space: nowrap;
 }
 
 .anka-nav ul li a:hover {
-    color: #f5a623;
+    color: #ffffff;
+    background-color: #f5a523be;
+    padding-left: 40%;
+    padding-right: 40%;
+    margin-left: -40%;
+    border-radius: 5px;
+    transition: 0.4s;
+    white-space: nowrap;
 }
 
+/* Projeler Bölümü (Şuan için haberler olarak adlandırıldı)*/
+.news-section {
+    background-color: #ffffff;
+    padding: 10px 3%;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
 
+/* Slider Container */
+.news-slider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+}
+
+/* Haberler Ana Konteyner */
+.news-container {
+    width: 80%;
+    overflow: hidden;
+    position: relative;
+    border-radius: 20px;
+}
+
+/* Haberler Track (Kayan Kısım) */
+.news-track {
+    display: flex;
+    transition: transform 0.6s ease-in-out;
+    width: 100%; /* Kayan kısım tam olarak kapsayıcı genişliğinde olacak */
+}
+
+/* Haber Kartları */
+.news-item {
+    width: calc((100% / 3) - 35px); /* 3 haber yan yana tam görünmeli */ 
+    flex-shrink: 0;
+    background: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    opacity: 0.8;
+    margin: 1%;
+}
+
+.news-item h3{
+    font-size: 30px;
+    font-weight: bold;
+    color: #f5a623;
+    margin: 20px;
+    text-transform: uppercase;
+    background-color: unset;
+    border-radius: 10px;
+    padding: 10px;
+    width: unset;
+}
+
+.news-item img {
+    height: 100px;
+    width: auto;
+    border-radius: 5px;
+}
+
+/* Ok Butonları */
+.news-prev,
+.news-next {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 24px;
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: background 0.3s;
+    border-radius: 5px;
+    z-index: 10;
+}
+
+.news-prev:hover,
+.news-next:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.news-prev {
+    left: 20px;
+}
+
+.news-next {
+    right: 20px;
+}
+
+/* Slider Dots */
+.news-dots {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.news-dot {
+    width: 10px;
+    height: 10px;
+    background: #ccc;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.news-dot.active {
+    background: #f5a623;
+}
+
+/* Devamını Oku Butonu */
+.read-more {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 15px;
+    background: #f5a623;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background 0.3s ease-in-out;
+}
+
+.read-more:hover {
+    background: #d18e1f;
+}
+/* Projeler Kısmı Bitiş */
 
 /* Dropdown Menü */
 .dropdown {
@@ -297,7 +501,6 @@ body.menu-active .content-wrapper {
     opacity: 1;
     visibility: visible;
 }
-
 
 .slider-container {
     position: relative;
@@ -409,7 +612,6 @@ button:hover {
     background-color: #0056b3;
 }
 
-
 /* Footer Bölümü */
 .footer {
     background-color: #222;
@@ -471,119 +673,38 @@ button:hover {
     opacity: 0.7;
 }
 
-
-
-
-/* Genel Komite Bölümü Stili */
-.committee-section {
-    max-width: 90%;
-    margin: 20px auto;
-    padding: 20px;
-    background: white;
-    border-radius: 15px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-}
-
-/* Başlık Stilleri */
-.committee-section h2 {
-    font-size: 32px;
-    font-weight: bold;
-    color: #1a1e38;
-    margin-bottom: 15px;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.committee-section h3 {
-    font-size: 24px;
-    font-weight: bold;
-    color: #f5a623;
-    margin-top: 20px;
-    text-transform: uppercase;
-}
-
 /* Açık Pozisyonlar Listesi */
 .jobs-listing {
     list-style: none;
     padding: 0;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 10px;
     align-items: center;
+    justify-items: center;
+    max-width: 600px;
+    margin: 30px auto;
+    margin-bottom: 100px;
 }
 
 .jobs-listing .job {
     background: #1a1e38;
     color: white;
-    padding: 10px 20px;
+    padding: 10px 10px;
     border-radius: 5px;
     font-size: 18px;
     font-weight: bold;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     transition: background 0.3s ease-in-out;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .jobs-listing .job:hover {
     background: #f5a623;
     color: white;
-}
-
-/* Misyon ve Amaçlar Yazısı */
-.committee-section p {
-    font-size: 18px;
-    line-height: 1.6;
-    text-align: justify;
-    color: #333;
-    max-width: 800px;
-    margin: 20px auto;
-    padding: 10px 15px;
-    background: rgba(245, 166, 35, 0.1);
-    border-left: 5px solid #f5a623;
-    border-radius: 5px;
-}
-
-/* Misyon ve Amaçlar Başlığı */
-.committee-section p span {
-    font-size: 20px;
-    font-weight: bold;
-    color: #1a1e38;
-    display: block;
-    margin-bottom: 10px;
-    text-align: center;
-}
-
-/* Yönetim Kurulu Üyeleri */
-.committee-board {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 20px;
-}
-
-.member {
-    text-align: center;
-    background: #f8f9fa;
-    padding: 15px;
-    border-radius: 10px;
-    width: 200px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* .member img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 10px;
-} */
-
-.member p {
-    font-size: 16px;
-    font-weight: bold;
-    color: #1a1e38;
-    margin-top: 10px;
 }
 
 /* Responsive Tasarım */
