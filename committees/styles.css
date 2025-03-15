@@ -735,3 +735,8 @@ button:hover {
         width: 90%;
     }
 }
+
+
+.member > img {
+    object-fit: cover;
+}
