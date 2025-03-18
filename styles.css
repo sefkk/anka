@@ -781,4 +781,16 @@ body.menu-active .content-wrapper {
         font-size: 18px;
         padding: 12px 25px;
     }
+
+    /* Navbar Saklama Mobilde */
+    .anka-nav {
+        display: none; /* Hide navbar */
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+        position: absolute;
+        top: 50px;
+        left: 0;
+        background-color: #333;
+    }
 }
