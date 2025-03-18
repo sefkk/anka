@@ -148,7 +148,7 @@ html, body {
 
 
 /* Üye Ol Bölümü */
-.join-intro, .join-details, .join-requirements, .empty {
+.join-intro, .join-details, .join-requirements, .empty, .join-internship-request {
     display: flex;
     align-items: center;
     justify-content: space-between;
