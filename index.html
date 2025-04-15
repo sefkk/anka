@@ -1,209 +1,342 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ANKA Association</title>
-    <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css">
-
+    <title></title>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="icon" type="img/x-icon" href="img/favicon.png">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="css/font-awesome.min.css"> 
+	<link rel="stylesheet" href="slider/owl.carousel.css">	
 </head>
+
 <body>
-    <header class="anka-header">
-        <div class="anka-logo">
-            <a href="index.html">
-                <img src="img/anka-tp.png" alt="Anka Logo">
-            </a>
-        </div>
-        <div class="menu-toggle" onclick="toggleMenu()">
-            <span>MENU</span>
-            <div class="hamburger">
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
-        </div>
-    
-        <div class="menu-overlay">
-            <nav class="menu-nav">
-                <ul>
-                    <li><a href="index.html"><i class="fas fa-home"></i>Ana Sayfa</a></li>
-                    <li><a href="about-us/about-us.html">Hakkımızda</a></li>
-                    <li><a href="join/join.html">Üye Ol</a></li>
-                    <li class="dropdown">
-                        <a href="#">Komitelerimiz</a>
-                        <ul class="dropdown-menu">
-                            <li><a href="committees/it-committee.html">IT Komitesi</a></li>
-                            <li><a href="committees/marketing-committee.html">Marketing Komitesi</a></li>
-                            <li><a href="committees/hr-committee.html">HR Komitesi</a></li>
-                            <li><a href="committees/entrepreneurship-committee.html">Girişimcilik Komitesi</a></li>
-                            <li><a href="committees/international-relations-committee.html">Uluslararası İşbirliği ve Proje  Komitesi</a></li>
-                            <li><a href="committees/law-committee.html">Hukuk Danışmanlık Komitesi</a></li>
-                            <li><a href="committees/event-planning-committee.html">Etkinlik Düzenleme  Komitesi</a></li>
-                            <li><a href="committees/academic-committee.html">Kabul Sonrası ve Akademik Destek Komitesi</a></li>
-                        </ul>
-                    </li>
-                    <li><a href="#footer">İletişim</a></li>
-                    <li><a href="">Start Hub</a></li> <!-- start hub sayfası linki eklenecek -->
-                </ul>
-            </nav>
-        </div>
+  
+<header>
+<div class="menu-header">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="logo">
+						<a href="index.html"><img src="img/logo.png"></a>
+					</div>
+				</div>
+			</div>
+			</div>
+				
+				
+	
+		<div class="container-fluid">
+			<div class="row">
+			<div class="menulist-item">	
+					<div class="col-md-12">
+						<nav id="cssmenu">
+							<div id="head-mobile"></div>
+							<div class="button"></div>
+							<ul>
+								<li class="active"><a href="index.html">Home</a></li>
+								<li><a href="#">About Us</a></li>
+								<li><a href="#">Our Committees</a></li>
+								<li><a href="#">Talent Pool</a></li>
+								<li><a href="#">Online Start-Up Hub</a></li>
+								<li><a href="#">Contact Us</a></li>
+								<li><a href="#">Sign Up</a></li>
+							</ul>
+						</nav>				
+					</div>				
+				</div>				
+			</div>
+		</div>
+	</div>
+</header>
 
-        <div class="anka-nav">
-            <ul>
-                <li><a href="index.html"><i class="fas fa-home"></i>Ana Sayfa</a></li>
-                <li><a href="about-us/about-us.html">Hakkımızda</a></li>
-                <li><a href="join/join.html">Üye Ol</a></li>
-                <li class="dropdown">
-                    <a href="#">Komitelerimiz</a>
-                    <ul class="dropdown-menu">
-                        <li><a href="committees/it-committee.html">IT Komitesi</a></li>
-                        <li><a href="committees/marketing-committee.html">Marketing Komitesi</a></li>
-                        <li><a href="committees/hr-committee.html">HR Komitesi</a></li>
-                        <li><a href="committees/entrepreneurship-committee.html">Girişimcilik Komitesi</a></li>
-                        <li><a href="committees/international-relations-committee.html">Uluslararası İşbirliği ve Proje  Komitesi</a></li>
-                        <li><a href="committees/law-committee.html">Hukuk Danışmanlık Komitesi</a></li>
-                        <li><a href="committees/event-planning-committee.html">Etkinlik Düzenleme  Komitesi</a></li>
-                        <li><a href="committees/academic-committee.html">Kabul Sonrası ve Akademik Destek Komitesi</a></li>
-                    </ul>
-                </li>
-                <li><a href="#footer">İletişim</a></li>
-                <li><a href="">StartHub</a></li> <!-- start hub sayfası linki eklenecek -->
-            </ul>
+<section id="slider-home" class="carousel wow fadeIn " data-ride="carousel" data-pause="false">
+        <ul class="carousel-indicators">
+            <li data-target="#slider-home" data-slide-to="0" class="active"></li>
+            <li data-target="#slider-home" data-slide-to="1"></li>
+        </ul>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="img/banner-2.jpg">
+            </div>	
+            <div class="carousel-item">
+               <img src="img/banner-1.jpg">			   
         </div>
-    </header>
-
-<!-- Haberler Bölümü -->
-<section class="news-section">
-    <h2>Haberler</h2>
-    <div class="news-slider">
-        <button class="news-prev">&#10094;</button> <!-- Sol Ok -->
-        
-        <div class="news-container">
-            <div class="news-track">
-                <article class="news-item">
-                    <img src="img/placeholder.jpg" alt="Haber 1">
-                    <h3>Yeni Etkinlik Duyurusu</h3>
-                    <p>Yaklaşan etkinliğimiz hakkında bilgi almak için tıklayın.</p>
-                    <a href="news1.html" class="read-more">Devamını Oku</a>
-                </article>
-                <article class="news-item">
-                    <img src="img/placeholder.jpg" alt="Haber 2">
-                    <h3>Üye Kayıtları Başladı</h3>
-                    <p>Yeni dönem için üye kayıtlarımız başladı! Hemen kaydolun.</p>
-                    <a href="news2.html" class="read-more">Devamını Oku</a>
-                </article>
-                <article class="news-item">
-                    <img src="img/placeholder.jpg" alt="Haber 3">
-                    <h3>Komite Çalışmaları Devam Ediyor</h3>
-                    <p>Projelerimiz hakkında güncellemeleri takip edin.</p>
-                    <a href="news3.html" class="read-more">Devamını Oku</a>
-                </article>
-                <article class="news-item">
-                    <img src="img/placeholder.jpg" alt="Haber 4">
-                    <h3>Yeni Proje Açıklandı</h3>
-                    <p>Topluluk olarak yeni projemizi duyurduk.</p>
-                    <a href="news4.html" class="read-more">Devamını Oku</a>
-                </article>
-                <article class="news-item">
-                    <img src="img/placeholder.jpg" alt="Haber 5">
-                    <h3>Yeni İş Birlikleri</h3>
-                    <p>Önemli markalarla partnerlikler yapıldı.</p>
-                    <a href="news5.html" class="read-more">Devamını Oku</a>
-                </article>
-            </div>
-        </div>
-        <button class="news-next">&#10095;</button> <!-- Sağ Ok -->
-    </div>
-
-    <!-- Slider Dots -->
-    <div class="news-dots"></div>
-</section>
-        <!-- Partnerlerimiz Bölümü -->
-        <!-- <section class="partners-section">
-            <h2>Partnerlerimiz</h2>
-            <div class="partners-slider">
-                <div class="partners-track">
-                    <img src="img/ibility_app_logo.jpeg" alt="Partner 1">
-                    <img src="img/Rabobank_logo.svg.png" alt="Partner 2"> -->
-                    <!-- <img src="img/partner3.png" alt="Partner 3">
-                    <img src="img/partner4.png" alt="Partner 4">
-                    <img src="img/partner5.png" alt="Partner 5">
-                    <img src="img/partner6.png" alt="Partner 6">
-                    <img src="img/partner7.png" alt="Partner 7">
-                    <img src="img/partner8.png" alt="Partner 8"> -->
-                <!-- </div>
-            </div>
-        </section> -->
-
-    <!-- Diğer Bölümler -->
-    <!-- <section class="projects-section">
-        <h2>Projelerimiz</h2>
-        <p>Gerçekleştirdiğimiz ve devam eden projeler hakkında bilgi alın.</p>
-        <a href="projects.html" class="read-more">Tüm Projeler</a>
-    </section> -->
-
-    <section class="join-section">
-        <h2>Bize Katılın</h2>
-        <p>Anka ailesinin bir parçası olun!</p>
-        <a href="https://forms.gle/UpiV2x2YeGo9hvz46" class="join-button">
-            ANKA'lı ol
+        <a class="carousel-control-prev" href="#slider-home" data-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </a>
+        <a class="carousel-control-next" href="#slider-home" data-slide="next">
+            <span class="carousel-control-next-icon"></span>
         </a>
     </section>
+<section class="associationanka">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="contact-mail">
+					<marquee><h2>ANKA ASSOCIATION OF NETWORKING KNOWLEDGE AND ADVANCEMENT</h2>	</marquee>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<section class="Customers-trusted">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-12">
+			  <div id="news-slider" class="owl-carousel">
+				<div class="post-slide">
+				  <div class="post-img">
+					<img src="https://images.unsplash.com/photo-1596265371388-43edbaadab94?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=301&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=501" alt="">
+					<a href="#" class="over-layer"><i class="fa fa-link"></i></a>
+				  </div>
+				  <div class="post-content">
+					<h3 class="post-title">
+					  <a href="#">New Event Announcement</a>
+					</h3>
+					<p class="post-description">Click here for information about our upcoming event.</p>
+					<span class="post-date"><i class="fa fa-clock-o"></i>Out 27, 2024</span>
+					<a href="#" class="read-more">read more</a>
+				  </div>
+				</div>
+				
+				<div class="post-slide">
+				  <div class="post-img">
+					<img src="https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=303&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=503" alt="">
+					<a href="#" class="over-layer"><i class="fa fa-link"></i></a>
+				  </div>
+				  <div class="post-content">
+					<h3 class="post-title">
+					  <a href="#">Membership Registrations Have Started</a>
+					</h3>
+					<p class="post-description">Our membership registration for the new term has started!.....</p>
+					<span class="post-date"><i class="fa fa-clock-o"></i>Out 27, 2019</span>
+					<a href="#" class="read-more">read more</a>
+				  </div>
+				</div>
+				
+				<div class="post-slide">
+				  <div class="post-img">
+					<img src="https://images.unsplash.com/photo-1564979268369-42032c5ca998?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=300&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=500" alt="">
+					<a href="#" class="over-layer"><i class="fa fa-link"></i></a>
+				  </div>
+				  <div class="post-content">
+					<h3 class="post-title">
+					  <a href="#">Committee Work Continues</a>
+					</h3>
+					<p class="post-description">Follow updates about our projects.</p>
+					<span class="post-date"><i class="fa fa-clock-o"></i>Out 27, 2019</span>
+					<a href="#" class="read-more">read more</a>
+				  </div>
+				</div>
+				
+				<div class="post-slide">
+				  <div class="post-img">
+					<img src="https://images.unsplash.com/photo-1576659531892-0f4991fca82b?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=301&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=501" alt="">
+					<a href="#" class="over-layer"><i class="fa fa-link"></i></a>
+				  </div>
+				  <div class="post-content">
+					<h3 class="post-title">
+					  <a href="#">New Project Announced</a>
+					</h3>
+					<p class="post-description">As a community, we announced our new project.</p>
+					<span class="post-date"><i class="fa fa-clock-o"></i>Out 27, 2019</span>
+					<a href="#" class="read-more">read more</a>
+				  </div>
+				</div>
+				
+				<div class="post-slide">
+				  <div class="post-img">
+					<img src="https://images.unsplash.com/photo-1586083702768-190ae093d34d?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=305&ixid=eyJhcHBfaWQiOjF9&ixlib=rb-1.2.1&q=80&w=505" alt="">
+					<a href="#" class="over-layer"><i class="fa fa-link"></i></a>
+				  </div>
+				  <div class="post-content">
+					<h3 class="post-title">
+					  <a href="#">New Collaborations</a>
+					</h3>
+					<p class="post-description">Partnerships were made with important brands.</p>
+					<span class="post-date"><i class="fa fa-clock-o"></i>Out 27, 2019</span>
+					<a href="#" class="read-more">read more</a>
+				  </div>
+				</div>
 
-<!-- İletişim Kısmı -->
-<section class="contact-section">
-    <h2>ANKA için bir fikrin mi var?</h2>
-    <div class="contact-container">
-        <p>ANKA topluluğu için etki yaratacağını düşündüğün bir fikrin veya projen varsa her zaman bizimle iletişime geçebilirsin. Sensiz bir kişi eksiğiz!</p>
-        <div class="contact-info">
-            <h3>İletişime Geç</h3>
-            <a href="mailto:iletisim@anka.org">info@associationanka.nl</a>
-        </div>
-        <div class="social-media">
-            <h3>Bizi Takip Et!</h3>
-            <a target="_blank" href="https://www.instagram.com/anka.association/"><i class="fab fa-instagram"></i></a>
-            <a target="blank" href="https://www.linkedin.com/company/ankastudentassociation/"><i class="fab fa-linkedin"></i></a>
-        </div>
-    </div>
+			  </div>
+			</div>
+		
+		</div>
+	</div>
+</section>	
+<section class="join-us">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6">
+				<div class="become-anka-family">
+					<h2>Contact Us</h2>
+					<h4>If you have an idea or project that you think will create an impact for the ANKA community, you can always contact us. We are one person short without you!</h4>
+					<a href="#"> Contact Us</a>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="become-anka">
+					<img src="img/ankaa.jpg">
+					<div class="become-anka-join">
+						<h2>Join Us</h2>
+						<p>Become a part of the Anka family!</p>
+						<a href="#"> Become an ANKA</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </section>
 
-<!-- Footer -->
-<footer class="footer" id="footer">
-    <div class="footer-container">
-        <div class="footer-column">
-            <h3>Kurumsal</h3>
-            <ul>
-                <!-- <li><a href="#">Fayda Havuzu</a></li> -->
-                <li><a href="join/join.html">ANKA Üyesi Ol</a></li>
-                <!-- <li><a href="#">Bağışçı Ol</a></li> -->
-                <!-- <li><a href="#">SSS</a></li> -->
-                <li><a href="about-us/about-us.html">Hakkımızda</a></li>
-                <!-- <li><a href="#">Kullanım ve Gizlilik Politikası</a></li> -->
-            </ul>
-        </div>
-        <div class="footer-column">
-            <h3>İletişim</h3>
-            <a href="mailto:iletisim@anka.org">info@associationanka.nl</a>
-            <p><a href="https://associationanka.nl">https://associationanka.nl</a></p>
-        </div>
-        <div class="footer-column">
-            <h3>ANKA App</h3>
-            <a href="#"><img src="img/anka-tp.png" alt="App Store"></a>
-            <!-- <a href="#"><img src="img/googleplay.png" alt="Google Play"></a> -->
-        </div>
-        <div class="footer-column">
-            <h3>Sosyal Medya</h3>
-            <a target="_blank" href="https://www.instagram.com/anka.association/"><i class="fab fa-instagram"></i></a>
-            <!-- <a href="#"><img src="img/insta.png" alt="instagram"></a> -->
-            <!-- <a href="#"><i class="fab fa-x-twitter"></i></a> -->
-            <a target="blank" href="https://www.linkedin.com/company/ankastudentassociation/"><i class="fab fa-linkedin"></i></a>
-        </div>
-    </div>
-    <p class="footer-copy">&copy; 2025 ANKA. Tüm Hakları Saklıdır.</p>
+<footer>
+	<div class="top-footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<div class="footer-client-details">
+						<ul>
+							<li><a href="mailto:info@associationanka.nl">info@associationanka.nl</a></li>
+							<li><a href="tel:+91 123456789">+91 123456789</a> </li>
+							<li><a href="https://www.instagram.com/anka.association/"><i class="fa fa-instagram"></i></a></li>
+							<li><a href="https://www.linkedin.com/company/ankastudentassociation/"><i class="fa fa-linkedin-square"></i></a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="bottom-footer">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4">
+					<div class="footer-widget">
+						<h3>Institutional</h3>
+						<img src="img/logo.png">
+						<p>Become an ANKA Member About Us</p>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="footer-widget footer-menu">
+						<h3>Quick Links</h3>
+						<ul>
+								<li class="active"><a href="index.html">Home</a></li>
+								<li><a href="#">About Us</a></li>
+								<li><a href="#">Our Committees</a></li>
+								<li><a href="#">Talent Pool</a></li>
+								<li><a href="#">Online Start-Up Hub</a></li>
+								<li><a href="#">Contact Us</a></li>
+								<li><a href="#">Sign Up</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="footer-widget">
+					<h3>Social Media</h3>
+						<ul class="footer-social-icon">
+							<li><a href="mailto:info@associationanka.nl">info@associationanka.nl</a></li>
+							<li><a href="tel:+91 123456789">+91 123456789</a> </li>
+						</ul>
+						<ul class="footer-social-icon-link">
+							<li><a href="https://www.instagram.com/anka.association/"><i class="fa fa-instagram"></i></a></li>
+							<li><a href="https://www.linkedin.com/company/ankastudentassociation/"><i class="fa fa-linkedin-square"></i></a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
 </footer>
 
-    <script src="script.js"></script>
+   <script src="js/jquery.min.js"></script>	
+    <script src="js/bootstrap.min.js"></script>
+    <script src="slider/owl.carousel.js"></script>
 
+
+	<script>
+	
+	(function($) {
+$.fn.menumaker = function(options) {  
+ var cssmenu = $(this), settings = $.extend({
+   format: "dropdown",
+   sticky: false
+ }, options);
+ return this.each(function() {
+   $(this).find(".button").on('click', function(){
+     $(this).toggleClass('menu-opened');
+     var mainmenu = $(this).next('ul');
+     if (mainmenu.hasClass('open')) { 
+       mainmenu.slideToggle().removeClass('open');
+     }
+     else {
+       mainmenu.slideToggle().addClass('open');
+       if (settings.format === "dropdown") {
+         mainmenu.find('ul').show();
+       }
+     }
+   });
+   cssmenu.find('li ul').parent().addClass('has-sub');
+multiTg = function() {
+     cssmenu.find(".has-sub").prepend('<span class="submenu-button"></span>');
+     cssmenu.find('.submenu-button').on('click', function() {
+       $(this).toggleClass('submenu-opened');
+       if ($(this).siblings('ul').hasClass('open')) {
+         $(this).siblings('ul').removeClass('open').slideToggle();
+       }
+       else {
+         $(this).siblings('ul').addClass('open').slideToggle();
+       }
+     });
+   };
+   if (settings.format === 'multitoggle') multiTg();
+   else cssmenu.addClass('dropdown');
+   if (settings.sticky === true) cssmenu.css('position', 'fixed');
+resizeFix = function() {
+  var mediasize = 1000;
+     if ($( window ).width() > mediasize) {
+       cssmenu.find('ul').show();
+     }
+     if ($(window).width() <= mediasize) {
+       cssmenu.find('ul').hide().removeClass('open');
+     }
+   };
+   resizeFix();
+   return $(window).on('resize', resizeFix);
+ });
+  };
+})(jQuery);
+
+(function($){
+$(document).ready(function(){
+$("#cssmenu").menumaker({
+   format: "multitoggle"
+});
+});
+})(jQuery);
+
+	
+	</script>
+
+	<script>
+		$(document).ready(function() {
+			$("#news-slider").owlCarousel({
+				items : 3,
+				itemsDesktop:[1199,3],
+				itemsDesktopSmall:[980,2],
+				itemsMobile : [600,1],
+				navigation:true,
+				navigationText:["",""],
+				pagination:true,
+				autoPlay:true
+			});
+		});
+	</script>
 </body>
+
 </html>
