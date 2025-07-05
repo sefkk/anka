@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANKA Website</title>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+  <!-- Favicon (optional) -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+
+  <!-- Google Fonts (optional) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- Your main stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  
+<header>
+    <div id="navbar"></div>
+</header>
+
+
+<section class="committees-section">
+  <h2>Our Committees</h2>
+  <div class="committees-grid">
+    <div class="committee-card it">
+      <i class="fas fa-code"></i>
+      <h3>IT Committee</h3>
+      <p>ANKA'nın dijital altyapısını yöneten bu ekip, web geliştirme, yazılım ve teknik destek alanlarında görev alır.</p>
+    </div>
+    <div class="committee-card marketing">
+      <i class="fas fa-bullhorn"></i>
+      <h3>Marketing Committee</h3>
+      <p>Stratejik tanıtım, sosyal medya ve içerik üretimiyle ANKA'nın dış dünyaya açılan yüzünü temsil eder.</p>
+    </div>
+    <div class="committee-card entrepreneurship">
+      <i class="fas fa-lightbulb"></i>
+      <h3>Entrepreneurship Committee</h3>
+      <p>Yenilikçi projeler geliştirir, girişimcilik atölyeleri ve yarışmalar düzenler, üyeleri fikirden ürüne götürür.</p>
+    </div>
+    <div class="committee-card academic">
+      <i class="fas fa-book"></i>
+      <h3>Academic Committee</h3>
+      <p>Seminerler, akademik içerikler ve yayınlar ile ANKA'nın bilgi odaklı vizyonunu destekler.</p>
+    </div>
+    <div class="committee-card event">
+      <i class="fas fa-calendar-alt"></i>
+      <h3>Event Planning Committee</h3>
+      <p>Sosyal ve akademik etkinlikleri organize eder; fikirden sahneye tüm süreçleri yönetir.</p>
+    </div>
+    <div class="committee-card hr">
+      <i class="fas fa-users"></i>
+      <h3>HR Committee</h3>
+      <p>İç iletişim, üyeler arası etkileşim ve organizasyon içi uyumu sağlamakla sorumludur.</p>
+    </div>
+    <div class="committee-card law">
+      <i class="fas fa-balance-scale"></i>
+      <h3>Law Committee</h3>
+      <p>Hukuki danışmanlık sağlar, projelerin ve süreçlerin yasal uyumluluğunu denetler.</p>
+    </div>
+    <div class="committee-card ir">
+      <i class="fas fa-globe"></i>
+      <h3>International Relations Committee</h3>
+      <p>ANKA'nın yurtdışı bağlantılarını kurar, uluslararası projeleri ve iş birliklerini yürütür.</p>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- Footer -->
+<div id="footer"></div>
+
+<!-- Javascript Sources -->
+<script>
+  fetch('Partials/navbar.html')
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById('navbar').innerHTML = data;
+    });
+
+  fetch('Partials/footer.html')
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById('footer').innerHTML = data;
+    });
+</script>
+
+</body>
+
+</html>
