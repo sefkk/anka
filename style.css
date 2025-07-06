@@ -770,3 +770,56 @@ ul{
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
 }
 
+/* ONLINE STARTUP HUB */
+
+.background-image-srthub {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50vh;
+  background-image: url("Images/srtup-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+  opacity: 0.6;
+}
+
+.greeting-banner-srthub {
+  height: 580px;
+  position: relative;
+  width: 83%;
+  margin: 110px auto 60px auto;
+  padding: 60px 20px;
+  background: #e5925a;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(-30px);
+  animation: fadeSlideIn 0.5s ease-out forwards;
+  animation-delay: 0.3s;
+}
+
+.greeting-content-srthub {
+  padding-top: 40px;
+}
+
+.greeting-content-srthub h1 {
+  font-family: "Lora", serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 3rem;
+  color: white;
+  margin-left: 70px;
+  margin-top: -15px;
+}
+
+.greeting-content-srthub p {
+  font-size: 1.25rem;
+  color: white;
+  margin: 40px 70px 50px 70px;
+  font-weight: 550;
+}
+
