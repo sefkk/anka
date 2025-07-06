@@ -669,7 +669,7 @@ ul{
 /* CONTACT SECTION */
 .contact-section {
   max-width: 1100px;
-  margin: 80px auto;
+  margin: auto auto 110px auto;
   padding: 40px 20px;
   text-align: center;
 }
@@ -750,9 +750,10 @@ ul{
 }
 
 /* APPLY NOW SECTION */
+
 .apply-section {
   max-width: 1000px;
-  margin: 80px auto;
+  margin: auto;
   padding: 40px 20px;
   text-align: center;
 }
