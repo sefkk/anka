@@ -103,7 +103,7 @@ html, body {
 
 .about-section {
   max-width: 800px;
-  margin: 60px auto;
+  margin: 150px auto;
   padding: 0 20px;
   text-align: left;
 }
@@ -118,6 +118,57 @@ html, body {
   font-size: 1.25rem;
   line-height: 1.6;
   text-align: left;
+}
+
+.background-image-abt {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50vh;
+  background-image: url("Images/abt-us-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+  opacity: 0.6;
+}
+
+.greeting-banner-abt {
+  height: 580px;
+  position: relative;
+  width: 83%;
+  margin: 110px auto 60px auto;
+  padding: 60px 20px;
+  background: #e5925a;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(-30px);
+  animation: fadeSlideIn 0.5s ease-out forwards;
+  animation-delay: 0.3s;
+}
+
+.greeting-content-abt {
+  padding-top: 40px;
+}
+
+.greeting-content-abt h1 {
+  font-family: "Lora", serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 3rem;
+  color: white;
+  margin-left: 70px;
+  margin-top: -15px;
+}
+
+.greeting-content-abt p {
+  font-size: 1.25rem;
+  color: white;
+  margin: 40px 70px 50px 70px;
+  font-weight: 550;
 }
 
 /* SLIDER */
@@ -285,7 +336,7 @@ html, body {
   display: flex;
   justify-content: center;
   padding: 40px 0;
-  margin-top: 10%;
+  margin-top: 8%;
   margin-right: 13%;
 }
 
@@ -506,20 +557,15 @@ ul{
 }
 }
 
-
-
 /* OUR COMMITTEES STYLING */
+
 .committees-section {
   max-width: 1200px;
   margin: 60px auto;
   padding: 40px 20px;
   text-align: center;
 }
-.committees-section h2 {
-  font-size: 3rem;
-  margin-bottom: 40px;
-  color: #333;
-}
+
 .committees-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -533,6 +579,7 @@ ul{
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   color: #333;
 }
+
 .committee-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
@@ -552,7 +599,6 @@ ul{
   color: #555;
 }
 
-/* Komiteye özel renkler (isteğe bağlı) */
 .committee-card.it { background: linear-gradient(135deg, #c9d6ff, #e2e2e2); }
 .committee-card.marketing { background: linear-gradient(135deg, #fceabb, #f8b500); }
 .committee-card.entrepreneurship { background: linear-gradient(135deg, #fbc2eb, #a6c1ee); }
@@ -562,8 +608,63 @@ ul{
 .committee-card.law { background: linear-gradient(135deg, #e0c3fc, #8ec5fc); }
 .committee-card.ir { background: linear-gradient(135deg, #cfd9df, #e2ebf0); }
 
+.background-image-comms {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50vh;
+  background-image: url("Images/contact-us-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+  opacity: 0.6;
+}
 
+.greeting-banner-comms {
+  height: 580px;
+  position: relative;
+  width: 83%;
+  margin: 110px auto 60px auto;
+  padding: 60px 20px;
+  background: #e5925a;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  z-index: 1;
+  opacity: 0;
+  transform: translateY(-30px);
+  animation: fadeSlideIn 0.5s ease-out forwards;
+  animation-delay: 0.3s;
+}
 
+.greeting-content-comms {
+  padding-top: 40px;
+}
+
+.greeting-content-comms h1 {
+  font-family: "Lora", serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 3rem;
+  color: white;
+  margin-left: 70px;
+  margin-top: -15px;
+}
+
+.greeting-content-comms p {
+  font-size: 1.25rem;
+  color: white;
+  margin: 40px 70px 50px 70px;
+  font-weight: 550;
+}
+
+@keyframes fadeSlideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 /* CONTACT SECTION */
 .contact-section {
@@ -639,7 +740,6 @@ ul{
   color: #e5925a;
 }
 
-/* Mobil uyum */
 @media (max-width: 768px) {
   .contact-container {
     flex-direction: column;
@@ -648,9 +748,6 @@ ul{
     text-align: center;
   }
 }
-
-
-
 
 /* APPLY NOW SECTION */
 .apply-section {
