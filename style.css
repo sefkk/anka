@@ -587,7 +587,7 @@ ul{
 .committee-card i {
   font-size: 2.5rem;
   margin-bottom: 15px;
-  color: #e5925a;
+  color: #b24700;
 }
 .committee-card h3 {
   font-size: 1.5rem;
@@ -599,14 +599,14 @@ ul{
   color: #555;
 }
 
-.committee-card.it { background: linear-gradient(135deg, #c9d6ff, #e2e2e2); }
-.committee-card.marketing { background: linear-gradient(135deg, #fceabb, #f8b500); }
-.committee-card.entrepreneurship { background: linear-gradient(135deg, #fbc2eb, #a6c1ee); }
-.committee-card.academic { background: linear-gradient(135deg, #d4fc79, #96e6a1); }
-.committee-card.event { background: linear-gradient(135deg, #fddb92, #d1fdff); }
-.committee-card.hr { background: linear-gradient(135deg, #ffecd2, #fcb69f); }
-.committee-card.law { background: linear-gradient(135deg, #e0c3fc, #8ec5fc); }
-.committee-card.ir { background: linear-gradient(135deg, #cfd9df, #e2ebf0); }
+.committee-card.it { background: linear-gradient(135deg, #ffffff, #800020); }           /* White to Burgundy */
+.committee-card.marketing { background: linear-gradient(135deg, #ffffff, #f1c40f); }    /* White to Yellow */
+.committee-card.entrepreneurship { background: linear-gradient(135deg, #ffffff, #e74c3c); } /* White to Red */
+.committee-card.academic { background: linear-gradient(135deg, #ffffff, #3498db); }     /* White to Blue */
+.committee-card.event { background: linear-gradient(135deg, #ffffff, #2ecc71); }        /* White to Green */
+.committee-card.hr { background: linear-gradient(135deg, #ffffff, #9b59b6); }           /* White to Purple */
+.committee-card.law { background: linear-gradient(135deg, #ffffff, #34495e); }          /* White to Dark Blue-Grey */
+.committee-card.ir { background: linear-gradient(135deg, #ffffff, #ff6f61); }           /* White to Coral */
 
 .background-image-comms {
   position: absolute;
