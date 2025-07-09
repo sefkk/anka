@@ -171,6 +171,66 @@ html, body {
   font-weight: 550;
 }
 
+.image-text-section {
+  background-color: #fff;
+  padding: 60px 10%;
+}
+
+.image-text-container {
+  opacity: 1;
+  transform: translateY(0);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 40px;
+  margin-bottom: 100px;
+}
+
+@media (max-width: 768px) {
+  .image-text-container {
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 120px;
+  }
+
+  .text-side {
+    padding-top: 20px;
+  }
+}
+
+.image-side {
+  flex: 1;
+  min-width: 300px;
+}
+
+.image-side img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.text-side {
+  flex: 1;
+  min-width: 300px;
+}
+
+.text-side h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #222;
+  text-align: center;
+}
+
+.text-side p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #555;
+}
+
+.reverse-text{
+  text-align: right;
+}
+
 /* SLIDER */
 
 * {box-sizing:border-box}
@@ -659,6 +719,21 @@ ul{
   font-weight: 550;
 }
 
+.card-link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  padding: 30px 20px;
+  height: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.card-link:hover {
+  cursor: pointer;
+  text-decoration: none;
+}
+
 @keyframes fadeSlideIn {
   to {
     opacity: 1;
@@ -824,3 +899,185 @@ ul{
   font-weight: 550;
 }
 
+/* ========================
+   BASE COMMITTEE DESIGN
+   ======================== */
+
+.hero {
+  color: white;
+  padding: 100px 40px;
+  text-align: center;
+  border-radius: 12px;
+  margin-bottom: 50px;
+  opacity: 0;
+  transform: translateY(30px);
+  animation: heroFadeInUp 1s ease forwards;
+  animation-delay: 0.15s;
+  max-width: clamp(900px, 90vw, 1200px);
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+  margin-top: 50px;
+}
+
+@keyframes heroFadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.intro, .responsibilities {
+  background: white;
+  padding: 40px 40px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  margin-bottom: 50px;
+  max-width: clamp(900px, 90vw, 1200px);
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+.intro h2, .responsibilities h2 {
+  margin-bottom: 20px;
+  font-size: 2rem;
+}
+
+.responsibilities ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  font-size: 1rem;
+  color: #444;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 40px;
+  margin-bottom: 50px;
+  max-width: clamp(900px, 90vw, 1200px);
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+.team-member {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.team-member img {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.team-member h3 {
+  margin-bottom: 8px;
+}
+
+.team-member p {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.contact-cta {
+  color: white;
+  padding: 40px 40px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: clamp(900px, 90vw, 1200px);
+  margin-left: auto;
+  margin-right: auto;
+  box-sizing: border-box;
+  margin-bottom: 80px;
+}
+
+.contact-cta h2 {
+  margin-bottom: 15px;
+}
+
+.contact-cta a {
+  background: white;
+  padding: 12px 25px;
+  border-radius: 30px;
+  font-weight: bold;
+  display: inline-block;
+  margin-top: 10px;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+}
+
+.contact-cta a:hover {
+  background: #8c8c8c;
+  color: white;
+  text-decoration: none;
+}
+
+/* IT (Burgundy) */
+.hero-it { background: linear-gradient(135deg, #ffffff, #800020); }
+.intro-it h2, .responsibilities-it h2, .team-member-it h3 { color: #800020; }
+.contact-cta-it { background: #800020; }
+.contact-cta-it a { color: #800020; }
+
+/* Marketing (Yellow) */
+.hero-marketing { background: linear-gradient(135deg, #ffffff, #f1c40f); }
+.intro-marketing h2, .responsibilities-marketing h2, .team-member-marketing h3 { color: #f1c40f; }
+.contact-cta-marketing { background: #f1c40f; }
+.contact-cta-marketing a { color: #f1c40f; }
+
+/* Entrepreneurship (Red) */
+.hero-entre { background: linear-gradient(135deg, #ffffff, #e74c3c); }
+.intro-entre h2, .responsibilities-entre h2, .team-member-entre h3 { color: #e74c3c; }
+.contact-cta-entre { background: #e74c3c; }
+.contact-cta-entre a { color: #e74c3c; }
+
+/* Academic (Blue) */
+.hero-academic { background: linear-gradient(135deg, #ffffff, #3498db); }
+.intro-academic h2, .responsibilities-academic h2, .team-member-academic h3 { color: #3498db; }
+.contact-cta-academic { background: #3498db; }
+.contact-cta-academic a { color: #3498db; }
+
+/* Events (Green) */
+.hero-event { background: linear-gradient(135deg, #ffffff, #2ecc71); }
+.intro-event h2, .responsibilities-event h2, .team-member-event h3 { color: #2ecc71; }
+.contact-cta-event { background: #2ecc71; }
+.contact-cta-event a { color: #2ecc71; }
+
+/* HR (Purple) */
+.hero-hr { background: linear-gradient(135deg, #ffffff, #9b59b6); }
+.intro-hr h2, .responsibilities-hr h2, .team-member-hr h3 { color: #9b59b6; }
+.contact-cta-hr { background: #9b59b6; }
+.contact-cta-hr a { color: #9b59b6; }
+
+/* Law (Dark Gray) */
+.hero-law { background: linear-gradient(135deg, #ffffff, #34495e); }
+.intro-law h2, .responsibilities-law h2, .team-member-law h3 { color: #34495e; }
+.contact-cta-law { background: #34495e; }
+.contact-cta-law a { color: #34495e; }
+
+/* International Relations (Coral) */
+.hero-int-relations { background: linear-gradient(135deg, #ffffff, #ff6f61); }
+.intro-int-relations h2, .responsibilities-int-relations h2, .team-member-int-relations h3 { color: #ff6f61; }
+.contact-cta-int-relations { background: #ff6f61; }
+.contact-cta-int-relations a { color: #ff6f61; }
