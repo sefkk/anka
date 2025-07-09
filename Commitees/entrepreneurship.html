@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANKA Website</title>
+  <link rel="stylesheet" href="../style.css"/>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+</head>
+
+<body>
+
+<!-- Navbar -->
+<header>
+    <div id="navbar"></div>
+</header>
+
+<div class="container">
+    <!-- Hero -->
+    <section class="hero hero-entre">
+      <h1>Entrepreneurship Committee</h1>
+      <p>Driving innovation and digital transformation through technology and technical support at ANKA.</p>
+    </section>
+
+    <!-- Intro -->
+    <section class="intro intro-entre">
+      <h2>About the Entrepreneurship Committee</h2>
+      <p>The IT Committee manages ANKA’s digital infrastructure, oversees software development, web services, and provides technical support to ensure smooth operation of our digital platforms.</p>
+    </section>
+
+    <!-- Team -->
+    <section class="team team-entre">
+      <h2 style="color:#e74c3c; margin-bottom: 30px;">Our Team</h2>
+      <div class="team-grid">
+        <div class="team-member team-member-entre">
+          <img src="../Images/landscape-placeholder.svg" alt="Member Name" />
+          <h3>Orkun Sefik</h3>
+          <p>Chair of IT Committee</p>
+        </div>
+        <div class="team-member team-member-entre">
+          <img src="../Images/landscape-placeholder.svg" alt="Member Name" />
+          <h3>Eda Cetinkaya</h3>
+          <p>Vice Chair of IT Committee</p>
+        </div>
+        <div class="team-member team-member-entre">
+          <img src="../Images/landscape-placeholder.svg" alt="Member Name" />
+          <h3>Poyraz Temiz</h3>
+          <p>Full Stack Developer</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Responsibilities -->
+    <section class="responsibilities responsibilities-entre">
+      <h2>Key Responsibilities</h2>
+      <ul>
+        <li>Maintain and update ANKA’s website and digital platforms</li>
+        <li>Develop software solutions to improve internal workflows</li>
+        <li>Provide IT support to ANKA staff and committees</li>
+        <li>Manage data security and privacy protocols</li>
+        <li>Research and implement new technologies</li>
+      </ul>
+    </section>
+
+    <!-- Contact Call To Action -->
+    <section class="contact-cta contact-cta-entre">
+      <h2>Interested in joining the IT Committee?</h2>
+      <a href="../apply-now.html">Apply Now</a>
+    </section>
+  </div>
+
+<!-- Footer -->
+<div id="footer"></div>
+
+<!-- Javascript Sources -->
+<script>
+  fetch('../Partials/navbar.html')
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById('navbar').innerHTML = data;
+    });
+
+  fetch('../Partials/footer.html')
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById('footer').innerHTML = data;
+    });
+</script>
+
+<script src="../slider.js"></script>
+
+</body>
+
+</html>
