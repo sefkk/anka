@@ -47,6 +47,41 @@ body {
   background-color: transparent !important;
 }
 
+.hamburger {
+  display: none;
+  font-size: 28px;
+  color: white;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+/* Mobile styles */
+@media (max-width: 430px) {
+  .navbar {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background-color: #333;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    z-index: 1000;
+  }
+
+  .hamburger {
+    display: block;
+  }
+
+  .navbar.active {
+    display: flex;
+  }
+
+  .navbar li a {
+    padding: 12px 20px;
+    border-top: 1px solid #575757;
+  }
+}
+
 /* WELCOME TO ANKA (Greeting) */
 
 html, body {
@@ -104,20 +139,24 @@ html, body {
 .about-section {
   max-width: 800px;
   margin: 150px auto;
+  margin-bottom: 5rem;
   padding: 0 20px;
   text-align: left;
+  font-family: 'Poppins', sans-serif;
 }
 
 .about-section h2 {
-  font-size: 3rem;
+  font-size: 3.5rem;
   margin-bottom: 1rem;
   text-align: left;
+  font-weight: 700;
 }
 
 .about-section p {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   line-height: 1.6;
   text-align: left;
+  font-weight: 400;
 }
 
 .background-image-abt {
@@ -230,17 +269,6 @@ html, body {
 .reverse-text{
   text-align: right;
 }
-
-/* SLOGAN */
-#slogan {
-  font-size: 2.2rem;
-  text-align: center;
-  margin-top: 20px;
-  color: #6498a0;
-  font-weight: bold;
-  animation: fadeInOpacity 1s ease-in-out forwards, slideInFromLeft 1s ease-in-out forwards;
-}
-
 /* SLIDER */
 
 * {box-sizing:border-box}
@@ -306,13 +334,19 @@ html, body {
 .slideshow-container {
   position: relative;
   z-index: 2;
-}
-
-.slideshow-container {
+  opacity: 0;
+  transform: translateX(50px);
+  transition: opacity 1s ease, transform 1s ease;
   max-width: 1000px;
   position: relative;
   margin: auto;
 }
+
+.slideshow-container.animate {
+  opacity: 1;
+  transform: translateX(0);
+}
+
 
 .mySlides {
   display: none;
@@ -401,18 +435,6 @@ html, body {
   }
 }
 
-.text-area li {
-  list-style-type: circle; /* dot bullets */
-  padding-left: 20px;
-  margin: 10px 0;
-}
-
-.reason-text ul li {
-  margin-bottom: 8px;
-  font-size: 16px;
-  color: #f0f0f0; /* soft white text */
-}
-
 .custom-section .container {
   width: 100%;
   display: flex;
@@ -420,6 +442,7 @@ html, body {
   padding: 40px 0;
   margin-top: 8%;
   margin-right: 13%;
+  margin-bottom: 5rem;
 }
 
 .big-square {
@@ -446,20 +469,11 @@ html, body {
 
 .text-area h2 {
   font-size: 12rem;
-  margin-bottom: 1rem;
+  margin: 0;
+  position: relative;
+  top: -17rem;
   white-space: nowrap;
-  margin-top: -6rem;
-  transform: translateX(1%);
-}
-
-.text-area ul li {
-  /* font-size: 1.2rem;
-  line-height: 1.5;
-  margin-top: 2rem;
-  transform: translateX(20%); */
-  font-size: 24px;
-  color: #36455d;
-  font-weight: bold;
+  font-family: 'Poppins', sans-serif;
 }
 
 .big-square.animate,
@@ -491,6 +505,19 @@ html, body {
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.intro-text {
+  text-align: justify;
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.1rem;
+  line-height: 1.9;
+  font-weight: 300;
+  color: #222;
+  margin-top: -15rem;
+  transform: translateX(4rem);
+  font-weight: 500;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 /* SPONSORS SLIDESHOW */
@@ -629,7 +656,6 @@ ul{
     text-align: center;
 }
 
-/*responsive*/
 @media(max-width: 767px){
   .footer-col{
     width: 50%;
@@ -669,20 +695,31 @@ ul{
   transform: translateY(-5px);
   box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
 }
+
 .committee-card i {
   font-size: 2.5rem;
   margin-bottom: 15px;
-  color: #b24700;
 }
+
 .committee-card h3 {
   font-size: 1.5rem;
   margin-bottom: 10px;
 }
+
 .committee-card p {
   font-size: 1rem;
   line-height: 1.6;
   color: #555;
 }
+
+.committee-card.it i { color: #660019; }              /* Darker Burgundy */
+.committee-card.marketing i { color: #b39500; }       /* Darker Yellow */
+.committee-card.entrepreneurship i { color: #b0392a; }/* Darker Red */
+.committee-card.academic i { color: #2a78b0; }        /* Darker Blue */
+.committee-card.event i { color: #249957; }           /* Darker Green */
+.committee-card.hr i { color: #7a3f9a; }              /* Darker Purple */
+.committee-card.law i { color: #273a48; }             /* Darker Dark Blue-Grey */
+.committee-card.ir i { color: #cc5a52; }              /* Darker Coral */
 
 .committee-card.it { background: linear-gradient(135deg, #ffffff, #800020); }           /* White to Burgundy */
 .committee-card.marketing { background: linear-gradient(135deg, #ffffff, #f1c40f); }    /* White to Yellow */

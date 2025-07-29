@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const newsSection = document.querySelector('.news-background');
   const title = newsSection.querySelector('h2');
   const shadow = newsSection.querySelector('.slider-shadow');
+  const slideshow = newsSection.querySelector('.slideshow-container');  // select slideshow container
 
   const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
@@ -38,16 +39,18 @@ document.addEventListener('DOMContentLoaded', () => {
         newsSection.classList.add('animate');
         title.classList.add('animate');
         shadow.classList.add('animate');
+        slideshow.classList.add('animate');
         observer.unobserve(entry.target);
       }
     });
   }, {
     threshold: 0.1,
-    rootMargin: '0px 0px -200px 0px'
+    rootMargin: '0px 0px -400px 0px'
   });
 
   observer.observe(newsSection);
 });
+
 
 // "WHY ANKA" ANIMATIONS
 
