@@ -50,7 +50,7 @@ body {
 .hamburger {
   display: none;
   font-size: 28px;
-  color: white;
+  color: rgb(0, 0, 0);
   cursor: pointer;
   margin-left: auto;
 }
