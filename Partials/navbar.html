@@ -6,11 +6,11 @@
     </a>
   </div>
 
-  <!-- This is the hamburger icon -->
-  <div class="hamburger" id="hamburger">&#9776;</div>
+  <!-- Hamburger Toggle -->
+  <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+  <label for="menu-toggle" class="hamburger">&#9776;</label>
 
-  <!-- This is the menu we want to show/hide -->
-  <ul class="navbar" id="navbarMenu">
+  <ul class="navbar">
     <li><a href="../index.html">Home</a></li>
     <li><a href="../about-us.html">About Us</a></li>
     <li><a href="../our-committies.html">Our Committees</a></li>
@@ -21,11 +21,3 @@
   </ul>
 </nav>
 
-<script>
-  const hamburger = document.getElementById('hamburger');
-  const navbarMenu = document.getElementById('navbarMenu');
-
-  hamburger.addEventListener('click', () => {
-    navbarMenu.classList.toggle('active');
-  });
-</script>
