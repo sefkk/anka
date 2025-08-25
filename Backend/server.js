@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const User = require('./models/user');
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 // Middleware
 app.use(express.json());
