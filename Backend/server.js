@@ -7,7 +7,7 @@ const cors = require('../.gitignore/node_modules/cors/lib'); // Import the cors 
 // Use a relative path to your user.js file.
 const User = require('./models/user'); // Import the User model
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT; // This will use the port Render assigns
 
 // Middleware 
 app.use(express.json());
