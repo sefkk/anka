@@ -2,7 +2,7 @@
 // models/User.js
 
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('../../.gitignore/node_modules/bcryptjs/umd');
 
 // Define the User Schema
 const UserSchema = new mongoose.Schema({
