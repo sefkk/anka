@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('../.gitignore/node_modules/bcryptjs/umd');
 const User = require('./models/user'); // Your User model
 require('dotenv').config();
 

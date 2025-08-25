@@ -10,7 +10,7 @@ async function onSubmit(event) {
 
     try {
         // Send the username and password to your backend login endpoint
-        const response = await fetch('http://localhost:3000/login', {
+        const response = await fetch('https://anka-vkrl.onrender.com/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
