@@ -1,22 +1,16 @@
-
 // server.js
-require('dotenv').config(); // Load environment variables
-const express = require('../.gitignore/node_modules/express');
+require('dotenv').config(); 
+const express = require('express');
 const mongoose = require('mongoose');
-const cors = require('../.gitignore/node_modules/cors/lib'); // Import the cors package
-// Use a relative path to your user.js file.
-const User = require('./models/user'); // Import the User model
+const cors = require('cors'); 
+const User = require('./models/User'); // Corrected path
+
 const app = express();
-const PORT = process.env.PORT; // This will use the port Render assigns
+const PORT = process.env.PORT; 
 
 // Middleware 
 app.use(express.json());
-app.use(cors()); // Enable CORS for all routes
-
-// Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('Could not connect to MongoDB:', err));
+app.use(cors());
 
 // The Login Endpoint
 app.post('/login', async (req, res) => {
@@ -40,6 +34,20 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+// Connect to MongoDB and then start the server
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URI);
+        console.log('Connected to MongoDB');
+        
+        app.listen(PORT, () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+
+    } catch (error) {
+        console.error('Could not connect to MongoDB:', error);
+        process.exit(1); // Exit with a failure code
+    }
+};
+
+connectDB();
