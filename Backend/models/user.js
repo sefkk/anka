@@ -1,8 +1,8 @@
 
-// models/User.js
+// models/user.js
 
 const mongoose = require('mongoose');
-const bcrypt = require('../../.gitignore/node_modules/bcryptjs/umd');
+const bcrypt = require('bcryptjs'); // The correct way to import the library
 
 // Define the User Schema
 const UserSchema = new mongoose.Schema({
