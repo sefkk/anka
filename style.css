@@ -1701,3 +1701,161 @@ ul{
 		border-radius: 8px;
 	}
 }
+
+
+
+
+
+
+
+/* LOGIN PAGE */
+
+.login-body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-image: url("Images/clouds-bg.jpg");
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box {
+    background-color: white;
+    width: 400px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    transition: 0.6s;
+}
+
+.login-box:hover {
+    background-color: white;
+    width: 400px;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 1);
+    text-align: center;
+}
+
+.icon img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 20px;
+    transition: 0.6s;
+}
+
+.icon img:hover {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 20px;
+    transition: 0.6s;
+}
+
+h2 {
+    font-size: 24px;
+    margin: 10px 0;
+}
+
+p {
+    color: #666;
+    font-size: 14px;
+    margin: 10px 0 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.forgot-password {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.forgot-password a {
+    color: #007BFF;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.btn {
+    width: 100%;
+    padding: 12px;
+    background-color: black;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.divider {
+    font-size: 12px;
+    color: #888;
+    margin: 20px 0;
+}
+
+.social-icons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-last {
+    width: 30%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    /* background-color: white; */
+    background-color: #f1f1f1;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.8s ease; /* Smooth geçiş */
+}
+
+.btn-last:hover {
+    background-color: white;
+    transition: 0.8s ease; /* Smooth geçiş */
+}
+
+.btn-1 {
+    color: #DB4437;
+}
+
+.btn-2 {
+    color: #4267B2;
+}
+
+.btn-3 {
+    color: black;
+}
+
+.hidden {
+    opacity: 0;
+    pointer-events: none; /* Fare ile etkileşimi engeller */
+    transition: opacity 0.8s ease; /* Yumuşak geçiş */
+}
+
+.visible {
+    opacity: 1;
+    pointer-events: auto; /* Fare ile etkileşim aktif */
+    transition: opacity 0.8s ease; /* Yumuşak geçiş */
+}
