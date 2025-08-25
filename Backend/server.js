@@ -3,9 +3,9 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const User = require('./models/user'); // Correct path
+const User = require('./models/user');
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
@@ -25,13 +25,14 @@ app.post('/login', async (req, res) => {
         res.status(500).json({ message: 'Server error' });
     }
 });
-// -------------------------------------------------------------
-// This is the most crucial part. Start the server AFTER connecting to the database.
+
+// Correct connection logic: Wait for the database connection before starting the server
 const connectDB = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI);
         console.log('Connected to MongoDB');
 
+        // Only start the server after a successful connection
         app.listen(PORT, () => {
             console.log(`Server running on port ${PORT}`);
         });
@@ -43,4 +44,3 @@ const connectDB = async () => {
 };
 
 connectDB();
-// -------------------------------------------------------------
