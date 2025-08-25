@@ -1,9 +1,9 @@
 
 // server.js
 require('dotenv').config(); // Load environment variables
-const express = require('express');
+const express = require('../.gitignore/node_modules/express');
 const mongoose = require('mongoose');
-const cors = require('cors'); // Import the cors package
+const cors = require('../.gitignore/node_modules/cors/lib'); // Import the cors package
 // Use a relative path to your user.js file.
 const User = require('./models/user'); // Import the User model
 const app = express();
