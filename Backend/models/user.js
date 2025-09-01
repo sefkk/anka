@@ -12,20 +12,20 @@ const UserSchema = new mongoose.Schema({
     password: { type: String, required: true }
 });
 
-// Middleware to hash password before saving
-UserSchema.pre('save', async function(next) {
-    // Only hash the password if it's new or has been modified
-    if (!this.isModified('password')) {
-        return next();
-    }
-    try {
-        const salt = await bcrypt.genSalt(10);
-        this.password = await bcrypt.hash(this.password, salt);
-        next();
-    } catch (error) {
-        next(error);
-    }
-});
+// // Middleware to hash password before saving
+// UserSchema.pre('save', async function(next) {
+//     // Only hash the password if it's new or has been modified
+//     if (!this.isModified('password')) {
+//         return next();
+//     }
+//     try {
+//         const salt = await bcrypt.genSalt(10);
+//         this.password = await bcrypt.hash(this.password, salt);
+//         next();
+//     } catch (error) {
+//         next(error);
+//     }
+// });
 
 // Method to compare passwords
 UserSchema.methods.matchPassword = async function(enteredPassword) {
