@@ -1,36 +1,21 @@
-const mongoose = require('mongoose');
-const bcrypt = require('../.gitignore/node_modules/bcryptjs/umd');
-const User = require('./models/user'); // Your User model
 require('dotenv').config();
+const mongoose = require('mongoose');
+const User = require('./models/user');
 
-const createNewUser = async (name, surname, username, password) => {
-    try {
-        // Connect to MongoDB
-        await mongoose.connect(process.env.MONGO_URI);
-        
-        // Check if the user already exists
-        const existingUser = await User.findOne({ username });
-        if (existingUser) {
-            console.log('Username already exists. Please choose another.');
-            return;
-        }
+mongoose.connect(process.env.MONGO_URI)
+  .then(async () => {
+    const user = new User({
+      name: 'John',
+      surname: 'Doe',
+      username: 'johndoe',
+      password: 'mypassword'
+    });
 
-        // Create a new user instance
-        const newUser = new User({ name, surname, username, password });
-        
-        // Save the user (the password will be hashed automatically by the pre-save middleware)
-        await newUser.save();
-        
-        console.log(`User '${username}' created successfully!`);
-        
-    } catch (error) {
-        console.error('Error creating user:', error);
-    } finally {
-        // Disconnect from MongoDB
-        mongoose.disconnect();
-    }
-};
-
-// Example usage:
-// Replace these with the actual data from your HR committee
-createNewUser('Orkun', 'Sefik', 'orkunsefik', 'temp1234');
+    await user.save();
+    console.log('User created successfully!');
+    process.exit();
+  })
+  .catch(err => {
+    console.error('Error creating user:', err);
+    process.exit(1);
+  });
