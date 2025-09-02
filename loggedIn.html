@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Lovers+Quarrel" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/handwriting" rel="stylesheet">
+    <link href='https://fonts.googleapis.com/css?family=Berkshire Swash' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css"/> 
+    <title>Anka Member Page</title>
+</head>
+<body>
+    <!-- Navbar -->
+    <header>
+        <div id="navbar"></div>
+    </header>
+
+    <!-- Legal Consultancy Form -->
+    <section class="consultancy-section" id="legal-consultancy">
+      <h2>Request Legal Consultancy</h2>
+      <p>Fill out the form below and our team will contact you.</p>
+      <div class="form-embed">
+        <iframe src="https://docs.google.com/forms/d/e/1FAIpQLScqD4P0yE3faThgbfbkKLL4AM-bJ2MYYuwQmf-OgP0ZYO5pRQ/viewform?embedded=true" width="75%" height="160" frameborder="0" marginheight="0" marginwidth="0" style="min-height:560px; max-height:560px; overflow:hidden;">Loading…</iframe>
+      </div>
+      <!-- <p>If the form does not load, <a href="https://docs.google.com/forms/d/e/REPLACE_WITH_FORM_ID/viewform" target="_blank" rel="noopener">open it in a new tab</a>.</p> -->
+    </section>
+
+    <!-- Footer -->
+    <div id="footer"></div>
+
+    <!-- Javascript Sources -->
+    <script>
+    fetch('Partials/navbar.html')
+        .then(res => res.text())
+        .then(data => {
+        document.getElementById('navbar').innerHTML = data;
+        });
+
+    fetch('Partials/footer.html')
+        .then(res => res.text())
+        .then(data => {
+        document.getElementById('footer').innerHTML = data;
+        });
+
+    // Use localStorage if that's what you used for storing the login status
+    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+    
+    // If the user is not logged in, redirect them to the login page
+    if (isLoggedIn !== 'true') {
+        window.location.href = 'login.html';
+    }
+    </script>
+    
+</body>
+</html>
