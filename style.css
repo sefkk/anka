@@ -1250,7 +1250,7 @@ ul{
 }
 .form-container iframe {
   border-radius: 10px;
-  box-shadow: 0 0 25px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
 }
 
 /* ONLINE STARTUP HUB */
@@ -1670,12 +1670,12 @@ ul{
 }
 
 .form-embed {
-	width: 100%;
+	width: 80%;
 }
 
 .form-embed iframe {
-	width: 100%;
-	height: 1200px;
+	width: 80%;
+	height: 350px;
 	border: 0;
 	border-radius: 10px;
 	background: #fff;
@@ -1858,4 +1858,12 @@ input {
     opacity: 1;
     pointer-events: auto; /* Fare ile etkileşim aktif */
     transition: opacity 0.8s ease; /* Yumuşak geçiş */
+}
+
+
+
+
+.form-frame {
+  padding-top: 20px !important;
+  border-radius: 10px;
 }
