@@ -1,52 +1,46 @@
-document.querySelector('.btn').addEventListener('click', onSubmit);
+// Select the login button
+document.getElementById('loginBtn').addEventListener('click', onSubmit);
 
 async function onSubmit(event) {
     event.preventDefault();
 
-    const username = document.querySelector('input[type="text"]').value;
-    const password = document.querySelector('input[type="password"]').value;
+    // Get the values from the inputs
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value.trim();
 
     const credentials = { username, password };
 
     try {
-        // Send the username and password to your backend login endpoint
+        // Send credentials to backend
         const response = await fetch('https://anka-vkrl.onrender.com/login', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(credentials),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(credentials)
         });
 
-        // Check if the response was successful (HTTP status 200)
         if (response.ok) {
-            // Login successful, redirect the user
-            window.location.href = "page.html"; // YONLENDIRILECEK LINK
+            console.log('Login successful!');
+            window.location.href = "page.html"; // Redirect after success
         } else {
-            // Login failed, show an error message
             const errorData = await response.json();
             alert(errorData.message || "Login failed. Please check your username and password.");
         }
     } catch (error) {
-        // Handle any network errors
         console.error('Network error:', error);
         alert("An error occurred. Please try again later.");
     }
 }
 
-// Tüm .hidden sınıfındaki elementleri seçiyoruz
+// Hover effect for .hidden elements
 const hiddenElements = document.querySelectorAll(".hidden");
-
 hiddenElements.forEach((element) => {
-    const parent = element.parentElement; // Ebeveyn elementi seçiyoruz
+    const parent = element.parentElement;
 
-    // Fareyle üzerine gelince visible sınıfını ekle
     parent.addEventListener("mouseover", () => {
         element.classList.add("visible");
         element.classList.remove("hidden");
     });
 
-    // Fare ayrılınca tekrar hidden sınıfına dön
     parent.addEventListener("mouseout", () => {
         element.classList.add("hidden");
         element.classList.remove("visible");
