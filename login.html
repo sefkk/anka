@@ -24,18 +24,19 @@
             </div>
             <h2>Log-In</h2>
             <p>Please enter your username and password given to you by ANKA's HR Committee.</p>
-            <form>
+            <form id="loginForm">
                 <div class="input-group">
-                    <input type="text" placeholder="username" required>
+                    <input type="text" id="username" name="username" placeholder="username" required>
                 </div>
                 <div class="input-group">
-                    <input type="password" placeholder="password" required>
+                    <input type="password" id="password" name="password" placeholder="password" required>
                 </div>
                 <div class="forgot-password">
                     <a href="#">Forgot Password &#x1F449;&#x1F448;</a>
                 </div>
-                <button type="submit" class="btn">Log In</button>
+                <button type="submit" id="loginBtn" class="btn">Log In</button>
             </form>
+
             <!-- <p class="divider">Hover</p>
             <div class="social-icons">
                 <button class="btn-last btn-1"><span class="hidden">A</span></button>

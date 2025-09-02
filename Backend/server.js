@@ -3,50 +3,71 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const User = require('./models/user');
+const User = require('./models/user'); // your User model
+
 const app = express();
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 5000; // Render sets process.env.PORT automatically
 
 // Middleware
+app.use(cors({
+    origin: "*", // for testing; later restrict to your frontend Render URL
+    methods: ["GET", "POST"],
+    allowedHeaders: ["Content-Type"]
+}));
 app.use(express.json());
-app.use(cors());
 
-// The Login Endpoint
+// Test route (to verify Render is serving correctly)
+app.get('/', (req, res) => {
+    res.send("✅ Backend is running");
+});
+
+// Login route
 app.post('/login', async (req, res) => {
-    console.log("a");
-    const { username, password } = req.body;
-    console.log("b");
     try {
-        console.log("c");
+        const username = req.body.username?.trim();
+        const password = req.body.password?.trim();
+
+        console.log('Received username:', username);
+        console.log('Received password:', password);
+
         const user = await User.findOne({ username });
-        if (!user || !(await user.matchPassword(password))) {
+        if (!user) {
+            console.log('User not found');
             return res.status(401).json({ message: 'Invalid username or password' });
         }
+
+        // Make sure your User model defines .matchPassword correctly (bcrypt compare)
+        const isMatch = await user.matchPassword(password);
+        if (!isMatch) {
+            console.log('Password does not match!');
+            return res.status(401).json({ message: 'Invalid username or password' });
+        }
+
+        console.log('Login successful for:', username);
         res.status(200).json({ message: 'Login successful' });
-    } catch (error) {
-        console.error(error);
-        console.log("d");
+
+    } catch (err) {
+        console.error('Server error:', err);
         res.status(500).json({ message: 'Server error' });
     }
 });
 
-// Correct connection logic: Wait for the database connection before starting the server
+// Connect to MongoDB and start server
 const connectDB = async () => {
     try {
-        console.log("e");
-        await mongoose.connect(process.env.MONGO_URI);
-        console.log("f");
-        console.log('Connected to MongoDB');
+        await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        });
+        console.log('✅ Connected to MongoDB');
 
-        // Only start the server after a successful connection
+        // Start listening AFTER successful DB connection
         app.listen(PORT, () => {
-            console.log("g");
-            console.log(`Server running on port ${PORT}`);
+            console.log(`🚀 Server running on port ${PORT}`);
         });
 
-    } catch (error) {
-        console.log("h");
-        console.error('Could not connect to MongoDB:', error);
+    } catch (err) {
+        console.error('❌ Could not connect to MongoDB:', err);
         process.exit(1);
     }
 };
