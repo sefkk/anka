@@ -20,7 +20,8 @@ async function onSubmit(event) {
 
         if (response.ok) {
             console.log('Login successful!');
-            window.location.href = "page.html"; // Redirect after success
+            sessionStorage.setItem('isLoggedIn', 'true'); // Store the value in sessionStorage 
+            window.location.href = "loggedIn.html"; // Redirect after success
         } else {
             const errorData = await response.json();
             alert(errorData.message || "Login failed. Please check your username and password.");
