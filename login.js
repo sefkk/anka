@@ -1,5 +1,9 @@
+// login.js
+
 // Select the login button
 document.getElementById('loginBtn').addEventListener('click', onSubmit);
+
+console.log("hello")
 
 async function onSubmit(event) {
     event.preventDefault();
@@ -19,9 +23,27 @@ async function onSubmit(event) {
         });
 
         if (response.ok) {
-            console.log('Login successful!');
+            // This line is where the data from the server is processed
+            const data = await response.json(); 
+
+            // This line tries to get the name from the server response
+            console.log(data.name); 
+            
+            // This line saves the name to sessionStorage
+            sessionStorage.setItem('userName', data.name);
+            
             sessionStorage.setItem('isLoggedIn', 'true'); // Store the value in sessionStorage 
             window.location.href = "loggedIn.html"; // Redirect after success
+
+            // For the login message
+            const dotIndex = username.indexOf('.');
+            const namePart = username.slice(0, dotIndex);
+            const capitalizedName = namePart.charAt(0).toUpperCase() + namePart.slice(1);
+
+            sessionStorage.setItem("name", capitalizedName);
+
+            console.log(sessionStorage.getItem("name"));
+
         } else {
             const errorData = await response.json();
             alert(errorData.message || "Login failed. Please check your username and password.");
@@ -31,6 +53,7 @@ async function onSubmit(event) {
         alert("An error occurred. Please try again later.");
     }
 }
+
 
 // Hover effect for .hidden elements
 const hiddenElements = document.querySelectorAll(".hidden");

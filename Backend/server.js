@@ -44,7 +44,11 @@ app.post('/login', async (req, res) => {
         }
 
         console.log('Login successful for:', username);
-        res.status(200).json({ message: 'Login successful' });
+        // Corrected line: Include the user's name in the response
+        res.status(200).json({ 
+            message: 'Login successful', 
+            name: user.name  // <-- This sends the name
+        });
 
     } catch (err) {
         console.error('Server error:', err);
