@@ -1860,3 +1860,30 @@ input {
   padding-top: 20px !important;
   border-radius: 10px;
 }
+
+
+
+
+/* Basic styling for the welcome section */
+.welcome-section {
+    padding: 40px 20px;
+    text-align: left;
+    background-color: #f4f4f4; /* A light grey background */
+    border-bottom: 2px solid #ddd;
+}
+
+/* Styling for the welcome message text */
+#welcomeMessage {
+    /* font-family: 'Times New Roman', Times, serif; Use a fancy font you have */ 
+    font-size: 2rem; /* Make the font size larger */
+    color: #333; /* A dark color for good readability */
+    margin: 1; /* Remove default margin */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+}
+
+/* You might want to adjust this for mobile screens */
+@media (max-width: 768px) {
+    #welcomeMessage {
+        font-size: 2rem;
+    }
+} 
