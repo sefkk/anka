@@ -1380,6 +1380,7 @@ ul{
   font-size: 1.2rem;
   max-width: 900px;
   margin: 0 auto;
+  color: #3a3a3a;
 }
 
 .intro, .responsibilities {
@@ -1488,49 +1489,49 @@ ul{
 
 /* IT (Burgundy) */
 .hero-it { background: linear-gradient(135deg, #ffffff, #800020); }
-.intro-it h2, .responsibilities-it h2, .team-member-it h3 { color: #800020; }
+.responsibilities-it h2, .team-member-it h3 { color: #800020; }
 .contact-cta-it { background: #800020; }
 .contact-cta-it a { color: #800020; }
 
 /* Marketing (Yellow) */
 .hero-marketing { background: linear-gradient(135deg, #ffffff, #f1c40f); }
-.intro-marketing h2, .responsibilities-marketing h2, .team-member-marketing h3 { color: #f1c40f; }
+.responsibilities-marketing h2, .team-member-marketing h3 { color: #f1c40f; }
 .contact-cta-marketing { background: #f1c40f; }
 .contact-cta-marketing a { color: #f1c40f; }
 
 /* Entrepreneurship (Red) */
 .hero-entre { background: linear-gradient(135deg, #ffffff, #e74c3c); }
-.intro-entre h2, .responsibilities-entre h2, .team-member-entre h3 { color: #e74c3c; }
+.responsibilities-entre h2, .team-member-entre h3 { color: #e74c3c; }
 .contact-cta-entre { background: #e74c3c; }
 .contact-cta-entre a { color: #e74c3c; }
 
 /* Academic (Blue) */
 .hero-academic { background: linear-gradient(135deg, #ffffff, #3498db); }
-.intro-academic h2, .responsibilities-academic h2, .team-member-academic h3 { color: #3498db; }
+.responsibilities-academic h2, .team-member-academic h3 { color: #3498db; }
 .contact-cta-academic { background: #3498db; }
 .contact-cta-academic a { color: #3498db; }
 
 /* Events (Green) */
 .hero-event { background: linear-gradient(135deg, #ffffff, #2ecc71); }
-.intro-event h2, .responsibilities-event h2, .team-member-event h3 { color: #2ecc71; }
+.responsibilities-event h2, .team-member-event h3 { color: #2ecc71; }
 .contact-cta-event { background: #2ecc71; }
 .contact-cta-event a { color: #2ecc71; }
 
 /* HR (Purple) */
 .hero-hr { background: linear-gradient(135deg, #ffffff, #9b59b6); }
-.intro-hr h2, .responsibilities-hr h2, .team-member-hr h3 { color: #9b59b6; }
+.responsibilities-hr h2, .team-member-hr h3 { color: #9b59b6; }
 .contact-cta-hr { background: #9b59b6; }
 .contact-cta-hr a { color: #9b59b6; }
 
 /* Law (Dark Gray) */
 .hero-law { background: linear-gradient(135deg, #ffffff, #34495e); }
-.intro-law h2, .responsibilities-law h2, .team-member-law h3 { color: #34495e; }
+.responsibilities-law h2, .team-member-law h3 { color: #34495e; }
 .contact-cta-law { background: #34495e; }
 .contact-cta-law a { color: #34495e; }
 
 /* International Relations (Coral) */
 .hero-int-relations { background: linear-gradient(135deg, #ffffff, #ff6f61); }
-.intro-int-relations h2, .responsibilities-int-relations h2, .team-member-int-relations h3 { color: #ff6f61; }
+.responsibilities-int-relations h2, .team-member-int-relations h3 { color: #ff6f61; }
 .contact-cta-int-relations { background: #ff6f61; }
 .contact-cta-int-relations a { color: #ff6f61; }
 
