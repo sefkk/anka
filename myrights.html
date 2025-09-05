@@ -31,10 +31,23 @@
     </div>
     </section>
 
-
-
     <!-- Footer -->
     <div id="footer"></div>
+
+    <!-- Javascript Sources -->
+    <script>
+    fetch('Partials/navbar.html')
+        .then(res => res.text())
+        .then(data => {
+        document.getElementById('navbar').innerHTML = data;
+        });
+
+    fetch('Partials/footer.html')
+        .then(res => res.text())
+        .then(data => {
+        document.getElementById('footer').innerHTML = data;
+        });
+    </script>
     
 </body>
 </html>
