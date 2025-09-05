@@ -35,40 +35,6 @@
 
     <!-- Footer -->
     <div id="footer"></div>
-
-    <!-- Javascript Sources -->
-    <script>
-    fetch('Partials/navbar.html')
-        .then(res => res.text())
-        .then(data => {
-        document.getElementById('navbar').innerHTML = data;
-        });
-
-    fetch('Partials/footer.html')
-        .then(res => res.text())
-        .then(data => {
-        document.getElementById('footer').innerHTML = data;
-        });
-
-
-    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-    
-    // If the user is not logged in, redirect them to the login page
-    if (isLoggedIn !== 'true') {
-        window.location.href = 'login.html';
-    } else {
-        // Get the user's name from sessionStorage
-        const userName = sessionStorage.getItem('name');
-        const welcomeElement = document.getElementById('welcomeMessage');
-
-        // Display the welcome message
-        if (userName) {
-            welcomeElement.textContent = `Welcome, ${userName}!`;
-        } else {
-            welcomeElement.textContent = "Welcome, member!";
-        }
-    }
-    </script>
     
 </body>
 </html>
