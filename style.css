@@ -1862,7 +1862,40 @@ input {
   border-radius: 10px;
 }
 
+/* Simple Linktree-style buttons */
+        .services-section {
+            text-align: center;
+            margin: 3rem 0;
+        }
 
+        .services-section h2 {
+            margin-bottom: 1rem;
+        }
+
+        .linktree-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .linktree-buttons a {
+            display: block;
+            width: 80%;
+            max-width: 400px;
+            padding: 1rem;
+            border-radius: 12px;
+            background: #222;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+        }
+
+        .linktree-buttons a:hover {
+            background: #444;
+            transform: scale(1.05);
+        }
 
 
 /* Basic styling for the welcome section */

@@ -8,42 +8,6 @@
     <link href='https://fonts.googleapis.com/css?family=Berkshire Swash' rel='stylesheet'>
     <link rel="stylesheet" href="style.css"/> 
     <title>Anka Member Page</title>
-    <style>
-        /* Simple Linktree-style buttons */
-        .services-section {
-            text-align: center;
-            margin: 3rem 0;
-        }
-
-        .services-section h2 {
-            margin-bottom: 1rem;
-        }
-
-        .linktree-buttons {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .linktree-buttons a {
-            display: block;
-            width: 80%;
-            max-width: 400px;
-            padding: 1rem;
-            border-radius: 12px;
-            background: #222;
-            color: #fff;
-            text-decoration: none;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
-        }
-
-        .linktree-buttons a:hover {
-            background: #444;
-            transform: scale(1.05);
-        }
-    </style>
 </head>
 <body>
 
@@ -57,17 +21,17 @@
         <h1 id="welcomeMessage"></h1>
     </section>
 
-    <!-- Services Section -->
-    <section class="services-section">
-        <h2>Our Services</h2>
-        <div class="linktree-buttons">
-            <a href="service1.html" target="_blank">Legal Consultancy</a>
-            <a href="https://ankattd.vercel.app/" target="_blank">ANKA Talent Pool</a>
-            <a href="service3.html" target="_blank">Guides For Newcomers</a>
-            <a href="service4.html" target="_blank">Special Events</a>
-            <a href="service5.html" target="_blank">Announcements</a>
-        </div>
+    <!-- Legal Consultancy Form -->
+    <section class="apply-section">
+    <h2>Request Legal Consultancy</h2>
+    <p class="apply-intro">Fill out the form below and our team will contact you.</p>
+    <div class="form-container">
+        <iframe data-tally-src="https://tally.so/embed/nre7ZM?alignLeft=1&hideTitle=1&transparentBackground=1&dynamicHeight=1" loading="lazy" width="100%" height="2877" frameborder="0" marginheight="0" marginwidth="0" title="myRights ANKA"></iframe>
+<script>var d=document,w="https://tally.so/widgets/embed.js",v=function(){"undefined"!=typeof Tally?Tally.loadEmbeds():d.querySelectorAll("iframe[data-tally-src]:not([src])").forEach((function(e){e.src=e.dataset.tallySrc}))};if("undefined"!=typeof Tally)v();else if(d.querySelector('script[src="'+w+'"]')==null){var s=d.createElement("script");s.src=w,s.onload=v,s.onerror=v,d.body.appendChild(s);}</script>
+    </div>
     </section>
+
+
 
     <!-- Footer -->
     <div id="footer"></div>
@@ -85,6 +49,7 @@
         .then(data => {
         document.getElementById('footer').innerHTML = data;
         });
+
 
     const isLoggedIn = sessionStorage.getItem('isLoggedIn');
     
@@ -104,6 +69,6 @@
         }
     }
     </script>
-
+    
 </body>
 </html>
