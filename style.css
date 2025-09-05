@@ -985,7 +985,7 @@ ul{
 .committee-card.marketing { background: linear-gradient(135deg, #ffffff, #f1c40f); }    /* White to Yellow */
 .committee-card.entrepreneurship { background: linear-gradient(135deg, #ffffff, #e74c3c); } /* White to Red */
 .committee-card.academic { background: linear-gradient(135deg, #ffffff, #3498db); }     /* White to Blue */
-.committee-card.event { background: linear-gradient(135deg, #ffffff, #2ecc71); }        /* White to Green */
+.committee-card.event { background: linear-gradient(135deg, #ffffff, #249957); }        /* White to Green */
 .committee-card.hr { background: linear-gradient(135deg, #ffffff, #9b59b6); }           /* White to Purple */
 .committee-card.law { background: linear-gradient(135deg, #ffffff, #34495e); }          /* White to Dark Blue-Grey */
 .committee-card.ir { background: linear-gradient(135deg, #ffffff, #ff6f61); }           /* White to Coral */
@@ -1512,10 +1512,10 @@ ul{
 .contact-cta-academic a { color: #3498db; }
 
 /* Events (Green) */
-.hero-event { background: linear-gradient(135deg, #ffffff, #2ecc71); }
-.responsibilities-event h2, .team-member-event h3 { color: #2ecc71; }
-.contact-cta-event { background: #2ecc71; }
-.contact-cta-event a { color: #2ecc71; }
+.hero-event { background: linear-gradient(135deg, #ffffff, #249957); }
+.responsibilities-event h2, .team-member-event h3 { color: #249957; }
+.contact-cta-event { background: #249957; }
+.contact-cta-event a { color: #249957; }
 
 /* HR (Purple) */
 .hero-hr { background: linear-gradient(135deg, #ffffff, #9b59b6); }
