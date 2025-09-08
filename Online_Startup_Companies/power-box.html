@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PowerBox | ANKA Association</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  
+<header>
+  <div id="navbar"></div>
+</header>
+
+<!-- Company Banner -->
+<section class="company-hero power-box">
+  <div class="company-hero-content">
+    <h1>PowerBox</h1>
+    <p class="tagline">When nothing works, PowerBox does</p>
+  </div>
+</section>
+
+<!-- About Section -->
+<section class="company-about">
+  <div class="container">
+    <h2>About Us</h2>
+    <p>
+      PowerBox is a smart, portable energy and communication hub designed to empower communities during natural disasters. 
+      Built with cutting-edge technologies like solar energy, IoT, and AI, PowerBox ensures reliable access to electricity 
+      and decentralized communication when conventional infrastructure fails.
+    </p>
+  </div>
+</section>
+
+<!-- Key Details -->
+<section class="company-details">
+  <div class="container">
+    <h2>Key Information</h2>
+    <div class="details-grid">
+      <div class="detail-item">
+        <span class="detail-label">Industry</span>
+        <span class="detail-value">E-commerce / Marketplace</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Founded</span>
+        <span class="detail-value">#</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Headquarters</span>
+        <span class="detail-value">#</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Website</span>
+        <span class="detail-value"><a href="https://epowerbox.nl/" target="_blank">epowerbox.nl</a></span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">App</span>
+        <span class="detail-value"><a href="nowhere" target="_blank">#</a></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services / Offerings -->
+<section class="company-services">
+  <div class="container">
+    <h2>What We Offer</h2>
+    <div class="services-grid">
+      <div class="service-card">
+        <i class="fas fa-handshake"></i>
+        <h3>Smart Communication Architecture</h3>
+        <p>PowerBox creates a mesh network topology that spans across the city, forming a new layer of communication infrastructure during disasters, warzones or whenever traditional communication fails. Like a spider web surrounding the urban landscape, this network ensures decentralized, resilient connectivity even when traditional systems collapse.</p>
+      </div>
+      <div class="service-card">
+        <i class="fas fa-bolt"></i>
+        <h3>AI-Powered Resource Management</h3>
+        <p>Each PowerBox unit is equipped with embedded sensors and integrated AI models to detect crowd presence and estimate headcount in real-time. This data enables automated resource allocation—such as power distribution, supply requests, or bandwidth prioritization—making the system both intelligent and self-optimizing.</p>
+      </div>
+      <div class="service-card">
+        <i class="fas fa-briefcase"></i>
+        <h3>Mini PowerBoxes & Mobile Adapters</h3>
+        <p>We are currently developing plug-in adapters that can connect directly to smartphones, transforming them into part of the PowerBox mesh network. These compact units act as Mini PowerBoxes, providing both emergency power and connectivity when users need it most.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<div id="footer"></div>
+
+<!-- Javascript Sources -->
+<script>
+  fetch('../Partials/navbar.html')
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById('navbar').innerHTML = data;
+    });
+
+  fetch('../Partials/footer.html')
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById('footer').innerHTML = data;
+    });
+</script>
+
+</body>
+</html>
