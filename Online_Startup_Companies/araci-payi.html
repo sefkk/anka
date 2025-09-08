@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aracı Payı | ANKA Association</title>
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  
+<header>
+  <div id="navbar"></div>
+</header>
+
+<!-- Company Banner -->
+<section class="company-hero araci-payi">
+  <div class="company-hero-content">
+    <h1>Aracı Payı</h1>
+    <p class="tagline">Where Safe Deals Meet Smart Collaboration</p>
+  </div>
+</section>
+
+<!-- About Section -->
+<section class="company-about">
+  <div class="container">
+    <h2>About Us</h2>
+    <p>
+      Aracı Payı is a platform that brings buyers and sellers together through intermediaries for safe shopping and 
+      collaboration, offering fast and effective solutions for everyone.
+    </p>
+    <p>
+      Sign up to post an ad, let intermediaries quickly find or sell the product/service you need, or become an intermediary yourself and start earning!
+    </p>
+  </div>
+</section>
+
+<!-- Key Details -->
+<section class="company-details">
+  <div class="container">
+    <h2>Key Information</h2>
+    <div class="details-grid">
+      <div class="detail-item">
+        <span class="detail-label">Industry</span>
+        <span class="detail-value">E-commerce / Marketplace</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Founded</span>
+        <span class="detail-value">#</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Headquarters</span>
+        <span class="detail-value">#</span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">Website</span>
+        <span class="detail-value"><a href="https://aracipayi.com/" target="_blank">aracipayi.com</a></span>
+      </div>
+      <div class="detail-item">
+        <span class="detail-label">App</span>
+        <span class="detail-value"><a href="https://play.google.com/store/apps/details?id=com.aracipayicom.app" target="_blank">Google Play Store</a></span>
+        <span class="detail-value"><a href="https://apps.apple.com/tr/app/arac%C4%B1-pay%C4%B1/id6741358444?l=tr" target="_blank">IOS</a></span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Services / Offerings -->
+<section class="company-services">
+  <div class="container">
+    <h2>What We Offer</h2>
+    <div class="services-grid">
+      <div class="service-card">
+        <i class="fas fa-handshake"></i>
+        <h3>Safe Transactions</h3>
+        <p>Secure environment for buyers and sellers to collaborate with trusted intermediaries.</p>
+      </div>
+      <div class="service-card">
+        <i class="fas fa-bolt"></i>
+        <h3>Fast Solutions</h3>
+        <p>Quick matching between needs and services to save time and money.</p>
+      </div>
+      <div class="service-card">
+        <i class="fas fa-briefcase"></i>
+        <h3>Earn as an Intermediary</h3>
+        <p>Take part as a trusted intermediary and generate income by connecting people.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<div id="footer"></div>
+
+<!-- Javascript Sources -->
+<script>
+  fetch('../Partials/navbar.html')
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById('navbar').innerHTML = data;
+    });
+
+  fetch('../Partials/footer.html')
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById('footer').innerHTML = data;
+    });
+</script>
+
+</body>
+</html>
