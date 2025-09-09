@@ -906,6 +906,7 @@ ul{
 .footer-logo {
   max-width: 350px;
   height: auto;
+  margin-left: -100px;
 }
 
 .footer-col:not(.logo-col) {
