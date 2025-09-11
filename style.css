@@ -206,6 +206,10 @@ html, body {
   opacity: 0.6;
 }
 
+.greeting {
+  border-radius: 18px;
+}
+
 .greeting-banner-abt {
   height: 580px;
   position: relative;
@@ -213,6 +217,7 @@ html, body {
   margin: 110px auto 60px auto;
   padding: 60px 20px;
   background: #e5925a;
+  border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   text-align: left;
   z-index: 1;
@@ -870,6 +875,7 @@ ul{
 	display: block;
 	transition: all 0.3s ease;
 }
+
 .footer-col ul li a:hover{
 	color: #e5925a;
 	padding-left: 8px;
@@ -1013,6 +1019,7 @@ ul{
   margin: 110px auto 60px auto;
   padding: 60px 20px;
   background: #e5925a;
+  border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   text-align: left;
   z-index: 1;
@@ -1257,6 +1264,7 @@ ul{
 .form-container iframe {
   border-radius: 10px;
   box-shadow: 0 0 25px rgba(0, 0, 0, 0.6);
+  padding-left: 10px;
 }
 
 /* ONLINE STARTUP HUB */
@@ -1285,6 +1293,7 @@ ul{
   text-align: left;
   z-index: 1;
   opacity: 0;
+  border-radius: 12px;
   transform: translateY(-30px);
   animation: fadeSlideIn 0.5s ease-out forwards;
   animation-delay: 0.3s;
@@ -1883,7 +1892,7 @@ input {
 .welcome-section {
     padding: 40px 20px;
     text-align: left;
-    background-color: #fff5f0; /* very soft background to match buttons */
+    background-color: #fae6db; /* very soft background to match buttons */
     border-bottom: 2px solid #ddd;
     border-radius: 15px;
     margin-bottom: 2rem;
@@ -1893,7 +1902,7 @@ input {
 #welcomeMessage {
     font-family: 'Ubuntu', sans-serif;
     font-size: 2.5rem;
-    color: #e5925a; /* match your accent color */
+    color: #df8448; /* match your accent color */
     margin: 0;
     line-height: 1.3;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.1);
@@ -1974,7 +1983,7 @@ a:hover {
 .company-hero.power-box {
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
-    url('Images/landscape-placeholder.svg');
+    url('Images/power-box.JPG');
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;

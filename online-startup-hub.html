@@ -1,22 +1,106 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ANKA Association</title>
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-
-  <!-- Favicon (optional) -->
   <link rel="icon" href="favicon.ico" type="image/x-icon" />
-
-  <!-- Google Fonts (optional) -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
-
-  <!-- Your main stylesheet -->
   <link rel="stylesheet" href="style.css" />
-</head>
+  <style>
+    /* CSS for Companies Section */
+    .companies-section {
+      padding: 50px 0;
+    }
 
+    .companies-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 0 20px;
+    }
+
+    .company-card {
+      background-color: #f9f9f9;
+      border: 1px inset #c64949;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 8px 6px 0 rgba(0, 0, 0, 0.4);
+      transition: transform 0.3s ease-in-out;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .company-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .company-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .company-card p {
+      font-size: 1rem;
+      color: #666;
+    }
+    
+    .card-link {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .load-more-container {
+      display: flex;
+      justify-content: center;
+      margin-top: 30px;
+    }
+    
+    .load-more-button {
+      padding: 12px 24px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: white;
+      background-color: #007bff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    
+    .load-more-button:hover {
+      background-color: #0056b3;
+    }
+
+    /* Adjusting existing styles for a better look */
+    .greeting-banner-srthub {
+      padding: 80px 20px;
+      background-size: cover;
+      background-position: center;
+      color: white;
+      text-align: center;
+    }
+    
+    .greeting-content-srthub h1 {
+      font-size: 2.5rem;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    @media (min-width: 768px) {
+      .companies-grid {
+        padding: 0 50px;
+      }
+    }
+  </style>
+</head>
 <body>
   
 <div class="background-image-srthub"></div>
@@ -25,25 +109,17 @@
     <div id="navbar"></div>
 </header>
 
-<!-- Greeting -->
 <section class="greeting-banner-srthub">
   <div class="greeting-content-srthub">
     <h1>Online Startup Hub</h1>
     <h1>Where Innovation Meets Opportunity</h1>
-    <p>Explore the teams that drive our mission forward. Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-      sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco 
-      laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum 
-      dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit 
-      anim id est laborum.</p>
+    <p>Explore the teams that drive our mission forward through the Startup Hub. By turning ideas into action, these teams strengthen our mission and shape a thriving future for the startup ecosystem, fostering innovation, collaboration, and growth while empowering entrepreneurs to create lasting impact and meaningful change in their communities.</p>
   </div>
 </section>
 
-<!-- Companies -->
-
-<!-- Committees -->
-<section class="committees-section">
-  <div class="committees-grid">
-    <div class="committee-card it araci-payi-card">
+<section class="companies-section">
+  <div class="companies-grid">
+    <div class="company-card it araci-payi-card">
       <a href="Online_Startup_Companies/araci-payi.html" class="card-link">
         <h3>Aracı Payı</h3>
         <p>Aracı Payı is a platform that brings buyers and sellers together through intermediaries for safe shopping and 
@@ -52,7 +128,7 @@
           find or sell the product/service you need, or become an intermediary yourself and start earning!</p>
       </a>
     </div>
-    <div class="committee-card it power-box-card">
+    <div class="company-card it power-box-card">
       <a href="Online_Startup_Companies/power-box.html" class="card-link">
         <h3>PowerBox</h3>
         <p>PowerBox is a smart, portable energy and communication hub designed to empower communities during natural disasters.<br><br>
@@ -60,12 +136,38 @@
           decentralized communication when conventional infrastructure fails.</p>
       </a>
     </div>
+    <!-- <div class="company-card">
+      <a href="#" class="card-link">
+        <h3>FutureTech Solutions</h3>
+        <p>FutureTech Solutions specializes in developing innovative software for the modern enterprise, focusing on efficiency and scalability. Our solutions are designed to help businesses of all sizes thrive in a digital-first world.</p>
+      </a>
+    </div>
+    <div class="company-card">
+      <a href="#" class="card-link">
+        <h3>EcoHarvest Innovations</h3>
+        <p>EcoHarvest Innovations is dedicated to sustainable agriculture through the use of smart farming techniques. We create tools and platforms that help farmers maximize yield while minimizing environmental impact.</p>
+      </a>
+    </div>
+    <div class="company-card">
+      <a href="#" class="card-link">
+        <h3>AeroDynamics Labs</h3>
+        <p>AeroDynamics Labs pushes the boundaries of drone technology for commercial and recreational use. Our cutting-edge designs and software provide superior performance and user experience.</p>
+      </a>
+    </div>
+    <div class="company-card">
+      <a href="#" class="card-link">
+        <h3>Quantum Leap Studios</h3>
+        <p>Quantum Leap Studios is a creative hub for video game development. We focus on narrative-driven games that immerse players in rich, dynamic worlds, combining compelling storytelling with engaging gameplay.</p>
+      </a>
+    </div> -->
+  </div>
+  <div class="load-more-container">
+    <button class="load-more-button">Load More</button>
+  </div>
 </section>
 
-<!-- Footer -->
 <div id="footer"></div>
 
-<!-- Javascript Sources -->
 <script>
   fetch('Partials/navbar.html')
     .then(res => res.text())
@@ -78,8 +180,29 @@
     .then(data => {
       document.getElementById('footer').innerHTML = data;
     });
+
+  // Simple script for Load More button (optional)
+  const loadMoreBtn = document.querySelector('.load-more-button');
+  const companiesGrid = document.querySelector('.companies-grid');
+  let counter = 0;
+
+  loadMoreBtn.addEventListener('click', () => {
+    // In a real application, you would fetch more data here.
+    // This is a placeholder to show the concept.
+    for (let i = 0; i < 6; i++) {
+      const newCompanyCard = document.createElement('div');
+      newCompanyCard.classList.add('company-card', 'new-card');
+      newCompanyCard.innerHTML = `
+        <a href="#" class="card-link">
+          <h3>New Company ${counter + 1}</h3>
+          <p>This is a description for a newly loaded company. It will be replaced with real data in a production environment.</p>
+        </a>
+      `;
+      companiesGrid.appendChild(newCompanyCard);
+      counter ++;
+    }
+  });
 </script>
 
 </body>
-
 </html>
