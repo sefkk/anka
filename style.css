@@ -1866,6 +1866,16 @@ input {
   border-radius: 10px;
 }
 
+.home-button{
+  text-decoration: none;
+  color: black;
+}
+
+.home-button:hover{
+  text-decoration: none;
+  color: rgb(231, 132, 18);
+}
+
 
 /* ========================
    WELCOME SECTION
