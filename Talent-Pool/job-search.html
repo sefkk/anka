@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anka Hub - Job Search</title>
+  <link rel="stylesheet" href="talent-pool-css.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <h1 class="logo"><a href="../Talent-Pool/talent-pool.html">ANKA Hub</a></h1>
+      <nav class="menu">
+        <a href="index.html">Home</a>
+        <a href="#jobs">Find Jobs</a>
+        <a href="#profile">My Profile</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <div class="auth-links">
+        <a href="#dashboard" class="login-link">Login</a>
+        <a href="#post" class="btn">Register</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Job Search Filters Section -->
+  <section class="job-search-section">
+    <div class="container">
+      <h2>Job Search</h2>
+
+      <div class="job-filters">
+        <div class="filter">
+          <label for="jobType">Job Type</label>
+          <select id="jobType">
+            <option value="">Select Job Type</option>
+            <option value="fulltime">Full-time</option>
+            <option value="parttime">Part-time</option>
+            <option value="contract">Contract</option>
+            <option value="internship">Internship</option>
+          </select>
+        </div>
+
+        <div class="filter">
+          <label for="experienceLevel">Experience Level</label>
+          <select id="experienceLevel">
+            <option value="">Select Experience Level</option>
+            <option value="entry">Entry Level</option>
+            <option value="mid">Mid Level</option>
+            <option value="senior">Senior Level</option>
+          </select>
+        </div>
+
+        <div class="filter">
+          <label for="location">Location</label>
+          <input type="text" id="location" placeholder="Enter location">
+        </div>
+
+        <div class="filter">
+          <button class="btn primary">Search</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Job Results Section -->
+  <section class="job-results-section container">
+    <h3>Available Jobs</h3>
+    <div id="job-results" class="card-grid">
+      <!-- Jobs will be injected here dynamically -->
+      <p class="no-results">Failed to fetch jobs</p>
+      <p class="no-results">No results found</p>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <div id="footer"></div>
+
+  <script>
+    // Placeholder fetch logic
+    fetch('Partials/footer.html')
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById('footer').innerHTML = data;
+      });
+  </script>
+
+
+<!-- Footer -->
+<div id="footer"></div>
+
+<!-- Javascript Sources -->
+<script>
+  fetch('../Partials/footer.html')
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById('footer').innerHTML = data;
+    });
+</script>
+
+</body>
+</html>

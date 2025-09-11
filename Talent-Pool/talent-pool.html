@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anka Hub</title>
+  <link rel="stylesheet" href="../Talent-Pool/talent-pool-css.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <h1 class="logo"><a href="../Talent-Pool/talent-pool.html">ANKA Hub</a></h1>
+      <nav class="menu">
+        <a href="../Talent-Pool/job-search.html">Find Jobs</a>
+        <a href="#profile">My Profile</a>
+        <a href="#dashboard">Dashboard</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+    <div class="auth-links">
+      <a href="#dashboard" class="login-link">Login</a>
+      <a href="#post" class="btn">Register</a>
+    </div>
+  </header>
+
+  <!-- Hero / Intro Section -->
+  <section class="hero">
+    <div class="container">
+      <h2>Find Your Dream Job</h2>
+      <p>
+        Connect with top employers and discover opportunities that match your skills and ambitions.
+      </p>
+      <div class="hero-buttons">
+        <a href="../Talent-Pool/job-search.html" class="btn primary">Browse Jobs</a>
+        <a href="#learn" class="btn secondary">Learn More</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Choose Section -->
+<section class="why-choose">
+  <div class="container">
+    <h3>Why Choose Job Marketplace</h3>
+    <div class="card-grid">
+      <!-- Card 1: Job Seekers -->
+      <div class="card">
+        <h4>For Job Seekers</h4>
+        <ul>
+          <li>Find opportunities that match your skills and experience</li>
+          <li>Apply with a streamlined, intuitive process</li>
+          <li>Track application status in real-time</li>
+          <li>Showcase your skills and get noticed</li>
+        </ul>
+      </div>
+
+      <!-- Card 2: Employers -->
+      <div class="card">
+        <h4>For Employers</h4>
+        <ul>
+          <li>Post jobs and reach qualified candidates quickly</li>
+          <li>Powerful search and filtering tools</li>
+          <li>Manage applications efficiently</li>
+          <li>Communicate directly with promising candidates</li>
+        </ul>
+      </div>
+
+      <!-- Card 3: Platform Benefits -->
+      <div class="card">
+        <h4>Platform Benefits</h4>
+        <ul>
+          <li>User-friendly interface designed for productivity</li>
+          <li>Secure and reliable platform</li>
+          <li>Regular updates with new features</li>
+          <li>Dedicated support team</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<div id="footer"></div>
+
+<!-- Javascript Sources -->
+<script>
+  fetch('../Partials/footer.html')
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById('footer').innerHTML = data;
+    });
+</script>
+
+</body>
+</html>
