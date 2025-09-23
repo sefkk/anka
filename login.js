@@ -8,8 +8,6 @@ document.addEventListener('keydown', function (event) {
   }
 });
 
-console.log("hello")
-
 async function onSubmit(event) {
     event.preventDefault();
 
