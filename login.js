@@ -2,6 +2,11 @@
 
 // Select the login button
 document.getElementById('loginBtn').addEventListener('click', onSubmit);
+document.addEventListener('keydown', function (event) {
+  if (event.key === 'Enter') {
+    onSubmit();
+  }
+});
 
 console.log("hello")
 

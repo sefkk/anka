@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css" />
+    <title>ANKA Association</title>
+</head>
+<body>
+    <!-- Navbar -->
+    <header>
+        <div id="navbar"></div>
+    </header>
+
+    <!-- ====== DISCOUNTS & CAMPAIGNS SECTION ====== -->
+    <section class="discounts-section">
+    <div class="discounts-container">
+        <h2 class="discounts-title">✨ ANKA Special Discounts and Campaigns ✨</h2>
+        <div id="discountsGrid" class="discounts-grid">
+        <!-- JS ile kampanya kartları buraya gelecek -->
+        </div>
+    </div>
+    </section>
+
+    <!-- Footer -->
+     <footer>
+        <div id="footer"></div>
+     </footer>
+
+    <script>
+
+    fetch('Partials/navbar.html')
+        .then(res => res.text())
+        .then(data => {
+        document.getElementById('navbar').innerHTML = data;
+    });
+
+    fetch('Partials/footer.html')
+        .then(res => res.text())
+        .then(data => {
+        document.getElementById('footer').innerHTML = data;
+    });
+    // Dinamik kampanya listesi
+    const discounts = [
+        {
+        title: "JUJU Amsterdam & jujumood.nl",
+        description:
+            "JUJU Amsterdam mağazasında ve jujumood.nl sitesinde %20 indirim sizi bekliyor. 💎",
+        note: "İndirim kodunu topluluk gruplarımızda bulabilirsiniz.",
+        image: "Images/juju1.png", // kendi görselini koyabilirsin
+        },
+    ];
+
+    // Kampanya kartlarını oluşturma
+    const discountsGrid = document.getElementById("discountsGrid");
+
+    discounts.forEach((discount) => {
+        const card = document.createElement("div");
+        card.className = "discount-card";
+
+        card.innerHTML = `
+        <div class="discount-image">
+            <img src="${discount.image}" alt="${discount.title}">
+        </div>
+        <div class="discount-content">
+            <h3>${discount.title}</h3>
+            <p>${discount.description}</p>
+            <span class="discount-note">${discount.note}</span>
+        </div>
+        `;
+
+        discountsGrid.appendChild(card);
+    });
+    </script>
+    <script src="security.js" defer></script>
+
+    
+</body>
+</html>
