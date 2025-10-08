@@ -1,16 +1,14 @@
-// server.js
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const User = require('./models/user'); // Your User model
-
+const User = require('./models/User'); // Make sure the file name matches
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-    origin: "*", // for testing; later restrict to your frontend Render URL
+    origin: "*", // for testing; later restrict to your frontend URL
     methods: ["GET", "POST"],
     allowedHeaders: ["Content-Type"]
 }));
@@ -31,14 +29,14 @@ app.post('/login', async (req, res) => {
         }
 
         const user = await User.findOne({ username: username.trim() });
-        if (!user) return res.status(401).json({ message: 'Invalid username or password' });
+        if (!user || user.password !== password.trim()) {
+            return res.status(401).json({ message: 'Invalid username or password' });
+        }
 
-        const isMatch = await user.matchPassword(password.trim());
-        if (!isMatch) return res.status(401).json({ message: 'Invalid username or password' });
-
+        // Successful login
         res.status(200).json({ message: 'Login successful', name: user.name });
     } catch (err) {
-        console.error('Server error:', err);
+        console.error('Login route error:', err);
         res.status(500).json({ message: 'Server error' });
     }
 });
