@@ -11,4 +11,25 @@
   <body>
     <iframe data-tally-src="https://tally.so/r/mV2qy6?transparentBackground=1" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0" title="ANKA Komite Pozisyonu Başvuru Formu"></iframe>
   </body>
+
+  <!-- Javascript Sources -->
+    <script>
+    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+    
+    // If the user is not logged in, redirect them to the login page
+    if (isLoggedIn !== 'true') {
+        window.location.href = 'login.html';
+    } else {
+        // Get the user's name from sessionStorage
+        const userName = sessionStorage.getItem('name');
+        const welcomeElement = document.getElementById('welcomeMessage');
+
+        // Display the welcome message
+        if (userName) {
+            welcomeElement.textContent = `Welcome ${userName}!`;
+        } else {
+            welcomeElement.textContent = "Welcome member!";
+        }
+    }
+    </script>
 </html>
