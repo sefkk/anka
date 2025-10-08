@@ -53,7 +53,7 @@ const companySchema = new mongoose.Schema({
     experience: String,
     jobtype: String
 });
-const Company = mongoose.model("Company", companySchema);
+const Company = mongoose.model("Company", companySchema, "talentpool-companies-data");
 
 // ------------------- Companies API -------------------
 app.get("/api/companies", async (req, res) => {
