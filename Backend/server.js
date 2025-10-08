@@ -6,7 +6,7 @@ const cors = require('cors');
 const User = require('./models/user'); // Your User model
 
 const app = express();
-const PORT = process.env.PORT || 5000; // Render sets process.env.PORT automatically
+const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
@@ -24,13 +24,16 @@ app.get('/', (req, res) => {
 // ------------------- Login route -------------------
 app.post('/login', async (req, res) => {
     try {
-        const username = req.body.username?.trim();
-        const password = req.body.password?.trim();
+        const { username, password } = req.body;
 
-        const user = await User.findOne({ username });
+        if (!username || !password) {
+            return res.status(400).json({ message: "Username and password are required" });
+        }
+
+        const user = await User.findOne({ username: username.trim() });
         if (!user) return res.status(401).json({ message: 'Invalid username or password' });
 
-        const isMatch = await user.matchPassword(password);
+        const isMatch = await user.matchPassword(password.trim());
         if (!isMatch) return res.status(401).json({ message: 'Invalid username or password' });
 
         res.status(200).json({ message: 'Login successful', name: user.name });
@@ -61,28 +64,21 @@ app.get("/api/companies", async (req, res) => {
         const companies = await Company.find();
         res.json(companies);
     } catch (err) {
-        console.error(err);
+        console.error('Failed to fetch companies:', err);
         res.status(500).json({ message: "Failed to fetch companies" });
     }
 });
 
 // ------------------- Connect to MongoDB & Start Server -------------------
-const connectDB = async () => {
-    try {
-        await mongoose.connect(process.env.MONGO_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
-        console.log('✅ Connected to MongoDB');
-
-        app.listen(PORT, () => {
-            console.log(`🚀 Server running on port ${PORT}`);
-        });
-
-    } catch (err) {
-        console.error('❌ Could not connect to MongoDB:', err);
-        process.exit(1);
-    }
-};
-
-connectDB();
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+.then(() => {
+    console.log('✅ Connected to MongoDB');
+    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+})
+.catch(err => {
+    console.error('❌ Could not connect to MongoDB:', err);
+    process.exit(1);
+});
