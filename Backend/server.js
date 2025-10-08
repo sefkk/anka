@@ -3,7 +3,7 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const User = require('./models/user'); // your User model
+const User = require('./models/user'); // Your User model
 
 const app = express();
 const PORT = process.env.PORT || 5000; // Render sets process.env.PORT automatically
@@ -16,47 +16,57 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Test route (to verify Render is serving correctly)
+// ------------------- Test route -------------------
 app.get('/', (req, res) => {
     res.send("✅ Backend is running");
 });
 
-// Login route
+// ------------------- Login route -------------------
 app.post('/login', async (req, res) => {
     try {
         const username = req.body.username?.trim();
         const password = req.body.password?.trim();
 
-        console.log('Received username:', username);
-        console.log('Received password:', password);
-
         const user = await User.findOne({ username });
-        if (!user) {
-            console.log('User not found');
-            return res.status(401).json({ message: 'Invalid username or password' });
-        }
+        if (!user) return res.status(401).json({ message: 'Invalid username or password' });
 
-        // Make sure your User model defines .matchPassword correctly (bcrypt compare)
         const isMatch = await user.matchPassword(password);
-        if (!isMatch) {
-            console.log('Password does not match!');
-            return res.status(401).json({ message: 'Invalid username or password' });
-        }
+        if (!isMatch) return res.status(401).json({ message: 'Invalid username or password' });
 
-        console.log('Login successful for:', username);
-        // Corrected line: Include the user's name in the response
-        res.status(200).json({ 
-            message: 'Login successful', 
-            name: user.name  // <-- This sends the name
-        });
-
+        res.status(200).json({ message: 'Login successful', name: user.name });
     } catch (err) {
         console.error('Server error:', err);
         res.status(500).json({ message: 'Server error' });
     }
 });
 
-// Connect to MongoDB and start server
+// ------------------- Company model -------------------
+const companySchema = new mongoose.Schema({
+    name: String,
+    industry: String,
+    description_short: String,
+    description_long: String,
+    headquarters: String,
+    website: String,
+    logo_url: String,
+    apply_url: String,
+    experience: String,
+    jobtype: String
+});
+const Company = mongoose.model("Company", companySchema);
+
+// ------------------- Companies API -------------------
+app.get("/api/companies", async (req, res) => {
+    try {
+        const companies = await Company.find();
+        res.json(companies);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Failed to fetch companies" });
+    }
+});
+
+// ------------------- Connect to MongoDB & Start Server -------------------
 const connectDB = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI, {
@@ -65,7 +75,6 @@ const connectDB = async () => {
         });
         console.log('✅ Connected to MongoDB');
 
-        // Start listening AFTER successful DB connection
         app.listen(PORT, () => {
             console.log(`🚀 Server running on port ${PORT}`);
         });

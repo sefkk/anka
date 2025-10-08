@@ -77,20 +77,13 @@
     </div>
   </section>
 
+  <div id="modal" class="modal-overlay">
+  <div class="modal-content" id="modal-content">
+    <!-- content will be injected dynamically -->
+  </div>
+</div>
+
   <!-- Footer -->
-  <div id="footer"></div>
-
-  <script>
-    // Placeholder fetch logic
-    fetch('Partials/footer.html')
-      .then(res => res.text())
-      .then(data => {
-        document.getElementById('footer').innerHTML = data;
-      });
-  </script>
-
-
-<!-- Footer -->
 <div id="footer"></div>
 
 <!-- Javascript Sources -->
@@ -119,6 +112,9 @@
         }
     }
 </script>
+
+<!-- Javascript Sources -->
+<script src="talent-pool.js" defer></script>
 
 </body>
 </html>
