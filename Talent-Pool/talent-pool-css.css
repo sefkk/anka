@@ -479,22 +479,28 @@ ul{
 }
 
 /* Job Cards */
+/* Job Cards Grid - Full Width Vertical Layout */
 .card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 25px;
-  justify-items: center;
+  display: flex;
+  flex-direction: column; /* stack cards top to bottom */
+  gap: 25px; /* vertical spacing between cards */
+  align-items: center; /* center cards horizontally */
+  width: 100%;
+  padding: 0 10px; /* small space from the screen edges */
+  box-sizing: border-box;
 }
 
+/* Individual Card */
 .card {
   background: #fff;
   border-radius: 14px;
-  padding: 25px 20px;
+  padding: 25px 30px; /* some internal spacing */
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
   text-align: left;
   transition: all 0.3s ease;
   width: 100%;
-  max-width: 350px;
+  max-width: 1200px; /* cards almost full screen on large screens */
+  box-sizing: border-box;
 }
 
 .card:hover {
@@ -502,25 +508,195 @@ ul{
   box-shadow: 0 12px 28px rgba(0,0,0,0.12);
 }
 
+/* Card Header (Logo + Name) - Centered */
+.card div {
+  display: flex;
+  flex-direction: column; /* stack logo and text vertically */
+  align-items: center;    /* center everything horizontally */
+  margin-bottom: 20px;
+  text-align: center;     /* center text under logo */
+}
+
+.card div img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 12px;  /* space between logo and title */
+}
+
 .card h4 {
-  font-size: 20px;
-  margin-bottom: 12px;
+  font-size: 24px;
+  margin: 0;
   color: #fd9e5e;
   font-weight: 600;
 }
 
-.card p {
+.card p.meta {
   font-size: 14px;
-  color: #555;
-  margin-bottom: 8px;
+  color: #777;
+  margin-top: 4px;
 }
 
 /* Card Button */
 .card .btn {
   display: block;
   margin-top: 15px;
-  width: 100%;
+  width: 200px;
   text-align: center;
+  padding: 12px 0;
+  border-radius: 12px;
+  background: #fd9e5e;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.card .btn:hover {
+  background: #e87f33;
+  transform: translateY(-2px);
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none; /* prevents interaction when hidden */
+  transition: opacity 0.4s ease-in-out; /* smoother fade */
+}
+
+/* Show the modal */
+.modal-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* Modal Content */
+.modal-content {
+  background: #fff;
+  border-radius: 16px;
+  padding: 30px 25px;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+  transform: translateY(-30px) scale(0.95);
+  opacity: 0;
+  transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out; /* smooth slide + fade */
+}
+
+/* Animate modal content on show */
+.modal-overlay.active .modal-content {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+/* Modal Close Button */
+.modal-content .close-btn {
+  background: #fd9e5e;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 15px;
+  float: right;
+  transition: background 0.3s ease;
+}
+
+.modal-content .close-btn:hover {
+  background: #e87f33;
+}
+
+/* Modal text styling */
+.modal-content h4 {
+  margin-top: 0;
+  color: #fd9e5e;
+}
+
+.modal-content p {
+  margin: 8px 0;
+  color: #555;
+}
+
+/* Modal Buttons Container */
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end; /* buttons aligned to right */
+  gap: 12px; /* space between Apply and Close */
+  margin-top: 20px;
+}
+
+/* Apply button inside modal */
+.modal-buttons .apply-btn {
+  display: inline-flex;          /* allows flex centering */
+  align-items: center;           /* vertical center */
+  justify-content: center;       /* horizontal center */
+  background: #a74e28;           /* green color */
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 22px;            /* vertical + horizontal padding */
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 1;                /* prevents text misalignment */
+  transition: all 0.3s ease;
+}
+
+.modal-buttons .apply-btn:hover {
+  background: #907e71;
+}
+
+/* Close button */
+.modal-buttons .close-btn {
+  background: #fd9e5e;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.modal-buttons .close-btn:hover {
+  background: #e87f33;
+}
+
+/* Responsive */
+@media(max-width:768px) {
+  .card {
+    padding: 20px;
+    width: 100%;
+  }
+
+  .card div img {
+    width: 60px;
+    height: 60px;
+    margin-right: 12px;
+  }
+
+  .card h4 {
+    font-size: 20px;
+  }
+
+  .card p {
+    font-size: 14px;
+  }
+
+  .card .btn {
+    width: 100%;
+  }
 }
 
 /* Responsive */
