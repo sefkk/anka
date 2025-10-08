@@ -350,11 +350,6 @@ ul{
 }
 }
 
-
-
-
-
-
 /* JOB SEARCH */
 
 /* Job Search Section */
@@ -538,7 +533,6 @@ ul{
   margin-top: 4px;
 }
 
-/* Card Button */
 .card .btn {
   display: block;
   margin-top: 15px;
@@ -550,6 +544,8 @@ ul{
   color: #fff;
   font-weight: 600;
   text-decoration: none;
+  border: none;       /* <-- ADD THIS */
+  cursor: pointer;    /* optional: show pointer on hover */
   transition: all 0.3s ease;
 }
 
