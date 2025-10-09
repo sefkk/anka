@@ -15,9 +15,9 @@
     <div class="container nav-container">
       <h1 class="logo"><a href="../Talent-Pool/talent-pool.html">ANKA Hub</a></h1>
       <nav class="menu">
-        <a href="../index.html">Home</a>
+        <a href="../loggedIn.html">Home</a>
         <a href="#jobs">Find Jobs</a>
-        <a href="#profile">My Profile</a>
+        <a href="my-profile.html">My Profile</a>
         <a href="#dashboard">Dashboard</a>
         <a href="#faq">FAQ</a>
       </nav>
@@ -38,10 +38,10 @@
           <label for="jobType">Job Type</label>
           <select id="jobType">
             <option value="">Select Job Type</option>
-            <option value="fulltime">Full-time</option>
-            <option value="parttime">Part-time</option>
-            <option value="contract">Contract</option>
-            <option value="internship">Internship</option>
+            <option value="full-time">Full-time</option>
+            <option value="part-time">Part-time</option>
+            <!-- <option value="contract">Contract</option> 
+            <option value="internship">Internship</option> --> 
           </select>
         </div>
 
@@ -49,9 +49,10 @@
           <label for="experienceLevel">Experience Level</label>
           <select id="experienceLevel">
             <option value="">Select Experience Level</option>
-            <option value="entry">Entry Level</option>
+            <option value="internship">Internship</option>
+            <option value="junior">Junior / Entry</option>
             <option value="mid">Mid Level</option>
-            <option value="senior">Senior Level</option>
+            <option value="senior">Senior</option>
           </select>
         </div>
 
@@ -95,7 +96,7 @@
     });
 
     const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-    
+
     // If the user is not logged in, redirect them to the login page
     if (isLoggedIn !== 'true') {
         window.location.href = '../login.html';
