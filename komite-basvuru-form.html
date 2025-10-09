@@ -8,8 +8,17 @@
       iframe { position: absolute; top: 0; right: 0; bottom: 0; left: 0; border: 0; }
     </style>
   </head>
+
   <body>
+    <header>  
+    <!-- Navbar -->
+    <div id="navbar"></div>
+  </header>
+
     <iframe data-tally-src="https://tally.so/r/mV2qy6?transparentBackground=1" width="100%" height="100%" frameborder="0" marginheight="0" marginwidth="0" title="ANKA Komite Pozisyonu Başvuru Formu"></iframe>
+
+    <!-- Footer -->
+    <div id="footer"></div>
   </body>
 
   <!-- Javascript Sources -->
@@ -31,5 +40,18 @@
             welcomeElement.textContent = "Welcome member!";
         }
     }
+
+    fetch('Partials/navbar.html')
+      .then(res => res.text())
+      .then(data => {
+      document.getElementById('navbar').innerHTML = data;
+    });
+
+    fetch('Partials/footer.html')
+      .then(res => res.text())
+      .then(data => {
+      document.getElementById('footer').innerHTML = data;
+      });
+      
     </script>
 </html>
