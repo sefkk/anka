@@ -41,6 +41,29 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// ------------------- Get user by username -------------------
+app.get('/api/users', async (req, res) => {
+  try {
+    const { username } = req.query;
+    if (!username) {
+      return res.status(400).json({ message: "Username is required" });
+    }
+
+    const user = await User.findOne({ username: username.trim() });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { password, ...safeUser } = user.toObject();
+    res.json(safeUser);
+  } catch (err) {
+    console.error("❌ Error fetching user:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
 // ------------------- Company model -------------------
 const companySchema = new mongoose.Schema({
     name: String,
@@ -80,3 +103,6 @@ mongoose.connect(process.env.MONGO_URI, {
     console.error('❌ Could not connect to MongoDB:', err);
     process.exit(1);
 });
+
+
+
