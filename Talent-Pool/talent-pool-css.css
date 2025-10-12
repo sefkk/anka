@@ -486,16 +486,26 @@ ul{
 }
 
 /* Individual Card */
-.card {
-  background: #fff;
-  border-radius: 14px;
-  padding: 25px 30px; /* some internal spacing */
+.card{
+  max-width: clamp(900px, 92vw, 1200px);
+  padding-block: clamp(14px, 2.0vw, 22px);
+  padding-inline: clamp(18px, 3vw, 32px) clamp(200px, 32vw, 460px);
+
+  border-radius: 18px;
   box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-  text-align: left;
-  transition: all 0.3s ease;
-  width: 100%;
-  max-width: 1200px; /* cards almost full screen on large screens */
-  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+/* Sağ Panel*/
+.card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background: linear-gradient(90deg,#7a7a7a,#cfcfcf);
+  clip-path: polygon(62% 0, 100% 0, 100% 100%, 42% 100%);
+  z-index:1;
 }
 
 .card:hover {
@@ -503,21 +513,29 @@ ul{
   box-shadow: 0 12px 28px rgba(0,0,0,0.12);
 }
 
-/* Card Header (Logo + Name) - Centered */
-.card div {
-  display: flex;
-  flex-direction: column; /* stack logo and text vertically */
-  align-items: center;    /* center everything horizontally */
-  margin-bottom: 20px;
-  text-align: center;     /* center text under logo */
+/* Tum icerikleri sol yukariya yonlendirme */
+.card > *{ position: relative;
+  z-index:2;
+  text-align:left !important; 
 }
 
-.card div img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 12px;
-  margin-bottom: 12px;  /* space between logo and title */
+/* + Üstteki başlık/kapak div’ini merkezden çıkarıyoruz */
+.card div{ display:block; 
+  margin-bottom: clamp(6px,1.2vw,12px);
+}
+
+.card div img{
+  position: absolute;
+  left: 140%;       
+  top: 100%;        
+  transform: translate(-50%, -50%);
+  width: clamp(72px, 9vw, 130px);
+  height: auto;
+  object-fit: contain;
+  z-index: 3;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .card h4 {
@@ -527,26 +545,18 @@ ul{
   font-weight: 600;
 }
 
-.card p.meta {
-  font-size: 14px;
-  color: #777;
-  margin-top: 4px;
+.card h4{ font-size: clamp(18px,2.1vw,24px);
+  margin:0 0 4px 0; 
+  color:#fd9e5e;
+}
+.card p, .card p.meta{ margin: 2px 0 8px;
+  font-size: clamp(13px,1.8vw,14px);
+  color:#555; 
 }
 
-.card .btn {
-  display: block;
-  margin-top: 15px;
-  width: 200px;
-  text-align: center;
-  padding: 12px 0;
-  border-radius: 12px;
-  background: #fd9e5e;
-  color: #fff;
-  font-weight: 600;
-  text-decoration: none;
-  border: none;       /* <-- ADD THIS */
-  cursor: pointer;    /* optional: show pointer on hover */
-  transition: all 0.3s ease;
+.card .btn{ margin-top: 10px;
+  min-width: 180px;
+  border: none;
 }
 
 .card .btn:hover {
@@ -638,7 +648,7 @@ ul{
   display: inline-flex;          /* allows flex centering */
   align-items: center;           /* vertical center */
   justify-content: center;       /* horizontal center */
-  background: #a74e28;           /* green color */
+  background: #fd9e5e;           /* green color */
   color: #fff;
   text-decoration: none;
   padding: 10px 22px;            /* vertical + horizontal padding */
@@ -655,7 +665,7 @@ ul{
 
 /* Close button */
 .modal-buttons .close-btn {
-  background: #fd9e5e;
+  background: #6d6c6b;
   border: none;
   padding: 10px 20px;
   border-radius: 12px;
@@ -670,28 +680,18 @@ ul{
 }
 
 /* Responsive */
-@media(max-width:768px) {
-  .card {
-    padding: 20px;
-    width: 100%;
+@media (max-width: 640px){
+  .card div img{
+    display: none !important;
   }
-
-  .card div img {
-    width: 60px;
-    height: 60px;
-    margin-right: 12px;
+  .card::after{
+    content: none;         
+    clip-path: none;
+    background: none;
   }
-
-  .card h4 {
-    font-size: 20px;
-  }
-
-  .card p {
-    font-size: 14px;
-  }
-
-  .card .btn {
-    width: 100%;
+  .card{
+    padding-right: clamp(16px, 4vw, 24px);  
+    padding-block: clamp(12px, 3.5vw, 18px);
   }
 }
 
