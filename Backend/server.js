@@ -62,7 +62,6 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
 // ------------------- Update CV Link -------------------
 app.post("/api/users/update-cv", async (req, res) => {
     try {
@@ -90,8 +89,6 @@ app.post("/api/users/update-cv", async (req, res) => {
 });
 
 
-=======
->>>>>>> 3265ab8080d231a1ddf53c34fb9894178a96454f
 // ------------------- Company model -------------------
 const companySchema = new mongoose.Schema({
     name: String,
@@ -122,31 +119,48 @@ app.get("/api/companies", async (req, res) => {
 // ------------------- Apply to Company -------------------
 app.post("/api/apply", async (req, res) => {
   try {
-    const { companyName, username } = req.body;
-    console.log("Apply request:", { companyName, username });
+    console.log("📥 Received apply request"); // Request reached backend
 
+    // Step 1: Log entire request body
+    console.log("➡️ Request body:", req.body);
+
+    const { companyName, username } = req.body;
+
+    // Step 2: Validate input
     if (!companyName || !username) {
+      console.warn("⚠️ Missing data:", { companyName, username });
       return res.status(400).json({ message: "Missing companyName or username" });
     }
 
+    // Step 3: Try to update company applicants list
+    console.log(`🔍 Searching for company: "${companyName}" to add applicant "${username}"`);
     const company = await Company.findOneAndUpdate(
-      { name: companyName },
+      { name: new RegExp(`^${companyName}$`, "i") }, // case-insensitive search
       { $addToSet: { applicants: username } },
       { new: true }
     );
 
+    // Step 4: Handle company not found
     if (!company) {
+      console.warn("❌ Company not found in DB:", companyName);
       return res.status(404).json({ message: "Company not found" });
     }
 
-    console.log("Updated company:", company);
+    // Step 5: Log success
+    console.log(`✅ ${username} successfully applied to ${company.name}`);
+    console.log("👥 Updated applicants:", company.applicants);
+
     res.status(200).json({
       message: `Successfully applied to ${company.name}`,
-      applicants: company.applicants
+      applicants: company.applicants,
     });
+
   } catch (err) {
-    console.error("❌ Apply route error:", err);
-    res.status(500).json({ message: "Server error" });
+    // Step 6: Catch any unexpected server/MongoDB error
+    console.error("🔥 Apply route error:");
+    console.error("   → Message:", err.message);
+    console.error("   → Stack:", err.stack);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 });
 
