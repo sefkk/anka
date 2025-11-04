@@ -50,12 +50,16 @@ document.addEventListener("DOMContentLoaded", () => {
       `;
       jobResultsContainer.appendChild(card);
 
+      // --- View Details modal ---
       document.getElementById(`details-btn-${index}`).addEventListener("click", () => {
         modalContent.innerHTML = `
           <button class="close-btn-top" aria-label="Close modal">×</button>
           <h4>${company.name}</h4>
           <p><strong>Industry:</strong> ${company.industry}</p>
           <p><strong>Headquarters:</strong> ${company.headquarters}</p>
+          <p><strong>Website:</strong> <a href="${company.website}" target="_blank">${company.website}</a></p>
+          <p><strong>Job Type:</strong> ${company.jobtype || "N/A"}</p>
+          <p><strong>Experience:</strong> ${company.experience || "N/A"}</p>
           <p><strong>Description:</strong> ${company.description_long || company.description_short}</p>
           <div class="modal-buttons">
             <button class="btn apply-btn" id="apply-btn-${index}" ${hasApplied ? 'disabled' : ''}>
@@ -66,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         modal.classList.add("active");
 
+        // Close modal
         modalContent.querySelector(".close-btn-top").addEventListener("click", () => {
           modal.classList.remove("active");
         });
@@ -113,6 +118,15 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
     });
+  }
+
+  // --- Already Applied Popup ---
+  function showAlreadyAppliedPopup() {
+    const popup = document.getElementById("already-applied-popup");
+    popup.classList.add("show");
+    setTimeout(() => {
+      popup.classList.remove("show");
+    }, 3000);
   }
 
   // --- Filter companies ---

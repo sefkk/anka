@@ -72,6 +72,7 @@ body {
   font-size: 14px;
   font-weight: 600;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .btn:hover {
@@ -687,17 +688,15 @@ ul{
   transform: translateY(-1px);
 }
 
-/* Modal Buttons Container */
+/* Modal buttons container */
 .modal-buttons {
   display: flex;
-  justify-content: flex-end; 
-  gap: 12px; 
-  margin-top: 30px;
-  padding-top: 20px;
-  border-top: 1px solid #eee;
+  justify-content: flex-end; /* aligns buttons to the right */
+  gap: 10px; /* optional spacing between buttons */
+  margin-top: 20px;
 }
 
-/* Apply button inside modal */
+/* Apply button inside modal - active (not applied) */
 .modal-buttons .apply-btn {
   display: inline-flex;          
   align-items: center;          
@@ -715,10 +714,20 @@ ul{
   min-width: 120px;
 }
 
-.modal-buttons .apply-btn:hover {
+/* Hover effect only for active Apply buttons */
+.modal-buttons .apply-btn:not(:disabled):hover {
   background: #e87f33;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(253, 158, 94, 0.4);
+  cursor: pointer;
+}
+
+/* Apply button when disabled (Applied state) */
+.modal-buttons .apply-btn:disabled {
+  cursor: default;
+  opacity: 0.6;
+  transform: none;
+  box-shadow: none;
 }
 
 /* Close button */
@@ -739,6 +748,7 @@ ul{
   background: #e87f33;
   transform: translateY(-2px);
 }
+
 
 /* --------- ALREADY APPLIED POPUP ---------- */
 
