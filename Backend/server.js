@@ -75,7 +75,8 @@ const companySchema = new mongoose.Schema({
     logo_url: String,
     apply_url: String,
     experience: String,
-    jobtype: String
+    jobtype: String,
+    applicants: { type: [String], default: [] }
 });
 const Company = mongoose.model("Company", companySchema, "talentpool-companies-data");
 
@@ -87,6 +88,35 @@ app.get("/api/companies", async (req, res) => {
     } catch (err) {
         console.error('Failed to fetch companies:', err);
         res.status(500).json({ message: "Failed to fetch companies" });
+    }
+});
+
+// ------------------- Apply to Company -------------------
+app.post("/api/apply", async (req, res) => {
+    try {
+        const { companyId, username } = req.body;
+
+        if (!companyId || !username) {
+            return res.status(400).json({ message: "Missing companyId or username" });
+        }
+
+        const company = await Company.findByIdAndUpdate(
+            companyId,
+            { $addToSet: { applicants: username } }, // add only if not already in array
+            { new: true }
+        );
+
+        if (!company) {
+            return res.status(404).json({ message: "Company not found" });
+        }
+
+        res.status(200).json({
+            message: `Successfully applied to ${company.name}`,
+            applicants: company.applicants
+        });
+    } catch (err) {
+        console.error("❌ Apply route error:", err);
+        res.status(500).json({ message: "Server error" });
     }
 });
 
