@@ -58,15 +58,43 @@ document.addEventListener("DOMContentLoaded", () => {
           <p><strong>Job Type:</strong> ${company.jobtype}</p>
           <p><strong>Experience Level:</strong> ${company.experience}</p>
           <div class="modal-buttons">
-            <a href="${company.apply_url || '#'}" target="_blank" class="btn apply-btn">Apply</a>
+            <button class="btn apply-btn">Apply</button>
           </div>
         `;
+
         modal.classList.add("active");
-        // Close button in top-right
+
+        // Close button
         modalContent.querySelector(".close-btn-top").addEventListener("click", () => {
           modal.classList.remove("active");
         });
+
+        // ✅ APPLY button handler (this is where your fetch call goes)
+        const applyButton = modalContent.querySelector(".apply-btn");
+        applyButton.addEventListener("click", async () => {
+          try {
+            const username = localStorage.getItem("username"); // or however you store it after login
+
+            const response = await fetch("https://anka-vkrl.onrender.com/api/apply", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ companyId: company._id, username }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+              alert("✅ Application submitted successfully!");
+            } else {
+              alert(`❌ Failed to apply: ${data.message}`);
+            }
+          } catch (error) {
+            console.error("Error applying:", error);
+            alert("❌ Something went wrong while applying.");
+          }
+        });
       });
+
     });
   }
 
