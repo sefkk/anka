@@ -66,10 +66,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         // ✅ Now the apply button exists
-        const applyBtn = document.getElementById(`apply-btn-${index}`);
+        const applyBtn = modalContent.querySelector(".apply-btn");
         applyBtn.addEventListener("click", async () => {
-          const username = sessionStorage.getItem("username"); // logged-in user
-          const companyName = company.name; // use company name
+          const username = sessionStorage.getItem("username");
+          const companyName = company.name
 
           if (!username || !companyName) {
             alert("Missing username or company name.");
@@ -97,10 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("An error occurred while applying.");
           }
         });
-
       });
-
-
     });
   }
 
