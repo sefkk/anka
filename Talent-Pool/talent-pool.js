@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       document.getElementById(`details-btn-${index}`).addEventListener("click", () => {
         modalContent.innerHTML = `
+          <button class="close-btn-top" aria-label="Close modal">×</button>
           <h4>${company.name}</h4>
           <p><strong>Industry:</strong> ${company.industry}</p>
           <p><strong>Headquarters:</strong> ${company.headquarters}</p>
@@ -58,11 +59,11 @@ document.addEventListener("DOMContentLoaded", () => {
           <p><strong>Experience Level:</strong> ${company.experience}</p>
           <div class="modal-buttons">
             <a href="${company.apply_url || '#'}" target="_blank" class="btn apply-btn">Apply</a>
-            <button class="close-btn">Close</button>
           </div>
         `;
         modal.classList.add("active");
-        modalContent.querySelector(".close-btn").addEventListener("click", () => {
+        // Close button in top-right
+        modalContent.querySelector(".close-btn-top").addEventListener("click", () => {
           modal.classList.remove("active");
         });
       });

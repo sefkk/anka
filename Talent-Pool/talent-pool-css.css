@@ -589,15 +589,17 @@ ul{
 
 /* Modal Content */
 .modal-content {
-  background: #fff;
+  background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
   border-radius: 16px;
-  padding: 30px 25px;
+  padding: 40px 35px;
   max-width: 600px;
   width: 90%;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.2);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.3), 0 0 0 1px rgba(253, 158, 94, 0.1);
   transform: translateY(-30px) scale(0.95);
   opacity: 0;
   transition: transform 0.4s ease-in-out, opacity 0.4s ease-in-out; /* smooth slide + fade */
+  position: relative;
+  border: 2px solid rgba(253, 158, 94, 0.2);
 }
 
 /* Animate modal content on show */
@@ -606,7 +608,35 @@ ul{
   opacity: 1;
 }
 
-/* Modal Close Button */
+/* Modal Close Button - Top Right X */
+.modal-content .close-btn-top {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: transparent;
+  border: 2px solid #fd9e5e;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  color: #fd9e5e;
+  font-weight: 700;
+  font-size: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  line-height: 1;
+  padding: 0;
+}
+
+.modal-content .close-btn-top:hover {
+  background: #fd9e5e;
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+/* Modal Close Button(old )*/
 .modal-content .close-btn {
   background: #fd9e5e;
   border: none;
@@ -615,8 +645,6 @@ ul{
   color: #fff;
   font-weight: 600;
   cursor: pointer;
-  margin-top: 15px;
-  float: right;
   transition: background 0.3s ease;
 }
 
@@ -627,57 +655,91 @@ ul{
 /* Modal text styling */
 .modal-content h4 {
   margin-top: 0;
+  margin-bottom: 20px;
   color: #fd9e5e;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
 }
 
 .modal-content p {
-  margin: 8px 0;
+  margin: 12px 0;
   color: #555;
+  line-height: 1.6;
+}
+
+.modal-content p strong {
+  color: #333;
+  font-weight: 600;
+}
+
+/* Website link hover interaction */
+.modal-content p a[href^="http"] {
+  color: #fd9e5e;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-bottom: 2px solid transparent;
+}
+
+.modal-content p a[href^="http"]:hover {
+  color: #e87f33;
+  border-bottom-color: #fd9e5e;
+  transform: translateY(-1px);
 }
 
 /* Modal Buttons Container */
 .modal-buttons {
   display: flex;
-  justify-content: flex-end; /* buttons aligned to right */
-  gap: 12px; /* space between Apply and Close */
-  margin-top: 20px;
+  justify-content: flex-end; 
+  gap: 12px; 
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
 }
 
 /* Apply button inside modal */
 .modal-buttons .apply-btn {
-  display: inline-flex;          /* allows flex centering */
-  align-items: center;           /* vertical center */
-  justify-content: center;       /* horizontal center */
-  background: #fd9e5e;           /* green color */
+  display: inline-flex;          
+  align-items: center;          
+  justify-content: center;       
+  background: #fd9e5e;          
   color: #fff;
   text-decoration: none;
-  padding: 10px 22px;            /* vertical + horizontal padding */
+  padding: 14px 28px;           
   border-radius: 12px;
   font-weight: 600;
   font-size: 16px;
-  line-height: 1;                /* prevents text misalignment */
+  line-height: 1;                
   transition: all 0.3s ease;
+  min-height: 48px;             
+  min-width: 120px;
 }
 
 .modal-buttons .apply-btn:hover {
-  background: #907e71;
+  background: #e87f33;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(253, 158, 94, 0.4);
 }
 
 /* Close button */
 .modal-buttons .close-btn {
   background: #6d6c6b;
   border: none;
-  padding: 10px 20px;
+  padding: 14px 28px;           
   border-radius: 12px;
   color: #fff;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  min-height: 48px;             
+  min-width: 100px;
 }
 
 .modal-buttons .close-btn:hover {
   background: #e87f33;
+  transform: translateY(-2px);
 }
+
 
 /* Responsive */
 @media (max-width: 640px){
