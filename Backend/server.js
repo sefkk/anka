@@ -62,6 +62,31 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
+// ------------------- Update CV Link -------------------
+app.post("/api/users/update-cv", async (req, res) => {
+    try {
+      const { username, cvLink } = req.body;
+  
+      if (!username || !cvLink) {
+        return res.status(400).json({ message: "username and cvLink required" });
+      }
+  
+      const updatedUser = await User.findOneAndUpdate(
+        { username: username.trim() },
+        { cvLink },
+        { new: true }
+      );
+  
+      if (!updatedUser) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      res.json({ message: "CV link saved", cvLink });
+    } catch (err) {
+      console.error("❌ CV update error:", err);
+      res.status(500).json({ message: "Server error" });
+    }
+});
 
 
 // ------------------- Company model -------------------

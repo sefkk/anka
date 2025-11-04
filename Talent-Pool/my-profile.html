@@ -116,6 +116,18 @@
           <p id="userYob">-</p>
         </div>
       </div>
+
+      <!-- CV -->
+      <div class="info-item" style="margin-top:15px;">
+        <label>Current CV</label>
+        <p id="userCV">No CV uploaded</p>
+      </div>
+
+      <input type="file" id="cvFile" accept="application/pdf" style="margin-bottom:10px;">
+
+      <button id="uploadCVBtn" class="edit-btn">Upload CV</button>
+      <button id="changeCVBtn" class="edit-btn" style="display:none;">Change CV</button>
+
       <a href="../login.html" class="logout-btn" id="logoutBtn">Logout</a>
     </div>
   </section>
@@ -133,6 +145,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const genderEl = document.getElementById("userGender");
   const yobEl = document.getElementById("userYob");
   const logoutBtn = document.getElementById("logoutBtn");
+
+  // CV bilgisi
+  const cvEl = document.getElementById("userCV");
+  const uploadCVBtn = document.getElementById("uploadCVBtn");
+  const changeCVBtn = document.getElementById("changeCVBtn");
+  const cvFileInput = document.getElementById("cvFile");
+
 
   // Footer'ı yükle
   fetch('../Partials/footer.html')
@@ -180,6 +199,15 @@ document.addEventListener("DOMContentLoaded", () => {
       majorEl.textContent = user.major || '-';
       genderEl.textContent = user.gender || '-';
       yobEl.textContent = user.yob || '-';
+
+      if (user.cvLink) {
+        cvEl.innerHTML = `<a href="${user.cvLink}" target="_blank">View CV</a>`;
+        uploadCVBtn.style.display = "none";
+        changeCVBtn.style.display = "inline-block";
+      } else {
+        cvEl.textContent = "No CV uploaded";
+        changeCVBtn.style.display = "none";
+      }
     })
     .catch(err => {
       console.error("User fetch error:", err);
@@ -191,6 +219,51 @@ document.addEventListener("DOMContentLoaded", () => {
     sessionStorage.clear();
     window.location.href = "../login.html";
   });
+
+  function saveCVLink(cvLink) {
+    console.log("Sending CV to backend:", cvLink);
+
+    fetch("https://anka-vkrl.onrender.com/api/users/update-cv", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: username,
+        cvLink: cvLink
+      })
+    })
+    .then(async res => {
+      console.log("STATUS:", res.status);
+      const text = await res.text();
+      console.log("RESPONSE:", text);
+
+      if (!res.ok) {
+        alert("CV update failed: " + text);
+        return;
+      }
+
+      location.reload();
+    })
+    .catch(err => console.error("CV update error:", err));
+  }
+
+
+  uploadCVBtn.addEventListener("click", () => {
+    const file = cvFileInput.files[0];
+    if (!file || file.type !== "application/pdf") {
+      alert("Select a PDF file first.");
+      return;
+    }
+
+    const link = prompt("Upload your CV to Google Drive and paste the share link:");
+    if (link) saveCVLink(link);
+  });
+
+  changeCVBtn.addEventListener("click", () => {
+    const file = cvFileInput.files[0];
+    const link = prompt("Upload your new CV to Google Drive and paste the link:");
+    if (link) saveCVLink(link);
+  });
+
 });
 </script>
 
