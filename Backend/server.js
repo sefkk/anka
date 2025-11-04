@@ -119,47 +119,38 @@ app.get("/api/companies", async (req, res) => {
 // ------------------- Apply to Company -------------------
 app.post("/api/apply", async (req, res) => {
   try {
-    console.log("📥 Received apply request"); // Request reached backend
-
-    // Step 1: Log entire request body
-    console.log("➡️ Request body:", req.body);
-
     const { companyName, username } = req.body;
+    console.log("📥 Received apply request:", req.body);
 
-    // Step 2: Validate input
     if (!companyName || !username) {
-      console.warn("⚠️ Missing data:", { companyName, username });
       return res.status(400).json({ message: "Missing companyName or username" });
     }
 
-    // Step 3: Try to update company applicants list
-    console.log(`🔍 Searching for company: "${companyName}" to add applicant "${username}"`);
-    const company = await Company.findOneAndUpdate(
-      { name: new RegExp(`^${companyName}$`, "i") }, // case-insensitive search
-      { $addToSet: { applicants: username } },
-      { new: true }
-    );
+    const company = await Company.findOne({ name: new RegExp(`^${companyName}$`, "i") });
 
-    // Step 4: Handle company not found
     if (!company) {
-      console.warn("❌ Company not found in DB:", companyName);
       return res.status(404).json({ message: "Company not found" });
     }
 
-    // Step 5: Log success
-    console.log(`✅ ${username} successfully applied to ${company.name}`);
-    console.log("👥 Updated applicants:", company.applicants);
+    // Ensure applicants is an array
+    if (!Array.isArray(company.applicants)) {
+      console.log(`⚙️ Fixing applicants type for ${company.name}`);
+      company.applicants = company.applicants ? [company.applicants] : [];
+    }
 
+    if (!company.applicants.includes(username)) {
+      company.applicants.push(username);
+      await company.save();
+    }
+
+    console.log(`✅ ${username} successfully applied to ${company.name}`);
     res.status(200).json({
       message: `Successfully applied to ${company.name}`,
       applicants: company.applicants,
     });
 
   } catch (err) {
-    // Step 6: Catch any unexpected server/MongoDB error
-    console.error("🔥 Apply route error:");
-    console.error("   → Message:", err.message);
-    console.error("   → Stack:", err.stack);
+    console.error("🔥 Apply route error:", err.message, err.stack);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
