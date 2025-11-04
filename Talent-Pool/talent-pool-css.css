@@ -740,6 +740,41 @@ ul{
   transform: translateY(-2px);
 }
 
+/* --------- ALREADY APPLIED POPUP ---------- */
+
+#already-applied-popup {
+  display: none;
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #fff9c4;
+  border: 1px solid #fbc02d;
+  padding: 16px 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  font-size: 16px;
+  font-weight: 500;
+  z-index: 1000;
+}
+
+#already-applied-popup.show {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* Disabled Apply button styling */
+button.btn[disabled] {
+  background-color: #ccc;
+  color: #666;
+  cursor: not-allowed;
+  opacity: 0.8;
+}
 
 /* Responsive */
 @media (max-width: 640px){
