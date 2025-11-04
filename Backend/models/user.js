@@ -11,7 +11,8 @@ const userSchema = new mongoose.Schema({
   gender: String,
   major: String,
   uni: String,
-  yob: String
+  yob: String,
+  cvLink: String
 });
 
 // 3. parametre olarak koleksiyon adını belirtiyoruz
