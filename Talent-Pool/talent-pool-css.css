@@ -742,13 +742,14 @@ ul{
 
 /* --------- ALREADY APPLIED POPUP ---------- */
 
+/* Already applied popup */
 #already-applied-popup {
-  display: none;
+  display: none; /* hidden by default */
   position: fixed;
   top: 20%;
   left: 50%;
   transform: translateX(-50%);
-  background-color: #fff9c4;
+  background-color: #fff9c4; /* light yellow */
   border: 1px solid #fbc02d;
   padding: 16px 24px;
   border-radius: 8px;
@@ -766,14 +767,6 @@ ul{
 @keyframes fadeIn {
   from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
   to { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-
-/* Disabled Apply button styling */
-button.btn[disabled] {
-  background-color: #ccc;
-  color: #666;
-  cursor: not-allowed;
-  opacity: 0.8;
 }
 
 /* Responsive */
