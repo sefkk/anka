@@ -62,8 +62,6 @@ app.get('/api/users', async (req, res) => {
   }
 });
 
-
-
 // ------------------- Company model -------------------
 const companySchema = new mongoose.Schema({
     name: String,
@@ -93,31 +91,33 @@ app.get("/api/companies", async (req, res) => {
 
 // ------------------- Apply to Company -------------------
 app.post("/api/apply", async (req, res) => {
-    try {
-        const { companyName, username } = req.body;
+  try {
+    const { companyName, username } = req.body;
+    console.log("Apply request:", { companyName, username });
 
-        if (!companyName || !username) {
-            return res.status(400).json({ message: "Missing companyName or username" });
-        }
-
-        const company = await Company.findOneAndUpdate(
-            { name: companyName },            // find by name
-            { $addToSet: { applicants: username } }, // add username to applicants array
-            { new: true }
-        );
-
-        if (!company) {
-            return res.status(404).json({ message: "Company not found" });
-        }
-
-        res.status(200).json({
-            message: `Successfully applied to ${company.name}`,
-            applicants: company.applicants
-        });
-    } catch (err) {
-        console.error("❌ Apply route error:", err);
-        res.status(500).json({ message: "Server error" });
+    if (!companyName || !username) {
+      return res.status(400).json({ message: "Missing companyName or username" });
     }
+
+    const company = await Company.findOneAndUpdate(
+      { name: companyName },
+      { $addToSet: { applicants: username } },
+      { new: true }
+    );
+
+    if (!company) {
+      return res.status(404).json({ message: "Company not found" });
+    }
+
+    console.log("Updated company:", company);
+    res.status(200).json({
+      message: `Successfully applied to ${company.name}`,
+      applicants: company.applicants
+    });
+  } catch (err) {
+    console.error("❌ Apply route error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
 });
 
 // ------------------- Connect to MongoDB & Start Server -------------------
