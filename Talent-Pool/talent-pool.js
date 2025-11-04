@@ -53,47 +53,53 @@ document.addEventListener("DOMContentLoaded", () => {
           <h4>${company.name}</h4>
           <p><strong>Industry:</strong> ${company.industry}</p>
           <p><strong>Headquarters:</strong> ${company.headquarters}</p>
-          <p><strong>Description:</strong> ${company.description_long || company.description_short || "No detailed description."}</p>
-          <p><strong>Website:</strong> <a href="${company.website}" target="_blank">${company.website}</a></p>
-          <p><strong>Job Type:</strong> ${company.jobtype}</p>
-          <p><strong>Experience Level:</strong> ${company.experience}</p>
+          <p><strong>Description:</strong> ${company.description_long || company.description_short}</p>
           <div class="modal-buttons">
-            <button class="btn apply-btn">Apply</button>
+            <button class="btn apply-btn" id="apply-btn-${index}">Apply</button>
           </div>
         `;
 
         modal.classList.add("active");
 
-        // Close button
         modalContent.querySelector(".close-btn-top").addEventListener("click", () => {
           modal.classList.remove("active");
         });
 
-        // ✅ APPLY button handler (this is where your fetch call goes)
-        const applyButton = modalContent.querySelector(".apply-btn");
-        applyButton.addEventListener("click", async () => {
-          try {
-            const username = localStorage.getItem("username"); // or however you store it after login
+        // ✅ Now the apply button exists
+        const applyBtn = document.getElementById(`apply-btn-${index}`);
+        applyBtn.addEventListener("click", async () => {
+          const username = sessionStorage.getItem("username"); // logged-in user
+          const companyName = company.name; // use company name
 
+          if (!username || !companyName) {
+            alert("Missing username or company name.");
+            return;
+          }
+
+          try {
             const response = await fetch("https://anka-vkrl.onrender.com/api/apply", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ companyId: company._id, username }),
+              body: JSON.stringify({ username, companyName })
             });
 
             const data = await response.json();
 
             if (response.ok) {
-              alert("✅ Application submitted successfully!");
+              alert(`Applied to ${company.name}!`);
+              applyBtn.textContent = "Applied";
+              applyBtn.disabled = true;
             } else {
-              alert(`❌ Failed to apply: ${data.message}`);
+              alert(`Error: ${data.message}`);
             }
-          } catch (error) {
-            console.error("Error applying:", error);
-            alert("❌ Something went wrong while applying.");
+          } catch (err) {
+            console.error("Error applying:", err);
+            alert("An error occurred while applying.");
           }
         });
+
       });
+
 
     });
   }

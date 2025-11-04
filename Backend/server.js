@@ -94,15 +94,15 @@ app.get("/api/companies", async (req, res) => {
 // ------------------- Apply to Company -------------------
 app.post("/api/apply", async (req, res) => {
     try {
-        const { companyId, username } = req.body;
+        const { companyName, username } = req.body;
 
-        if (!companyId || !username) {
-            return res.status(400).json({ message: "Missing companyId or username" });
+        if (!companyName || !username) {
+            return res.status(400).json({ message: "Missing companyName or username" });
         }
 
-        const company = await Company.findByIdAndUpdate(
-            companyId,
-            { $addToSet: { applicants: username } }, // add only if not already in array
+        const company = await Company.findOneAndUpdate(
+            { name: companyName },            // find by name
+            { $addToSet: { applicants: username } }, // add username to applicants array
             { new: true }
         );
 
