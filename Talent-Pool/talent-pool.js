@@ -9,8 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const locationInput = document.getElementById("location");
 
   let allCompanies = [];
+  const username = sessionStorage.getItem("username");
 
-  // --- Şirket verilerini API'den çek ---
+  // --- Fetch companies ---
   fetch("https://anka-vkrl.onrender.com/api/companies")
     .then(res => res.json())
     .then(companies => {
@@ -22,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
       jobResultsContainer.innerHTML = "<p class='no-results'>Failed to fetch companies.</p>";
     });
 
-  // --- Şirketleri ekrana bas ---
+  // --- Display companies ---
   function displayCompanies(companies) {
     jobResultsContainer.innerHTML = "";
 
@@ -32,6 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     companies.forEach((company, index) => {
+      const hasApplied = Array.isArray(company.applicants) && company.applicants.includes(username);
+
       const card = document.createElement("div");
       card.classList.add("card");
       card.innerHTML = `
@@ -55,7 +58,9 @@ document.addEventListener("DOMContentLoaded", () => {
           <p><strong>Headquarters:</strong> ${company.headquarters}</p>
           <p><strong>Description:</strong> ${company.description_long || company.description_short}</p>
           <div class="modal-buttons">
-            <button class="btn apply-btn" id="apply-btn-${index}">Apply</button>
+            <button class="btn apply-btn" id="apply-btn-${index}" ${hasApplied ? 'disabled' : ''}>
+              ${hasApplied ? 'Applied' : 'Apply'}
+            </button>
           </div>
         `;
 
@@ -65,13 +70,15 @@ document.addEventListener("DOMContentLoaded", () => {
           modal.classList.remove("active");
         });
 
-        // ✅ Now the apply button exists
         const applyBtn = modalContent.querySelector(".apply-btn");
-        applyBtn.addEventListener("click", async () => {
-          const username = sessionStorage.getItem("username");
-          const companyName = company.name
 
-          if (!username || !companyName) {
+        applyBtn.addEventListener("click", async () => {
+          if (hasApplied || applyBtn.disabled) {
+            showAlreadyAppliedPopup();
+            return;
+          }
+
+          if (!username || !company.name) {
             alert("Missing username or company name.");
             return;
           }
@@ -80,17 +87,24 @@ document.addEventListener("DOMContentLoaded", () => {
             const response = await fetch("https://anka-vkrl.onrender.com/api/apply", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ username, companyName })
+              body: JSON.stringify({ username, companyName: company.name })
             });
 
             const data = await response.json();
 
             if (response.ok) {
-              alert(`Applied to ${company.name}!`);
               applyBtn.textContent = "Applied";
               applyBtn.disabled = true;
+              if (!Array.isArray(company.applicants)) company.applicants = [];
+              company.applicants.push(username); // update local state
             } else {
-              alert(`Error: ${data.message}`);
+              if (data.message.includes("already applied") || data.applicants?.includes(username)) {
+                showAlreadyAppliedPopup();
+                applyBtn.textContent = "Applied";
+                applyBtn.disabled = true;
+              } else {
+                alert(`Error: ${data.message}`);
+              }
             }
           } catch (err) {
             console.error("Error applying:", err);
@@ -101,7 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // --- Filtreleme fonksiyonu ---
+  // --- Filter companies ---
   function applyFilters() {
     const jobType = jobTypeSelect.value.toLowerCase();
     const experience = experienceSelect.value.toLowerCase();
@@ -117,17 +131,15 @@ document.addEventListener("DOMContentLoaded", () => {
     displayCompanies(filtered);
   }
 
-  // --- Arama butonu tıklanınca filtre uygula ---
   searchButton.addEventListener("click", applyFilters);
-  // --- Enter tuşuna basılınca filtre uygula ---
+
   document.addEventListener("keypress", (e) => {
     if (e.key === "Enter") {
-      e.preventDefault(); // form submit gibi davranmasın
+      e.preventDefault();
       applyFilters();
     }
   });
 
-  // Modal dışına tıklanınca kapat
   modal.addEventListener("click", (e) => {
     if (e.target === modal) modal.classList.remove("active");
   });
