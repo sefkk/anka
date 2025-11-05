@@ -158,3 +158,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.target === modal) modal.classList.remove("active");
   });
 });
+
+const faqs = document.querySelectorAll(".faq");
+
+faqs.forEach((faq) => {
+  faq.addEventListener("click", () => {
+    faq.classList.toggle("active");
+  });
+});
