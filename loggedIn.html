@@ -1,150 +1,281 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css?family=Lovers+Quarrel" rel="stylesheet">
-    <link href="https://fonts.cdnfonts.com/css/handwriting" rel="stylesheet">
-    <link href='https://fonts.googleapis.com/css?family=Berkshire Swash' rel='stylesheet'>
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css"/> 
-    <title>Anka Member Page</title>
-    <style>
-        body {
-            background-color: white; /* Make the whole page white */
-            margin: 0;
-            padding: 0;
-        }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link href="https://fonts.googleapis.com/css?family=Lovers+Quarrel" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/handwriting" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Berkshire Swash' rel='stylesheet'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css"/> 
+<title>Anka Member Page</title>
 
-        /* Simple Linktree-style buttons */
-        .services-section {
-            text-align: center;
-            margin: 3rem 0;
-        }
+<style>
+/* ------- Design Tokens ------- */
+:root{
+  --bg:#ffffff; --text:#222; --muted:#6b6b6b;
+  --brand-1:#f0b26f; --brand-2:#e2874a; --ring:#ffcf9b;
+  --radius:16px; --shadow:0 10px 30px rgba(0,0,0,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0b0b0c; --text:#f1f1f1; --muted:#b6b6b6; --shadow:0 10px 30px rgba(0,0,0,.4) }
+}
 
-        .services-section h2 {
-            margin-bottom: 1rem;
-        }
+/* ------- Base ------- */
+*{
+    box-sizing:border-box;
+    scroll-behavior: smooth;
+}
 
-        .linktree-buttons {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
-        }
+html,body{height:100%}
+body{
+  margin:0; padding:0; font-family:'Poppins',system-ui,Arial,sans-serif; color:var(--text);
+  background: var(--bg);
+  transition: all 0.3s ease;
+}
 
-        .linktree-buttons a {
-            display: block;
-            width: 80%;
-            max-width: 400px;
-            padding: 1rem;
-            border-radius: 12px;
-            background: #df894f;
-            color: #fff;
-            text-decoration: none;
-            font-size: 1.2rem;
-            transition: all 0.3s ease, background-position 0.5s ease;
-            background-image: linear-gradient(135deg, #f0b26f 0%, #e2874a 100%);
-            background-size: 200% 200%;
-            background-position: 100% 100%;
-        }
+/* Global smooth transitions (ani. kapatma desteği ile) */
+a, button, .linktree-buttons a, #navbar, .site-footer{
+  transition: background-color .25s ease, color .25s ease, border-color .25s ease,
+              transform .25s ease, box-shadow .25s ease, opacity .25s ease, background-position .5s ease;
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation:none !important; transition:none !important}
+}
 
-        .linktree-buttons a:hover {
-            background-position: 0 0;
-            color: #535353;
-            transform: scale(1.05);
-        }
+/* ------- Top Bar (Fixed, translucent, blurred) ------- */
+.site-topbar{
+  inset:0 0 auto 0; z-index:100;
+  backdrop-filter:saturate(140%) blur(8px);
+  -webkit-backdrop-filter:saturate(140%) blur(8px);
+  background: color-mix(in srgb, #ffffff 70%, transparent);
+  border-bottom:1px solid rgba(0,0,0,.06);
+  box-shadow: 0 6px 24px rgba(0,0,0,.06);
+  transform: translateY(-100%);
+  animation: topbarIn .6s cubic-bezier(.2,.7,.2,1) .1s forwards;
+}
+@media (prefers-color-scheme: dark){
+  .site-topbar{
+    background: color-mix(in srgb, #121214 72%, transparent);
+    border-bottom-color: rgba(255,255,255,.06);
+  }
+}
+@keyframes topbarIn{to{transform: translateY(0)}}
 
-        /* Buttons */
-        .linktree-buttons a {
-            font-family: 'Ubuntu', sans-serif;
-            font-weight: 500;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
+.container{width:min(100% - 2rem, 1100px); margin-inline:auto}
 
-        /* Services Section Styling */
-        .services-section h2 {
-            font-family: 'Ubuntu', sans-serif;
-            font-weight: 700;
-            font-size: 2.5rem;
-            background: linear-gradient(45deg, #e5925a, #ffb97a);
-            
-            /* For Chrome, Safari, Opera */
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            
-            /* Standard property (for Firefox support) */
-            background-clip: text;
-            color: transparent;
+/* ------- Welcome ------- */
+.welcome-section{ padding: calc(64px + 3.5rem) 0 2rem; text-align:center; } /* 64px = bar yüksekliği telafisi */
+#welcomeMessage{
+  margin:0 0 .5rem; font-weight:700; font-size:clamp(1.8rem,4vw,2.6rem);
+  background: linear-gradient(45deg, var(--brand-1), var(--brand-2));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.welcome-sub{ margin:0; color:var(--bg) }
 
-            margin-bottom: 2rem;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-        }
-    </style>
+/* ------- Services (Linktree) ------- */
+.services-section{text-align:center; margin: 2rem 0 3rem}
+.services-section h2{
+  font-weight:700; font-size:clamp(1.6rem,3.2vw,2.2rem);
+  margin:0 0 1.1rem;
+  background: linear-gradient(45deg, #e5925a, #ffb97a);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.linktree-buttons{
+  display:grid; grid-template-columns:1fr; gap:.9rem; width:min(100% - 2rem, 760px); margin-inline:auto;
+}
+@media (min-width:700px){ .linktree-buttons{ grid-template-columns:1fr 1fr } }
+.linktree-buttons a{
+  display:flex; align-items:center; justify-content:center; gap:.6rem;
+  min-height:56px; padding:.95rem 1.1rem; border-radius:calc(var(--radius) - 2px);
+  text-decoration:none; font-size:1.05rem; font-weight:600; color:#fff;
+  background-image: linear-gradient(135deg, var(--brand-1) 0%, var(--brand-2) 100%);
+  background-size:200% 200%; background-position:100% 100%;
+  box-shadow: var(--shadow);
+  border:1px solid rgba(0,0,0,.06);
+}
+.linktree-buttons a:hover{
+  transform: translateY(-2px);
+  background-position:0 0;
+  box-shadow: 0 14px 30px rgba(226,135,74,.25);
+  color:#222;
+}
+.linktree-buttons a:focus-visible{ outline:none; box-shadow:0 0 0 3px var(--ring), var(--shadow) }
+
+/* ------- Footer (daha temiz) ------- */
+footer.site-footer{
+  margin-top: 3rem;
+  padding-left: 3rem;
+  background: linear-gradient(180deg, rgba(0,0,0,.03), transparent);
+  border-top:1px solid rgba(0,0,0,.08);
+  color:var(--muted);
+}
+@media (prefers-color-scheme: dark){
+  footer.site-footer{ border-top-color: rgba(255,255,255,.1) }
+}
+.footer-inner{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between;
+  gap:.75rem; padding:4.25rem 2rem 2rem;
+}
+.footer-left, .footer-right{font-size:.95rem}
+.footer-right a{ color:inherit; text-decoration:none; border-bottom:1px dashed transparent }
+.footer-right a:hover{ border-bottom-color: currentColor }
+
+/* ------- Utility ------- */
+.mt-hero-offset{ margin-top:64px } /* JS’siz sabit bar telafisi */
+
+/* ---- Likert (1–5) — kutu görünümlü, bitişik, JS'siz teşekkür ---- */
+.mood-wrap{ margin-top:.9rem; display:grid; place-items:center }
+.mood-scale{
+  display:flex; gap:0; padding:.4rem; border-radius:12px;
+  background:rgba(0,0,0,.04); border:1px solid rgba(0,0,0,.08);
+  position:relative; will-change:opacity,transform;
+}
+@media (prefers-color-scheme: dark){
+  .mood-scale{ background:rgba(255,255,255,.04); border-color:rgba(255,255,255,.12) }
+}
+/* legend'i görsel akıştan çıkar */
+.mood-scale legend{ position:absolute; width:1px; height:1px; clip:rect(0 0 0 0); clip-path:inset(50%); overflow:hidden; white-space:nowrap }
+
+/* İç sarmalayıcıları görünmez yap: elemanlar sıfır boşlukla yan yana */
+.mood-option{ display:contents }
+
+/* Native checkbox'ı gizle, label kutu olur */
+.mood-option input[type="checkbox"]{
+  position:absolute; opacity:0; inset:auto; pointer-events:auto; margin:0;
+}
+.mood-option label{
+  width:44px; height:44px; display:grid; place-items:center;
+  margin:0; font-weight:700; font-size:1rem; line-height:1;
+  border:2px solid currentColor; border-radius:8px;
+  background:transparent; color:#999; cursor:pointer;
+  transition: transform .2s ease, background-color .2s ease, color .2s ease, opacity .2s ease;
+  user-select:none;
+}
+
+/* Renkler (1→5) — kutular boş (sadece kenarlık ve rakam) */
+.mood-option input[data-score="1"] + label{ color:#e74c3c }   /* kırmızı */
+.mood-option input[data-score="2"] + label{ color:#f39c12 }   /* turuncu */
+.mood-option input[data-score="3"] + label{ color:#f1c40f }   /* sarı */
+.mood-option input[data-score="4"] + label{ color:#2ecc71 }   /* yeşil */
+.mood-option input[data-score="5"] + label{ color:#137a3a }   /* koyu yeşil */
+
+.mood-option input:focus-visible + label{ box-shadow:0 0 0 3px var(--ring,#ffcf9b) }
+.mood-option input:active + label{ transform:scale(.97) }
+
+/* İşaretlenince küçük dolgu efekti (isteğe bağlı), sonra tüm ölçek fade-out */
+.mood-option input:checked + label{
+  background: currentColor; color:#fff;
+  transform:scale(.96);
+}
+
+/* Herhangi biri seçilince ölçeği yumuşakça söndür ve teşekkür mesajını göster */
+@keyframes moodFadeOut{ to{ opacity:0; transform:scale(.98) } }
+.mood-wrap:has(input:checked) .mood-scale{
+  animation: moodFadeOut .35s ease forwards;
+}
+.mood-thanks{
+  opacity:0; transform: translateY(4px);
+  transition: opacity .35s ease .2s, transform .35s ease .2s;
+  font-weight:600; text-align:center; color:var(--bg);
+}
+.mood-wrap:has(input:checked) .mood-thanks{
+  opacity:1; transform:none;
+}
+
+/* Kutu aralarındaki boşluğu tam olarak sıfırla */
+.mood-scale, .mood-option label{ letter-spacing:0; }
+
+</style>
 </head>
 <body>
 
-    <!-- Navbar -->
-    <header>
-        <div id="navbar"></div>
-    </header>
+<!-- Fixed, translucent navbar wrapper -->
+<header class="site-topbar">
+  <div id="navbar" class="container"></div>
+</header>
 
-    <!-- Welcome Message -->
-    <section class="welcome-section">
-        <h1 id="welcomeMessage"></h1>
-    </section>
+<!-- Welcome -->
+<section class="welcome-section">
+  <div class="container">
+    <h1 id="welcomeMessage"></h1>
+    <p class="welcome-sub">Here you can find your MyANKA page. You can access services, applications, and special discounts only for ANKA members.</p>
+  </div>
 
-    <!-- Services Section -->
-    <section class="services-section">
-        <h2 style="color: #0f0600 !important;">Our Services</h2>
-        <div class="linktree-buttons">
-            <a href="../myrights.html">Legal Consultancy</a>
-            <a href="Talent-Pool/talent-pool.html">ANKA Talent Pool</a>
-            <a href="komite-basvuru-form.html">ANKA Committee Position Application</a>
-            <!-- <a href="service3.html">Guides For Newcomers</a> --> 
-            <!-- <a href="service4.html">Special Events</a>
-            <a href="service5.html">Announcements</a> --> 
-            <a href="special.html">ANKA Special Discounts and Campaigns</a>
-        </div>
-    </section>
+  <div class="mood-wrap" aria-label="How are you feeling today questionnaire">
+    <fieldset class="mood-scale">
+      <legend>How are you feeling today?</legend>
+  
+      <div class="mood-option">
+        <input id="mood-1" type="checkbox" data-score="1">
+        <label for="mood-1">1</label>
+      </div>
+      <div class="mood-option">
+        <input id="mood-2" type="checkbox" data-score="2">
+        <label for="mood-2">2</label>
+      </div>
+      <div class="mood-option">
+        <input id="mood-3" type="checkbox" data-score="3">
+        <label for="mood-3">3</label>
+      </div>
+      <div class="mood-option">
+        <input id="mood-4" type="checkbox" data-score="4">
+        <label for="mood-4">4</label>
+      </div>
+      <div class="mood-option">
+        <input id="mood-5" type="checkbox" data-score="5">
+        <label for="mood-5">5</label>
+      </div>
+    </fieldset>
+  
+    <div class="mood-thanks" aria-live="polite">Thank you for your response.</div>
+  </div>
+  
+</section>
 
-    <!-- Footer -->
-    <div id="footer"></div>
+<!-- Services -->
+<section class="services-section">
+  <div class="container">
+    <h2>Our Services</h2>
+    <div class="linktree-buttons" role="list">
+      <a role="listitem" href="../myrights.html"><i class="fas fa-balance-scale"></i> Legal Consultancy</a>
+      <a role="listitem" href="Talent-Pool/talent-pool.html"><i class="fas fa-user-friends"></i> ANKA Talent Pool</a>
+      <a role="listitem" href="komite-basvuru-form.html"><i class="fas fa-clipboard-check"></i> ANKA Committee Position Application</a>
+      <a role="listitem" href="special.html"><i class="fas fa-tags"></i> ANKA Special Discounts and Campaigns</a>
+    </div>
+  </div>
+</section>
 
-    <!-- Javascript Sources -->
-    <script>
-    fetch('Partials/inner-navbar.html')
-        .then(res => res.text())
-        .then(data => {
-        document.getElementById('navbar').innerHTML = data;
-        });
+<!-- Footer (daha düzenli yapı) -->
+<footer class="site-footer">
+  <div id="footer" class="container">
+    <div class="footer-inner">
+      <div class="footer-left">© <span id="year"></span> ANKA. All rights reserved.</div>
+      <div class="footer-right">
+        <a href="#top">Back to top</a>
+      </div>
+    </div>
+  </div>
+</footer>
 
-    fetch('Partials/footer.html')
-        .then(res => res.text())
-        .then(data => {
-        document.getElementById('footer').innerHTML = data;
-        });
+<!-- JavaScript (mevcut akış; içeriğe dokunmadık) -->
+<script>
+fetch('Partials/inner-navbar.html').then(r=>r.text()).then(t=>{document.getElementById('navbar').innerHTML=t;});
+fetch('Partials/footer.html').then(r=>r.text()).then(t=>{ /* footer partial varsa üstteki yapı bozulmasın diye ekle */
+  const cont=document.getElementById('footer');
+  cont.insertAdjacentHTML('beforeend', t);
+});
+document.getElementById('year').textContent = new Date().getFullYear();
 
-    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-    
-    // If the user is not logged in, redirect them to the login page
-    if (isLoggedIn !== 'true') {
-        window.location.href = 'login.html';
-    } else {
-        // Get the user's name from sessionStorage
-        const userName = sessionStorage.getItem('name');
-        const welcomeElement = document.getElementById('welcomeMessage');
-
-        // Display the welcome message
-        if (userName) {
-            welcomeElement.textContent = `Welcome ${userName}!`;
-        } else {
-            welcomeElement.textContent = "Welcome member!";
-        }
-    }
-    </script>
-
+const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+if (isLoggedIn !== 'true') {
+  window.location.href = 'login.html';
+} else {
+  const userName = sessionStorage.getItem('name');
+  const welcomeElement = document.getElementById('welcomeMessage');
+  welcomeElement.textContent = userName ? `Welcome ${userName}!` : "Welcome member!";
+}
+</script>
 </body>
 </html>
