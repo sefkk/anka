@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANKA News | ANKA Association</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="anka-logo.png">
+  <link rel="icon" type="image/png" sizes="48x48" href="anka-logo.png">
+  <link rel="apple-touch-icon" href="anka-logo.png">
+</head>
+<body>
+
+<!-- Navbar -->
+<header>
+    <div id="navbar"></div>
+</header>
+
+<!-- News Section -->
+<section class="news-hero-section">
+    <div class="news-hero-content">
+        <h1>ANKA News</h1>
+        <p>Stay updated with the latest from ANKA Association</p>
+    </div>
+</section>
+<!-- IMPORTANT: CHANGE THESE NEWS AS NEWS COME IN. THERE ARE FOUR THINGS TO CHANGE: TITLE, DESCRIPTION, IMAGE, AND DATE. -->
+<section class="news-cards-section">
+    <div class="news-cards-container">
+        <div class="news-card" data-title="T.C. Amsterdam Başkonsolosluk Ziyareti" data-description="Bugün, T.C. Amsterdam Başkonsolosumuz Sayın Mahmut Burak Ersoy'u makamında ziyaret ettik. Ziyaretimize, Eğitim Müşavirimiz Sayın Miyase Koyuncu Kaya ve Amsterdam Konsolosluğu Ticaret Ataşesi Sayın Kutgün Sinan da eşlik ettiler.
+
+        ANKA olarak, Başkonsolosumuz Sayın Mahmut Burak Ersoy'a derneğimizin programları, hedefleri ve gelecek planları hakkında bilgi verdik. Sayın Başkonsolosumuz, çalışmalarımızı takdir ederek desteklerini ifade etti.
+        
+        Nazik ev sahipliği için kendisine ve ziyaretimize eşlik eden Eğitim Müşavirimiz Sayın Miyase Koyuncu Kaya ile Amsterdam Konsolosluğu Ticaret Ataşesi Sayın Kutgün Sinan'a teşekkür ederiz.">
+            <div class="news-card-image">
+                <img src="Images/anka-news-1.jpeg" alt="ANKA News">
+            </div>
+            <div class="news-card-date">Feb 26, 2025</div>
+        </div>
+
+        <div class="news-card" data-title="T.C. Lahey Büyükelçilik Ziyareti" data-description="Bugün, T.C. Lahey Büyükelçimiz Sayın Selçuk Ünal'ı makamında ziyaret ettik. Ziyaretimize, Eğitim Müşavirimiz Sayın Miyase Koyuncu Kaya ve Ticaret Müşavirimiz Sayın Ömer İlhan da eşlik ettiler. ANKA olarak, Büyükelçimiz Sayın Selçuk Ünal'a derneğimizin programları, hedefleri ve gelecek planları hakkında bilgi verdik. Sayın Büyükelçimiz, çalışmalarımızı takdir ederek desteklerini ifade etti. Nazik ev sahipliği için kendisine ve ziyaretimize eşlik eden Ticaret Müşavirimiz Sayın Ömer İlhan ile Eğitim Müşavirimiz Sayın Miyase Koyuncu Kaya'ya teşekkür ederiz.">
+            <div class="news-card-image">
+                <img src="Images/anka-toplu.jpeg" alt="ANKA News">
+            </div>
+            <div class="news-card-date">Feb 19, 2025</div>
+        </div>
+
+        <div class="news-card" data-title="ANKA Yönetim Kurulu Yurtdışı Türkler Birliği Ziyareti" data-description="ANKA Yönetim Kurulu olarak, YTB Yurtdışı Vatandaşlar Daire Başkanlığı Daire Başkanı Sayın Fatih Nişancı'yı ve YTB'nin Hollanda Masası'nı Yunus Emre Enstitüsü'nde ziyaret ettik. Topluluğumuzun güncel durumu, hedefleri ve projeleri üzerine verimli bir toplantı gerçekleştirdik. ANKA'nın "Beyin Göçünü Beyin Gücüne Dönüştürme" hedefi doğrultusunda istişarelerde bulunarak, Sayın Daire Başkanı'nın değerli tecrübelerinden faydalanma fırsatı yakaladık.">
+            <div class="news-card-image">
+                <img src="Images/anka-news-2.jpeg" alt="ANKA News">
+            </div>
+            <div class="news-card-date">Feb 9, 2025</div>
+        </div>
+    </div>
+</section>
+
+<!-- News Modal -->
+<div id="newsModal" class="news-modal">
+    <div class="news-modal-content">
+        <button class="news-modal-close">&times;</button>
+        <div class="news-modal-image">
+            <img id="modalImage" src="" alt="News Image">
+        </div>
+        <div class="news-modal-info">
+            <h2 id="modalTitle"></h2>
+            <div class="news-modal-date" id="modalDate"></div>
+            <p id="modalDescription"></p>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div id="footer"></div>
+
+<!-- Javascript Sources -->
+<script>
+  fetch('Partials/navbar.html')
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById('navbar').innerHTML = data;
+    });
+
+  fetch('Partials/footer.html')
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById('footer').innerHTML = data;
+    });
+
+  // News Modal Functionality
+  const newsCards = document.querySelectorAll('.news-card');
+  const modal = document.getElementById('newsModal');
+  const modalImage = document.getElementById('modalImage');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalDate = document.getElementById('modalDate');
+  const modalDescription = document.getElementById('modalDescription');
+  const closeBtn = document.querySelector('.news-modal-close');
+
+  newsCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const img = card.querySelector('img');
+      const date = card.querySelector('.news-card-date').textContent;
+      const title = card.getAttribute('data-title');
+      const description = card.getAttribute('data-description');
+
+      modalImage.src = img.src;
+      modalImage.alt = img.alt;
+      modalTitle.textContent = title;
+      modalDate.textContent = date;
+      modalDescription.textContent = description;
+
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  closeBtn.addEventListener('click', () => {
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal.classList.contains('active')) {
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+  });
+</script>
+
+
+</body>
+
+</html>
+
