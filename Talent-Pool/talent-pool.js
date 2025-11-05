@@ -37,9 +37,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const card = document.createElement("div");
       card.classList.add("card");
+
+      const overlayImages = {
+        "Korvia": "linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('../Images/korvia-bg.jpg')",
+        "Aracı Payı": "linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('../Images/araci-payi-bg.avif')",
+      };
+
+      card.style.setProperty(
+        "--overlay-background",
+        overlayImages[company.name] || "linear-gradient(90deg,#7a7a7a,#cfcfcf)"
+      );
+
       card.innerHTML = `
         <div>
-          <img src="${company.logo_url || 'https://via.placeholder.com/80'}" alt="${company.name} Logo">
           <h4>${company.name}</h4>
           <p class="meta">${company.industry} | ${company.headquarters}</p>
         </div>
