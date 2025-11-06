@@ -18,9 +18,6 @@
   --brand-1:#f0b26f; --brand-2:#e2874a; --ring:#ffcf9b;
   --radius:16px; --shadow:0 10px 30px rgba(0,0,0,.08);
 }
-@media (prefers-color-scheme: dark){
-  :root{ --bg:#0b0b0c; --text:#f1f1f1; --muted:#b6b6b6; --shadow:0 10px 30px rgba(0,0,0,.4) }
-}
 
 /* ------- Base ------- */
 *{
@@ -72,7 +69,7 @@ a, button, .linktree-buttons a, #navbar, .site-footer{
   background: linear-gradient(45deg, var(--brand-1), var(--brand-2));
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
-.welcome-sub{ margin:0; color:var(--bg) }
+.welcome-sub{ margin:0; color:var(--muted) }
 
 /* ------- Services (Linktree) ------- */
 .services-section{text-align:center; margin: 2rem 0 3rem}
@@ -125,7 +122,7 @@ footer.site-footer{
 /* ------- Utility ------- */
 .mt-hero-offset{ margin-top:64px } /* JS’siz sabit bar telafisi */
 
-/* ---- Likert (1–5) — kutu görünümlü, bitişik, JS'siz teşekkür ---- */
+/* ---- Likert (1–5) ---- */
 .mood-wrap{ margin-top:.9rem; display:grid; place-items:center }
 .mood-scale{
   display:flex; gap:0; padding:.4rem; border-radius:12px;
@@ -135,13 +132,8 @@ footer.site-footer{
 @media (prefers-color-scheme: dark){
   .mood-scale{ background:rgba(255,255,255,.04); border-color:rgba(255,255,255,.12) }
 }
-/* legend'i görsel akıştan çıkar */
 .mood-scale legend{ position:absolute; width:1px; height:1px; clip:rect(0 0 0 0); clip-path:inset(50%); overflow:hidden; white-space:nowrap }
-
-/* İç sarmalayıcıları görünmez yap: elemanlar sıfır boşlukla yan yana */
 .mood-option{ display:contents }
-
-/* Native checkbox'ı gizle, label kutu olur */
 .mood-option input[type="checkbox"]{
   position:absolute; opacity:0; inset:auto; pointer-events:auto; margin:0;
 }
@@ -153,24 +145,15 @@ footer.site-footer{
   transition: transform .2s ease, background-color .2s ease, color .2s ease, opacity .2s ease;
   user-select:none;
 }
-
-/* Renkler (1→5) — kutular boş (sadece kenarlık ve rakam) */
-.mood-option input[data-score="1"] + label{ color:#e74c3c }   /* kırmızı */
-.mood-option input[data-score="2"] + label{ color:#f39c12 }   /* turuncu */
-.mood-option input[data-score="3"] + label{ color:#f1c40f }   /* sarı */
-.mood-option input[data-score="4"] + label{ color:#2ecc71 }   /* yeşil */
-.mood-option input[data-score="5"] + label{ color:#137a3a }   /* koyu yeşil */
-
+.mood-option input[data-score="1"] + label{ color:#e74c3c }
+.mood-option input[data-score="2"] + label{ color:#f39c12 }
+.mood-option input[data-score="3"] + label{ color:#f1c40f }
+.mood-option input[data-score="4"] + label{ color:#2ecc71 }
+.mood-option input[data-score="5"] + label{ color:#137a3a }
 .mood-option input:focus-visible + label{ box-shadow:0 0 0 3px var(--ring,#ffcf9b) }
 .mood-option input:active + label{ transform:scale(.97) }
+.mood-option input:checked + label{ background: currentColor; color:#fff; transform:scale(.96); }
 
-/* İşaretlenince küçük dolgu efekti (isteğe bağlı), sonra tüm ölçek fade-out */
-.mood-option input:checked + label{
-  background: currentColor; color:#fff;
-  transform:scale(.96);
-}
-
-/* Herhangi biri seçilince ölçeği yumuşakça söndür ve teşekkür mesajını göster */
 @keyframes moodFadeOut{ to{ opacity:0; transform:scale(.98) } }
 .mood-wrap:has(input:checked) .mood-scale{
   animation: moodFadeOut .35s ease forwards;
@@ -183,60 +166,39 @@ footer.site-footer{
 .mood-wrap:has(input:checked) .mood-thanks{
   opacity:1; transform:none;
 }
-
-/* Kutu aralarındaki boşluğu tam olarak sıfırla */
 .mood-scale, .mood-option label{ letter-spacing:0; }
-
 </style>
 </head>
 <body>
 
 <!-- Fixed, translucent navbar wrapper -->
-<header class="site-topbar">
-  <div id="navbar" class="container"></div>
+<header>
+  <div id="navbar"></div>
+
+  <!-- Welcome -->
+  <section class="welcome-section">
+    <div class="container">
+      <h1 id="welcomeMessage"></h1>
+      <p class="welcome-sub">Here you can find your MyANKA page. You can access services, applications, and special discounts only for ANKA members.</p>
+    </div>
+
+    <div>
+      <span style="margin-right:8px; font-weight:600; color:var(--muted)">How are you feeling today?</span>
+    </div>
+
+    <div class="mood-wrap" aria-label="How are you feeling today questionnaire">
+      <fieldset class="mood-scale">
+        <legend>How are you feeling today?</legend>
+        <div class="mood-option"><input id="mood-1" type="checkbox" data-score="1"><label for="mood-1">1</label></div>
+        <div class="mood-option"><input id="mood-2" type="checkbox" data-score="2"><label for="mood-2">2</label></div>
+        <div class="mood-option"><input id="mood-3" type="checkbox" data-score="3"><label for="mood-3">3</label></div>
+        <div class="mood-option"><input id="mood-4" type="checkbox" data-score="4"><label for="mood-4">4</label></div>
+        <div class="mood-option"><input id="mood-5" type="checkbox" data-score="5"><label for="mood-5">5</label></div>
+      </fieldset>
+      <div class="mood-thanks" aria-live="polite">Thank you for your response.</div>
+    </div>
+  </section>
 </header>
-
-<!-- Welcome -->
-<section class="welcome-section">
-  <div class="container">
-    <h1 id="welcomeMessage"></h1>
-    <p class="welcome-sub">Here you can find your MyANKA page. You can access services, applications, and special discounts only for ANKA members.</p>
-  </div>
-
-  <div>
-    <span style="margin-right:8px; font-weight:600; color:var(--bg)">How are you feeling today?</span>
-  </div>
-      
-
-  <div class="mood-wrap" aria-label="How are you feeling today questionnaire">
-    <fieldset class="mood-scale">
-      <legend>How are you feeling today?</legend>
-      <div class="mood-option">
-        <input id="mood-1" type="checkbox" data-score="1">
-        <label for="mood-1">1</label>
-      </div>
-      <div class="mood-option">
-        <input id="mood-2" type="checkbox" data-score="2">
-        <label for="mood-2">2</label>
-      </div>
-      <div class="mood-option">
-        <input id="mood-3" type="checkbox" data-score="3">
-        <label for="mood-3">3</label>
-      </div>
-      <div class="mood-option">
-        <input id="mood-4" type="checkbox" data-score="4">
-        <label for="mood-4">4</label>
-      </div>
-      <div class="mood-option">
-        <input id="mood-5" type="checkbox" data-score="5">
-        <label for="mood-5">5</label>
-      </div>
-    </fieldset>
-  
-    <div class="mood-thanks" aria-live="polite">Thank you for your response.</div>
-  </div>
-  
-</section>
 
 <!-- Services -->
 <section class="services-section">
@@ -251,35 +213,34 @@ footer.site-footer{
   </div>
 </section>
 
-<!-- Footer (daha düzenli yapı) -->
-<footer class="site-footer">
-  <div id="footer" class="container">
-    <div class="footer-inner">
-      <div class="footer-left">© <span id="year"></span> ANKA. All rights reserved.</div>
-      <div class="footer-right">
-        <a href="#top">Back to top</a>
-      </div>
-    </div>
-  </div>
-</footer>
+<div id="footer"></div>
 
-<!-- JavaScript (mevcut akış; içeriğe dokunmadık) -->
+<!-- ✅ Fixed JavaScript -->
 <script>
-fetch('Partials/inner-navbar.html').then(r=>r.text()).then(t=>{document.getElementById('navbar').innerHTML=t;});
-fetch('Partials/footer.html').then(r=>r.text()).then(t=>{ /* footer partial varsa üstteki yapı bozulmasın diye ekle */
-  const cont=document.getElementById('footer');
-  cont.insertAdjacentHTML('beforeend', t);
-});
-document.getElementById('year').textContent = new Date().getFullYear();
+document.addEventListener("DOMContentLoaded", () => {
+  // Load navbar and footer
+  fetch('Partials/inner-navbar.html')
+    .then(r => r.text())
+    .then(t => { document.getElementById('navbar').innerHTML = t; });
 
-const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-if (isLoggedIn !== 'true') {
-  window.location.href = 'login.html';
-} else {
-  const userName = sessionStorage.getItem('name');
-  const welcomeElement = document.getElementById('welcomeMessage');
-  welcomeElement.textContent = userName ? `Welcome ${userName}!` : "Welcome member!";
-}
+  fetch('../Partials/footer.html')
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById('footer').innerHTML = data;
+      const yearEl = document.getElementById('year');
+      if (yearEl) yearEl.textContent = new Date().getFullYear();
+    });
+
+  // Login check and welcome message
+  const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+  if (isLoggedIn !== 'true') {
+    window.location.href = 'login.html';
+  } else {
+    const userName = sessionStorage.getItem('name');
+    const welcomeElement = document.getElementById('welcomeMessage');
+    welcomeElement.textContent = userName ? `Welcome ${userName}!` : "Welcome member!";
+  }
+});
 </script>
 </body>
 </html>
