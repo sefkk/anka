@@ -18,6 +18,12 @@
   --brand-1:#f0b26f; --brand-2:#e2874a; --ring:#ffcf9b;
   --radius:16px; --shadow:0 10px 30px rgba(0,0,0,.08);
 }
+<<<<<<< Updated upstream
+=======
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#ffffff; --text:#000000; --muted:#b6b6b6; --shadow:0 10px 30px rgba(0,0,0,.4) }
+}
+>>>>>>> Stashed changes
 
 /* ------- Base ------- */
 *{
@@ -37,6 +43,12 @@ a, button, .linktree-buttons a, #navbar, .site-footer{
   transition: background-color .25s ease, color .25s ease, border-color .25s ease,
               transform .25s ease, box-shadow .25s ease, opacity .25s ease, background-position .5s ease;
 }
+
+#navbar {
+  box-shadow: var(--shadow);
+  border-radius: 18px;
+}
+
 @media (prefers-reduced-motion: reduce){
   *{animation:none !important; transition:none !important}
 }
@@ -54,8 +66,8 @@ a, button, .linktree-buttons a, #navbar, .site-footer{
 }
 @media (prefers-color-scheme: dark){
   .site-topbar{
-    background: color-mix(in srgb, #121214 72%, transparent);
-    border-bottom-color: rgba(255,255,255,.06);
+    background: #fff;
+    border-bottom-color: rgba(0, 0, 0, 0.06);
   }
 }
 @keyframes topbarIn{to{transform: translateY(0)}}
@@ -69,7 +81,11 @@ a, button, .linktree-buttons a, #navbar, .site-footer{
   background: linear-gradient(45deg, var(--brand-1), var(--brand-2));
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
+<<<<<<< Updated upstream
 .welcome-sub{ margin:0; color:var(--muted) }
+=======
+.welcome-sub{ margin:0; color:var(--text) }
+>>>>>>> Stashed changes
 
 /* ------- Services (Linktree) ------- */
 .services-section{text-align:center; margin: 2rem 0 3rem}
@@ -106,7 +122,7 @@ footer.site-footer{
   padding-left: 3rem;
   background: linear-gradient(180deg, rgba(0,0,0,.03), transparent);
   border-top:1px solid rgba(0,0,0,.08);
-  color:var(--muted);
+  color:var(--text);
 }
 @media (prefers-color-scheme: dark){
   footer.site-footer{ border-top-color: rgba(255,255,255,.1) }
@@ -154,6 +170,16 @@ footer.site-footer{
 .mood-option input:active + label{ transform:scale(.97) }
 .mood-option input:checked + label{ background: currentColor; color:#fff; transform:scale(.96); }
 
+<<<<<<< Updated upstream
+=======
+/* İşaretlenince küçük dolgu efekti (isteğe bağlı), sonra tüm ölçek fade-out */
+.mood-option input:checked + label{
+  background: currentColor; color:#000000;
+  transform:scale(.96);
+}
+
+/* Herhangi biri seçilince ölçeği yumuşakça söndür ve teşekkür mesajını göster */
+>>>>>>> Stashed changes
 @keyframes moodFadeOut{ to{ opacity:0; transform:scale(.98) } }
 .mood-wrap:has(input:checked) .mood-scale{
   animation: moodFadeOut .35s ease forwards;
@@ -161,7 +187,7 @@ footer.site-footer{
 .mood-thanks{
   opacity:0; transform: translateY(4px);
   transition: opacity .35s ease .2s, transform .35s ease .2s;
-  font-weight:600; text-align:center; color:var(--bg);
+  font-weight:600; text-align:center; color:#000;
 }
 .mood-wrap:has(input:checked) .mood-thanks{
   opacity:1; transform:none;
@@ -200,6 +226,51 @@ footer.site-footer{
   </section>
 </header>
 
+<<<<<<< Updated upstream
+=======
+<!-- Welcome -->
+<section class="welcome-section">
+  <div class="container">
+    <h1 id="welcomeMessage"></h1>
+    <p class="welcome-sub">Here you can find your MyANKA page. You can access services, applications, and special discounts only for ANKA members.</p>
+  </div>
+
+  <div>
+    <span style="margin-right:8px; font-weight:600; color:var(--text)">How are you feeling today?</span>
+  </div>
+      
+
+  <div class="mood-wrap" aria-label="How are you feeling today questionnaire">
+    <fieldset class="mood-scale">
+      <legend>How are you feeling today?</legend>
+      <div class="mood-option">
+        <input id="mood-1" type="checkbox" data-score="1">
+        <label for="mood-1">1</label>
+      </div>
+      <div class="mood-option">
+        <input id="mood-2" type="checkbox" data-score="2">
+        <label for="mood-2">2</label>
+      </div>
+      <div class="mood-option">
+        <input id="mood-3" type="checkbox" data-score="3">
+        <label for="mood-3">3</label>
+      </div>
+      <div class="mood-option">
+        <input id="mood-4" type="checkbox" data-score="4">
+        <label for="mood-4">4</label>
+      </div>
+      <div class="mood-option">
+        <input id="mood-5" type="checkbox" data-score="5">
+        <label for="mood-5">5</label>
+      </div>
+    </fieldset>
+  
+    <div class="mood-thanks" aria-live="polite">Thank you for your response.</div>
+  </div>
+  
+</section>
+
+>>>>>>> Stashed changes
 <!-- Services -->
 <section class="services-section">
   <div class="container">
