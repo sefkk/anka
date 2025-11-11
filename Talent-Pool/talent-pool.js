@@ -173,9 +173,9 @@ const faqs = document.querySelectorAll(".faq");
 
 faqs.forEach((faq) => {
   faq.querySelector(".question").addEventListener("click", () => {
-    faqs.forEach(f => {
-      if (f!== faq) f.classList.remove("active");
+    const isActive = faq.classList.contains("active");
+    faqs.forEach(f => f.classList.remove("active"));
+      if (!isActive) faq.classList.add("active");
     });
-    faq.classList.toggle("active");
   });
-});
+
