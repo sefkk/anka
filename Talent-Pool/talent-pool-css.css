@@ -831,7 +831,7 @@ ul{
   background: #fff;
   border-radius: 20px;
   margin: 0 auto;
-  padding: 2rem 3 rem;
+  padding: 0 3rem;
   display: flex;
   flex-direction: column;
   align-items: stretch;
