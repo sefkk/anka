@@ -851,6 +851,7 @@ ul{
   padding-bottom: 1rem;
   border-bottom: 2px solid #fd9e5e;
   cursor: pointer;
+  align-self: center;
   
 }
 
