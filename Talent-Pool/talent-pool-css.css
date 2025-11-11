@@ -826,7 +826,6 @@ ul{
 
 /*FAQ */
 .faq-section {
-  min-height: 100vh;
   width: 700px;
   background: #fff;
   border-radius: 20px;
@@ -845,6 +844,7 @@ ul{
   padding: 10px 0px;
   background: #fd9e5e;
   font-size: 3rem;
+  text-align: center;
 }
 
 .faq-section .faq{
@@ -870,7 +870,7 @@ ul{
 }
 
 .faq-section .question:hover {
-  background-color: #cfcfcf;
+  background-color: #ecebeb;
 }
 
 .faq-section .answer{
