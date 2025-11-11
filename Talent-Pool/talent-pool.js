@@ -175,7 +175,7 @@ faqs.forEach(faq => {
   const question = faq.querySelector(".question");
   const answer = faq.querySelector(".answer");
 
-  question.addEventListener("click", () => {
+  faq.addEventListener("click", () => {
     faqs.forEach(f => {
       if (f !== faq) {
         f.classList.remove("active");
