@@ -172,7 +172,10 @@ document.addEventListener("DOMContentLoaded", () => {
 const faqs = document.querySelectorAll(".faq");
 
 faqs.forEach((faq) => {
-  faq.addEventListener("click", () => {
+  faq.querySelector(".question").addEventListener("click", () => {
+    faq.forEach(f => {
+      if (f!== faq) f.classList.remove("active");
+    });
     faq.classList.toggle("active");
   });
 });
