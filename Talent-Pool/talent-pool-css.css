@@ -836,6 +836,8 @@ ul{
 
 .faq-section .faq-header {
   border-radius: 20px 20px 0px 0px;
+  align-self: center;   
+  width: 700px;
   padding: 10px 0px;
   background: #fd9e5e;
   font-size: 3rem;
