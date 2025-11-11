@@ -842,7 +842,7 @@ ul{
   align-self: center;   
   width: 700px;
   padding: 10px 0px;
-  background: #fd9e5e;
+  background: linear-gradient(135deg, #ff8737, #eab033);
   font-size: 3rem;
   text-align: center;
 }
