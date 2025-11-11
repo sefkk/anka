@@ -831,6 +831,7 @@ ul{
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+  align-items: center;
   
 }
 
@@ -850,7 +851,7 @@ ul{
   padding-bottom: 1rem;
   border-bottom: 2px solid #fd9e5e;
   cursor: pointer;
-  align-items: center;
+  
 }
 
 .faq-section .question{
