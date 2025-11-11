@@ -863,6 +863,7 @@ ul{
   justify-content: space-between;
   align-items: center;
   width: 100%;
+  padding-inline: 1rem;
 }
 
 .faq-section .question h3 {
@@ -877,6 +878,7 @@ ul{
   max-height: 0;
   overflow: hidden;
   transition: max-height 1.2s ease;
+  padding-inline: 1rem;
 }
 
 .faq-section .answer  p{
