@@ -171,11 +171,32 @@ document.addEventListener("DOMContentLoaded", () => {
 
 const faqs = document.querySelectorAll(".faq");
 
-faqs.forEach((faq) => {
+faqs.forEach(faq => {
+  const question = faq.querySelector(".question");
+  const answer = faq.querySelector(".answer");
+
+  question.addEventListener("click", () => {
+    faqs.forEach(f => {
+      if (f !== faq) {
+        f.classList.remove("active");
+        f.querySelector(".answer").style.maxHeight = null;
+      }
+    });
+    faq.classList.toggle("active");
+
+    if (answer.style.maxHeight) {
+      answer.style.maxHeight = null;
+    } else {
+      answer.style.maxHeight = answer.scrollHeight + "px";
+    }
+  });
+});
+
+/*faqs.forEach((faq) => {
   faq.querySelector(".question").addEventListener("click", () => {
     const isActive = faq.classList.contains("active");
     faqs.forEach(f => f.classList.remove("active"));
       if (!isActive) faq.classList.add("active");
     });
   });
-
+*/
