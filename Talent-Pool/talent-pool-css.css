@@ -897,6 +897,7 @@ ul{
 
 .faq-page .faq.active .faq-plus {
   transform: rotate(180deg);
+  transition: transform 1.2s ease;
 }
 
 .faq-page .faq.active .answer {
