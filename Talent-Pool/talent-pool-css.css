@@ -830,7 +830,7 @@ ul{
   width: 700px;
   background: #fff;
   border-radius: 20px;
-  margin: 0 auto;
+  margin: 2rem auto 0 auto;
   padding: 0 3rem;
   display: flex;
   flex-direction: column;
@@ -845,7 +845,6 @@ ul{
   padding: 10px 0px;
   background: #fd9e5e;
   font-size: 3rem;
-  margin: 2rem 0rem;
 }
 
 .faq-section .faq{
