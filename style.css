@@ -256,7 +256,11 @@ html, body {
 
 .overlay p {
   font-size: 1.25rem;
+  color: #e2e2e2;
+  font-weight: bold;
+  margin: 10px 0 20px;
 }
+
 
 /* ABOUT SECTION */
 
@@ -811,7 +815,7 @@ html, body {
   .slider-shadow {
     display: none; /* Hide shadow on mobile for cleaner look */
   }
-}
+
 
 
 /* SPONSORS SLIDESHOW */
