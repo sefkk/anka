@@ -129,6 +129,8 @@ body {
   background: #fff;
   color: #fd9e5e;
   font-weight: 600;
+  font-size: large;
+  border: 2px double #fb934d;
 }
 
 .btn.primary:hover {
@@ -140,6 +142,7 @@ body {
   background: transparent;
   color: white;
   font-weight: 600;
+  font-size: large;
 }
 
 .btn.secondary:hover {
