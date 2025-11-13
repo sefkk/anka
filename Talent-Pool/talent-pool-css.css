@@ -829,7 +829,7 @@ ul{
 
 /*FAQ */
 .faq-section {
-  width: 700px;
+  width: 1000px;
   background: #fff;
   border-radius: 20px;
   margin: 2rem auto 2rem auto;
@@ -843,7 +843,7 @@ ul{
 .faq-section .faq-header {
   border-radius: 20px 20px 0px 0px;
   align-self: center;   
-  width: 700px;
+  width: 1000px;
   padding: 10px 0px;
   background: linear-gradient(135deg, #ff8737, #eab033);
   font-size: 3rem;
@@ -852,7 +852,7 @@ ul{
 
 .faq-section .faq{
   width: 100%;
-  max-width: 700px;
+  max-width: 1000px;
   border-bottom: 2px solid #fd9e5e;
   cursor: pointer;
   align-self: center;

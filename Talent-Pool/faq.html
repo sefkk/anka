@@ -74,14 +74,30 @@
       
     <script src="talent-pool.js" defer></script>
 
-<!-- Footer -->
-<div id="footer"></div>
-<script>
-  fetch('../Partials/footer.html')
-    .then(res => res.text())
-    .then(data => {
-      document.getElementById('footer').innerHTML = data;
-  });
+
+
+
+
+
+  <div id="contact-container"></div>
+  <!-- Footer -->
+  <div id="footer"></div>
+
+  <script>
+    fetch('../Partials/footer.html')
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById('footer').innerHTML = data;
+    });
+
+    fetch('../contact-us.html')
+      .then(res => res.text())
+      .then(data => {
+        document.getElementById('contact-container').innerHTML = data;
+    });
+
+
+
 
   const isLoggedIn = sessionStorage.getItem('isLoggedIn');
     
