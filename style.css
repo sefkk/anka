@@ -2089,9 +2089,6 @@ input {
 
 /* ======================= COMPANY PAGE STYLES ======================= */
 
-.committee-card.it.araci-payi-card { background: linear-gradient(135deg, #a8c2ff, #77bf96); }  
-.committee-card.it.power-box-card { background: linear-gradient(135deg, #8eca98, #3c3c3c); }  
-
 /* ------------------- Base Styles ------------------- */
 body {
   font-family: 'Inter', sans-serif;
@@ -2103,13 +2100,13 @@ body {
 }
 
 a {
-  color: #007bff;
+  color: #fd9e5e;
   text-decoration: none;
   transition: all 0.3s ease;
 }
 
 a:hover {
-  color: #0056b3;
+  color: #fd9e5e;
   text-decoration: underline;
 }
 
@@ -2188,7 +2185,7 @@ a:hover {
   display: block;
   width: 80px;
   height: 4px;
-  background-color: #007bff;
+  background-color: #fd9e5e;
   margin: 0.5rem auto 0;
   border-radius: 2px;
 }
@@ -2220,7 +2217,7 @@ a:hover {
   display: block;
   width: 60px;
   height: 4px;
-  background-color: #007bff;
+  background-color: #fd9e5e;
   margin: 0.5rem auto 0;
   border-radius: 2px;
 }
@@ -2255,13 +2252,13 @@ a:hover {
 }
 
 .detail-value a {
-  color: #007bff;
+  color: #fd9e5e;
   text-decoration: none;
   transition: color 0.3s ease;
 }
 
 .detail-value a:hover {
-  color: #0056b3;
+  color: #fd9e5e;
 }
 
 /* ------------------- Services Section ------------------- */
@@ -2308,7 +2305,7 @@ a:hover {
 
 .service-card i {
   font-size: 3rem;
-  color: #007bff;
+  color: #fd9e5e;
   margin-bottom: 1rem;
   position: relative;
   z-index: 1;
@@ -2354,7 +2351,7 @@ a:hover {
   display: block;
   width: 80px;
   height: 4px;
-  background-color: #007bff;
+  background-color: #fd9e5e;
   margin: 0.5rem auto 0;
   border-radius: 2px;
 }
@@ -2385,18 +2382,18 @@ a:hover {
 }
 
 .contact-list li:hover {
-  color: #007bff;
+  color: #fd9e5e;
   transform: translateX(3px);
 }
 
 .contact-list i {
-  color: #007bff;
+  color: #fd9e5e;
 }
 
 .cta-button {
   display: inline-block;
   padding: 1rem 2.5rem;
-  background: linear-gradient(90deg, #007bff, #0056b3);
+  background: linear-gradient(90deg, #fd9e5e, #fd9e5e);
   color: #fff;
   border-radius: 14px;
   font-weight: 700;
