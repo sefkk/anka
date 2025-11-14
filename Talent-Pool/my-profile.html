@@ -9,7 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
   <style>
-    /* Same CSS as before */
+    /* Profile container & sidebar */
     .profile-container {
       max-width: 1000px;
       margin: 100px auto;
@@ -20,6 +20,7 @@
       display: flex;
       flex-wrap: wrap;
     }
+
     .profile-sidebar {
       background: linear-gradient(135deg, #ff8737, #eab033);
       color: white;
@@ -29,6 +30,7 @@
       align-items: center;
       padding: 40px 20px;
     }
+
     .profile-sidebar img {
       width: 120px;
       height: 120px;
@@ -37,38 +39,103 @@
       border: 4px solid #fff;
       margin-bottom: 15px;
     }
+
     .profile-sidebar h2 { font-size: 24px; font-weight: 600; margin-bottom: 5px; }
     .profile-sidebar p { font-size: 14px; opacity: 0.9; margin-bottom: 25px; }
-    .edit-btn {
-      background: #fff; color: #fd9e5e; padding: 10px 22px;
-      border-radius: 12px; text-decoration: none; font-weight: 600;
-      transition: all 0.3s ease;
-    }
-    .edit-btn:hover { background: #f1f1f1; transform: translateY(-2px); }
+
+    /* Profile details */
     .profile-details { flex: 2 1 600px; padding: 40px; }
     .profile-details h3 {
       font-size: 22px; font-weight: 600; margin-bottom: 20px; color: #fd9e5e;
     }
+
     .info-grid {
       display: grid; grid-template-columns: 1fr 1fr; gap: 20px;
     }
+
     .info-item {
       background: #f9f9f9; padding: 15px 20px; border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.05);
     }
+
     .info-item label { font-size: 13px; color: #888; display: block; margin-bottom: 5px; }
     .info-item p { font-size: 15px; color: #333; font-weight: 500; }
-    .logout-btn {
-      background: #e74c3c; color: white; padding: 10px 20px;
-      border-radius: 12px; font-weight: 600; text-decoration: none;
-      display: inline-block; margin-top: 30px; transition: all 0.3s ease;
+
+    /* Right-align button container */
+    .button-container {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px; /* spacing between buttons */
+      margin-top: 10px;
     }
-    .logout-btn:hover { background: #c0392b; }
+
+    /* Unified modern buttons: same size, right-aligned */
+    .button-container button,
+    .button-container .logout-btn,
+    .button-container a.button-like {
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      min-width: 140px; /* same width for all buttons */
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    /* Hover effect for buttons */
+    .button-container button:hover,
+    .button-container .logout-btn:hover,
+    .button-container a.button-like:hover {
+      transform: translateY(-2px);
+    }
+
+    /* Default Upload/Change CV button colors (change as you like) */
+    .button-container button {
+      background: #fd9e5e;
+      color: white;
+    }
+    .button-container button:hover {
+      background: #ffb777;
+    }
+
+    /* Logout button special color */
+    .button-container .logout-btn {
+      background: #e74c3c;
+      color: white;
+    }
+    .button-container .logout-btn:hover {
+      background: #c0392b;
+    }
+
+    /* Uploadcare "Choose a file" link style */
+    .uploadcare--widget__button_type_open_text {
+      background: none !important;
+      border: none !important;
+      padding: 0 !important;
+      color: #fd9e5e;
+      font-weight: 500;
+      text-decoration: underline;
+      cursor: pointer;
+      font-size: 15px;
+      margin-right: 10px; /* small spacing before main buttons */
+    }
+
+    /* Hide default Uploadcare widget button container (optional) */
+    .uploadcare--widget__button_type_open {
+      display: inline-block; /* keep the link visible */
+    }
+
+    /* Responsive */
     @media(max-width:768px) {
       .info-grid { grid-template-columns: 1fr; }
       .profile-container { flex-direction: column; }
+      .button-container { justify-content: center; flex-wrap: wrap; }
     }
   </style>
+
 </head>
 <body>
 
@@ -94,7 +161,6 @@
       <img id="profilePhoto" src="../Images/talentpool-pp.avif" alt="User Photo">
       <h2 id="userFullName">User Name</h2>
       <p id="userUsername">@username</p>
-      <a href="#" class="edit-btn">Edit Profile</a>
     </div>
 
     <div class="profile-details">
@@ -125,18 +191,19 @@
       </div>
 
       <!-- Uploadcare -->
-      <input
+      <div class="button-container">
+        <input
         type="hidden"
         role="uploadcare-uploader"
         data-public-key="3cfb4e60399cef8a900f"
         data-multiple="false"
         data-images-only="false"
         data-accept="application/pdf"
-      />
-      <button id="uploadCVBtn" class="edit-btn">Upload CV</button>
-      <button id="changeCVBtn" class="edit-btn" style="display:none;">Change CV</button>
-
-      <a href="../login.html" class="logout-btn" id="logoutBtn">Logout</a>
+        />
+        <button id="uploadCVBtn">Upload CV</button>
+        <button id="changeCVBtn" style="display:none;">Change CV</button>
+        <a href="../login.html" class="logout-btn" id="logoutBtn">Logout</a>
+      </div>
     </div>
   </section>
 
