@@ -144,101 +144,110 @@
   <div id="footer"></div>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const welcomeElement = document.getElementById("welcomeMessage");
-  const fullNameEl = document.getElementById("userFullName");
-  const usernameEl = document.getElementById("userUsername");
-  const uniEl = document.getElementById("userUni");
-  const majorEl = document.getElementById("userMajor");
-  const genderEl = document.getElementById("userGender");
-  const yobEl = document.getElementById("userYob");
-  const logoutBtn = document.getElementById("logoutBtn");
-  const cvEl = document.getElementById("userCV");
-  const uploadCVBtn = document.getElementById("uploadCVBtn");
-  const changeCVBtn = document.getElementById("changeCVBtn");
+  document.addEventListener("DOMContentLoaded", () => {
+    const welcomeElement = document.getElementById("welcomeMessage");
+    const fullNameEl = document.getElementById("userFullName");
+    const usernameEl = document.getElementById("userUsername");
+    const uniEl = document.getElementById("userUni");
+    const majorEl = document.getElementById("userMajor");
+    const genderEl = document.getElementById("userGender");
+    const yobEl = document.getElementById("userYob");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const cvEl = document.getElementById("userCV");
+    const uploadCVBtn = document.getElementById("uploadCVBtn");
+    const changeCVBtn = document.getElementById("changeCVBtn");
 
-  // Load footer
-  fetch('../Partials/footer.html')
-    .then(res => res.text())
-    .then(data => { document.getElementById('footer').innerHTML = data; });
+    // Load footer
+    fetch('../Partials/footer.html')
+      .then(res => res.text())
+      .then(data => { document.getElementById('footer').innerHTML = data; });
 
-  // Session check
-  const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-  const username = sessionStorage.getItem('username');
-  const storedName = sessionStorage.getItem('name');
+    // Session check
+    const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+    const username = sessionStorage.getItem('username');
+    const storedName = sessionStorage.getItem('name');
 
-  if (isLoggedIn !== 'true' || !username) {
-    window.location.href = '../login.html';
-    return;
-  }
+    if (isLoggedIn !== 'true' || !username) {
+      window.location.href = '../login.html';
+      return;
+    }
 
-  if (storedName) welcomeElement.textContent = `Welcome ${storedName}!`;
+    if (storedName) welcomeElement.textContent = `Welcome ${storedName}!`;
 
-  // Fetch user data
-  fetch(`https://anka-vkrl.onrender.com/api/users?username=${encodeURIComponent(username)}`)
-    .then(res => { if (!res.ok) throw new Error("User fetch failed"); return res.json(); })
-    .then(user => {
-      fullNameEl.textContent = `${user.name || ''} ${user.surname || ''}`;
-      usernameEl.textContent = '@' + user.username;
-      uniEl.textContent = user.uni || '-';
-      majorEl.textContent = user.major || '-';
-      genderEl.textContent = user.gender || '-';
-      yobEl.textContent = user.yob || '-';
+    // Fetch user data
+    fetch(`https://anka-vkrl.onrender.com/api/users?username=${encodeURIComponent(username)}`)
+      .then(res => { if (!res.ok) throw new Error("User fetch failed"); return res.json(); })
+      .then(user => {
+        fullNameEl.textContent = `${user.name || ''} ${user.surname || ''}`;
+        usernameEl.textContent = '@' + user.username;
+        uniEl.textContent = user.uni || '-';
+        majorEl.textContent = user.major || '-';
+        genderEl.textContent = user.gender || '-';
+        yobEl.textContent = user.yob || '-';
 
-      if (user.cvLink) {
-        cvEl.innerHTML = `<a href="${user.cvLink}" target="_blank">View CV</a>`;
+        if (user.cvLink) {
+          cvEl.innerHTML = `<a href="${user.cvLink}" target="_blank">View CV</a>`;
+          uploadCVBtn.style.display = "none";
+          changeCVBtn.style.display = "inline-block";
+        }
+      })
+      .catch(err => { 
+        console.error("User fetch error:", err); 
+        fullNameEl.textContent = "Error loading profile"; 
+      });
+
+    // Logout
+    logoutBtn.addEventListener("click", () => {
+      sessionStorage.clear();
+      window.location.href = "../login.html";
+    });
+
+    // Initialize Uploadcare widget
+    const widget = uploadcare.Widget('[role=uploadcare-uploader]');
+
+    async function uploadCV() {
+      const file = widget.value();
+      if (!file) {
+        alert("Please select a PDF file first.");
+        return;
+      }
+
+      uploadCVBtn.disabled = true;
+      uploadCVBtn.textContent = "Uploading...";
+
+      try {
+        const fileInfo = await file.promise();
+        const cvURL = fileInfo.cdnUrl;
+
+        // Save CV URL to backend (MongoDB)
+        const res = await fetch("https://anka-vkrl.onrender.com/api/users/update-cv", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, cvLink: cvURL })
+        });
+
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(text || "Failed to save CV in database");
+        }
+
+        // Update UI
+        cvEl.innerHTML = `<a href="${cvURL}" target="_blank">View CV</a>`;
         uploadCVBtn.style.display = "none";
         changeCVBtn.style.display = "inline-block";
+
+        alert("CV uploaded and saved successfully!");
+      } catch (err) {
+        console.error("CV upload/save error:", err);
+        alert("Upload failed! Please try again.");
+      } finally {
+        uploadCVBtn.disabled = false;
+        uploadCVBtn.textContent = "Upload CV";
       }
-    })
-    .catch(err => { console.error("User fetch error:", err); fullNameEl.textContent = "Error loading profile"; });
-
-  // Logout
-  logoutBtn.addEventListener("click", () => {
-    sessionStorage.clear();
-    window.location.href = "../login.html";
-  });
-
-  // Uploadcare widget
-  const widget = uploadcare.Widget('[role=uploadcare-uploader]');
-
-  async function uploadCV() {
-    const file = await widget.value();
-    if (!file) { alert("Please select a PDF file first."); return; }
-
-    uploadCVBtn.disabled = true;
-    uploadCVBtn.textContent = "Uploading...";
-
-    try {
-      const fileInfo = await file.promise();
-      const cvURL = fileInfo.cdnUrl;
-
-      // Save CV link to backend
-      fetch("https://anka-vkrl.onrender.com/api/users/update-cv", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, cvLink: cvURL })
-      })
-      .then(async res => {
-        const text = await res.text();
-        if (!res.ok) { alert("CV update failed: " + text); return; }
-        location.reload();
-      })
-      .catch(err => console.error("CV update error:", err));
-
-    } catch (err) {
-      console.error(err);
-      alert("Upload failed!");
-    } finally {
-      uploadCVBtn.disabled = false;
-      uploadCVBtn.textContent = "Upload CV";
     }
-  }
 
-  uploadCVBtn.addEventListener("click", uploadCV);
-  changeCVBtn.addEventListener("click", uploadCV);
-});
+    uploadCVBtn.addEventListener("click", uploadCV);
+    changeCVBtn.addEventListener("click", uploadCV);
+  });
 </script>
 
-</body>
-</html>
