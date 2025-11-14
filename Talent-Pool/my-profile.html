@@ -7,8 +7,9 @@
   <link rel="stylesheet" href="../Talent-Pool/talent-pool-css.css">
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
   <style>
-    /* Aynı CSS seninkiyle aynı, değiştirmedim */
+    /* Same CSS as before */
     .profile-container {
       max-width: 1000px;
       margin: 100px auto;
@@ -123,8 +124,15 @@
         <p id="userCV">No CV uploaded</p>
       </div>
 
-      <input type="file" id="cvFile" accept="application/pdf" style="margin-bottom:10px;">
-
+      <!-- Uploadcare -->
+      <input
+        type="hidden"
+        role="uploadcare-uploader"
+        data-public-key="3cfb4e60399cef8a900f"
+        data-multiple="false"
+        data-images-only="false"
+        data-accept="application/pdf"
+      />
       <button id="uploadCVBtn" class="edit-btn">Upload CV</button>
       <button id="changeCVBtn" class="edit-btn" style="display:none;">Change CV</button>
 
@@ -145,22 +153,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const genderEl = document.getElementById("userGender");
   const yobEl = document.getElementById("userYob");
   const logoutBtn = document.getElementById("logoutBtn");
-
-  // CV bilgisi
   const cvEl = document.getElementById("userCV");
   const uploadCVBtn = document.getElementById("uploadCVBtn");
   const changeCVBtn = document.getElementById("changeCVBtn");
-  const cvFileInput = document.getElementById("cvFile");
 
-
-  // Footer'ı yükle
+  // Load footer
   fetch('../Partials/footer.html')
     .then(res => res.text())
-    .then(data => {
-      document.getElementById('footer').innerHTML = data;
-    });
+    .then(data => { document.getElementById('footer').innerHTML = data; });
 
-  // Oturum kontrolü
+  // Session check
   const isLoggedIn = sessionStorage.getItem('isLoggedIn');
   const username = sessionStorage.getItem('username');
   const storedName = sessionStorage.getItem('name');
@@ -170,29 +172,12 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  // Welcome mesajı
-  if (storedName) {
-    welcomeElement.textContent = `Welcome ${storedName}!`;
-  }
+  if (storedName) welcomeElement.textContent = `Welcome ${storedName}!`;
 
-  console.log("Fetching user data for:", username);
-
-  // Kullanıcı verisini backend'den çek
+  // Fetch user data
   fetch(`https://anka-vkrl.onrender.com/api/users?username=${encodeURIComponent(username)}`)
-    .then(res => {
-      if (!res.ok) throw new Error("User fetch failed");
-      return res.json();
-    })
+    .then(res => { if (!res.ok) throw new Error("User fetch failed"); return res.json(); })
     .then(user => {
-      console.log("User data:", user);
-
-      if (!user || !user.username) {
-        fullNameEl.textContent = "Unknown User";
-        usernameEl.textContent = "@unknown";
-        return;
-      }
-
-      // Profil alanlarını doldur
       fullNameEl.textContent = `${user.name || ''} ${user.surname || ''}`;
       usernameEl.textContent = '@' + user.username;
       uniEl.textContent = user.uni || '-';
@@ -204,66 +189,54 @@ document.addEventListener("DOMContentLoaded", () => {
         cvEl.innerHTML = `<a href="${user.cvLink}" target="_blank">View CV</a>`;
         uploadCVBtn.style.display = "none";
         changeCVBtn.style.display = "inline-block";
-      } else {
-        cvEl.textContent = "No CV uploaded";
-        changeCVBtn.style.display = "none";
       }
     })
-    .catch(err => {
-      console.error("User fetch error:", err);
-      fullNameEl.textContent = "Error loading profile";
-    });
+    .catch(err => { console.error("User fetch error:", err); fullNameEl.textContent = "Error loading profile"; });
 
-  // Logout işlemi
+  // Logout
   logoutBtn.addEventListener("click", () => {
     sessionStorage.clear();
     window.location.href = "../login.html";
   });
 
-  function saveCVLink(cvLink) {
-    console.log("Sending CV to backend:", cvLink);
+  // Uploadcare widget
+  const widget = uploadcare.Widget('[role=uploadcare-uploader]');
 
-    fetch("https://anka-vkrl.onrender.com/api/users/update-cv", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: username,
-        cvLink: cvLink
+  async function uploadCV() {
+    const file = await widget.value();
+    if (!file) { alert("Please select a PDF file first."); return; }
+
+    uploadCVBtn.disabled = true;
+    uploadCVBtn.textContent = "Uploading...";
+
+    try {
+      const fileInfo = await file.promise();
+      const cvURL = fileInfo.cdnUrl;
+
+      // Save CV link to backend
+      fetch("https://anka-vkrl.onrender.com/api/users/update-cv", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, cvLink: cvURL })
       })
-    })
-    .then(async res => {
-      console.log("STATUS:", res.status);
-      const text = await res.text();
-      console.log("RESPONSE:", text);
+      .then(async res => {
+        const text = await res.text();
+        if (!res.ok) { alert("CV update failed: " + text); return; }
+        location.reload();
+      })
+      .catch(err => console.error("CV update error:", err));
 
-      if (!res.ok) {
-        alert("CV update failed: " + text);
-        return;
-      }
-
-      location.reload();
-    })
-    .catch(err => console.error("CV update error:", err));
+    } catch (err) {
+      console.error(err);
+      alert("Upload failed!");
+    } finally {
+      uploadCVBtn.disabled = false;
+      uploadCVBtn.textContent = "Upload CV";
+    }
   }
 
-
-  uploadCVBtn.addEventListener("click", () => {
-    const file = cvFileInput.files[0];
-    if (!file || file.type !== "application/pdf") {
-      alert("Select a PDF file first.");
-      return;
-    }
-
-    const link = prompt("Upload your CV to Google Drive and paste the share link:");
-    if (link) saveCVLink(link);
-  });
-
-  changeCVBtn.addEventListener("click", () => {
-    const file = cvFileInput.files[0];
-    const link = prompt("Upload your new CV to Google Drive and paste the link:");
-    if (link) saveCVLink(link);
-  });
-
+  uploadCVBtn.addEventListener("click", uploadCV);
+  changeCVBtn.addEventListener("click", uploadCV);
 });
 </script>
 
