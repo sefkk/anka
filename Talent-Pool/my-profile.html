@@ -41,7 +41,26 @@
     }
 
     .profile-sidebar h2 { font-size: 24px; font-weight: 600; margin-bottom: 5px; }
-    .profile-sidebar p { font-size: 14px; opacity: 0.9; margin-bottom: 25px; }
+    .profile-sidebar p { font-size: 14px; opacity: 0.9; margin-bottom: 15px; }
+
+    .change-password-btn {
+      padding: 10px 20px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .change-password-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+    }
 
     /* Profile details */
     .profile-details { flex: 2 1 600px; padding: 40px; }
@@ -128,11 +147,152 @@
       display: inline-block; /* keep the link visible */
     }
 
+    /* Password Change Modal */
+    .password-modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .password-modal-overlay.active {
+      display: flex;
+    }
+
+    .password-modal-card {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 450px;
+      width: 90%;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+      position: relative;
+      animation: modalSlideIn 0.3s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .password-modal-card h3 {
+      font-size: 22px;
+      font-weight: 600;
+      color: #fd9e5e;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .password-modal-card .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: #999;
+      cursor: pointer;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+    }
+
+    .password-modal-card .close-btn:hover {
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    .password-modal-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .password-modal-form .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .password-modal-form label {
+      font-size: 14px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .password-modal-form input {
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: border-color 0.3s ease;
+    }
+
+    .password-modal-form input:focus {
+      outline: none;
+      border-color: #fd9e5e;
+    }
+
+    .password-modal-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .password-modal-buttons button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+    }
+
+    .password-modal-buttons .submit-btn {
+      background: #fd9e5e;
+      color: white;
+    }
+
+    .password-modal-buttons .submit-btn:hover {
+      background: #ffb777;
+      transform: translateY(-2px);
+    }
+
+    .password-modal-buttons .cancel-btn {
+      background: #f5f5f5;
+      color: #333;
+    }
+
+    .password-modal-buttons .cancel-btn:hover {
+      background: #e0e0e0;
+    }
+
     /* Responsive */
     @media(max-width:768px) {
       .info-grid { grid-template-columns: 1fr; }
       .profile-container { flex-direction: column; }
       .button-container { justify-content: center; flex-wrap: wrap; }
+      .password-modal-card {
+        padding: 25px 20px;
+      }
     }
   </style>
 
@@ -161,6 +321,7 @@
       <img id="profilePhoto" src="../Images/talentpool-pp.avif" alt="User Photo">
       <h2 id="userFullName">User Name</h2>
       <p id="userUsername">@username</p>
+      <button class="change-password-btn" id="changePasswordBtn">Change your password</button>
     </div>
 
     <div class="profile-details">
@@ -207,6 +368,28 @@
     </div>
   </section>
 
+  <!-- Password Change Modal -->
+  <div class="password-modal-overlay" id="passwordModal">
+    <div class="password-modal-card">
+      <button class="close-btn" id="closePasswordModal">&times;</button>
+      <h3>Change Password</h3>
+      <form class="password-modal-form" id="passwordForm">
+        <div class="form-group">
+          <label for="oldPassword">Old Password</label>
+          <input type="password" id="oldPassword" name="oldPassword" required>
+        </div>
+        <div class="form-group">
+          <label for="newPassword">New Password</label>
+          <input type="password" id="newPassword" name="newPassword" required>
+        </div>
+        <div class="password-modal-buttons">
+          <button type="button" class="cancel-btn" id="cancelPasswordBtn">Cancel</button>
+          <button type="submit" class="submit-btn">Change Password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- Footer -->
   <div id="footer"></div>
 
@@ -223,6 +406,11 @@
     const cvEl = document.getElementById("userCV");
     const uploadCVBtn = document.getElementById("uploadCVBtn");
     const changeCVBtn = document.getElementById("changeCVBtn");
+    const changePasswordBtn = document.getElementById("changePasswordBtn");
+    const passwordModal = document.getElementById("passwordModal");
+    const closePasswordModal = document.getElementById("closePasswordModal");
+    const cancelPasswordBtn = document.getElementById("cancelPasswordBtn");
+    const passwordForm = document.getElementById("passwordForm");
 
     // Load footer
     fetch('../Partials/footer.html')
@@ -315,6 +503,70 @@
 
     uploadCVBtn.addEventListener("click", uploadCV);
     changeCVBtn.addEventListener("click", uploadCV);
+
+    // Password Change Modal
+    function openPasswordModal() {
+      passwordModal.classList.add("active");
+    }
+
+    function closePasswordModalFunc() {
+      passwordModal.classList.remove("active");
+      passwordForm.reset();
+    }
+
+    changePasswordBtn.addEventListener("click", openPasswordModal);
+    closePasswordModal.addEventListener("click", closePasswordModalFunc);
+    cancelPasswordBtn.addEventListener("click", closePasswordModalFunc);
+
+    // Close modal when clicking outside
+    passwordModal.addEventListener("click", (e) => {
+      if (e.target === passwordModal) {
+        closePasswordModalFunc();
+      }
+    });
+
+    // Handle form submission
+    passwordForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      
+      const oldPassword = document.getElementById("oldPassword").value;
+      const newPassword = document.getElementById("newPassword").value;
+      const submitBtn = passwordForm.querySelector(".submit-btn");
+      const originalBtnText = submitBtn.textContent;
+
+      // Disable button and show loading state
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Changing...";
+
+      try {
+        const response = await fetch("https://anka-vkrl.onrender.com/api/users/change-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: username,
+            oldPassword: oldPassword,
+            newPassword: newPassword
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.message || "Failed to change password");
+        }
+
+        // Success
+        alert("Password changed successfully!");
+        closePasswordModalFunc();
+      } catch (err) {
+        console.error("Password change error:", err);
+        alert(err.message || "Failed to change password. Please try again.");
+      } finally {
+        // Re-enable button
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalBtnText;
+      }
+    });
   });
 </script>
 
