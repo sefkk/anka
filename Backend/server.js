@@ -88,6 +88,36 @@ app.post("/api/users/update-cv", async (req, res) => {
   }
 });
 
+// ------------------- Change Password -------------------
+app.post("/api/users/change-password", async (req, res) => {
+  try {
+    const { username, oldPassword, newPassword } = req.body;
+
+    if (!username || !oldPassword || !newPassword) {
+      return res.status(400).json({ message: "username, oldPassword, and newPassword are required" });
+    }
+
+    const user = await User.findOne({ username: username.trim() });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Compare old password with stored password
+    if (user.password !== oldPassword.trim()) {
+      return res.status(401).json({ message: "Old password is incorrect" });
+    }
+
+    // Update password
+    user.password = newPassword.trim();
+    await user.save();
+
+    res.status(200).json({ message: "Password changed successfully" });
+  } catch (err) {
+    console.error("❌ Password change error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 // ------------------- Company model -------------------
 const companySchema = new mongoose.Schema({
     name: String,
