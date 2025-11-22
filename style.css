@@ -957,15 +957,34 @@ ul{
 }
 
 @media(max-width: 900px){
+  .footer{
+    padding: 50px 20px;
+  }
   .footer-col{
     width: 50%;
     margin-bottom: 30px;
+  }
+  .footer-col.logo-col {
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .footer-logo {
+    margin-left: 0;
+    max-width: 250px;
+  }
+  .footer-col:not(.logo-col) {
+    margin-left: 0;
+  }
 }
-}
-@media(max-width: 900px){
+@media(max-width: 600px){
   .footer-col{
     width: 100%;
-}
+    margin-bottom: 25px;
+  }
+  .footer-col.logo-col {
+    width: 100%;
+  }
 }
 
 /* OUR COMMITTEES STYLING */
