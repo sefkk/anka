@@ -93,6 +93,11 @@
     .then(res => res.text())
     .then(data => {
       document.getElementById('footer').innerHTML = data;
+      // Fix tüzük link path for Talent Pool pages
+      const tuzukLink = document.querySelector('#footer a[href*="tuzuk"]');
+      if (tuzukLink && tuzukLink.getAttribute('href') === 'docs/tuzuk2025.pdf') {
+        tuzukLink.setAttribute('href', '../docs/tuzuk2025.pdf');
+      }
     });
 
     const isLoggedIn = sessionStorage.getItem('isLoggedIn');
