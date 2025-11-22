@@ -204,6 +204,19 @@ body {
   font-size: 15px;
 }
 
+/* Hamburger Menu for Talent Pool */
+.menu-toggle-tp {
+  display: none;
+}
+
+.hamburger-tp {
+  display: none;
+  font-size: 28px;
+  cursor: pointer;
+  color: #555;
+  margin-left: auto;
+}
+
 /* Responsive */
 @media(max-width:768px) {
   .hero h2 {
@@ -214,8 +227,48 @@ body {
     font-size: 16px;
   }
   
+  .hamburger-tp {
+    display: block;
+  }
+
   .menu {
-    display: none; /* For mobile you could add a hamburger later */
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 0 0 10px 10px;
+    padding: 10px 0;
+    z-index: 1000;
+  }
+
+  .nav-container {
+    position: relative;
+  }
+  
+  /* Show menu when checkbox is checked - menu is a sibling that comes after checkbox */
+  .menu-toggle-tp:checked ~ .menu {
+    display: flex;
+  }
+
+  .menu a {
+    padding: 14px 20px;
+    border-top: 1px solid #eee;
+    width: 100%;
+    margin-right: 0;
+    display: block;
+  }
+
+  .menu a:first-child {
+    border-top: none;
+  }
+
+  .nav-container {
+    position: relative;
+    flex-wrap: wrap;
   }
   
   .card-grid {
