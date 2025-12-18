@@ -87,15 +87,48 @@
   <div id="footer"></div>
 
   <script>
-    fetch('../Partials/footer.html')
+    fetch('../Partials/footer-loggedin.html')
       .then(res => res.text())
       .then(data => {
         document.getElementById('footer').innerHTML = data;
-        // Fix tüzük link path for Talent Pool pages
-        const tuzukLink = document.querySelector('#footer a[href*="tuzuk"]');
-        if (tuzukLink && tuzukLink.getAttribute('href') === 'docs/tuzuk2025.pdf') {
-          tuzukLink.setAttribute('href', '../docs/tuzuk2025.pdf');
-        }
+        const yearEl = document.getElementById('year');
+        if (yearEl) yearEl.textContent = new Date().getFullYear();
+        // Fix paths for Talent Pool pages (footer-loggedin.html uses root-relative paths)
+        const footerLinks = document.querySelectorAll('#footer a[href]');
+        footerLinks.forEach(link => {
+          const href = link.getAttribute('href');
+          if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('../')) {
+            // Handle Talent-Pool/ paths specially
+            if (href.startsWith('Talent-Pool/')) {
+              link.setAttribute('href', href.replace('Talent-Pool/', ''));
+            } else {
+              link.setAttribute('href', '../' + href);
+            }
+          }
+        });
+        // Fix image paths
+        const footerImages = document.querySelectorAll('#footer img[src]');
+        footerImages.forEach(img => {
+          const src = img.getAttribute('src');
+          if (src && !src.startsWith('http') && !src.startsWith('../') && !src.startsWith('data:')) {
+            img.setAttribute('src', '../' + src);
+          }
+        });
+      })
+      .catch(() => {
+        // Fallback to regular footer if logged-in footer doesn't exist
+        fetch('../Partials/footer.html')
+          .then(res => res.text())
+          .then(data => {
+            document.getElementById('footer').innerHTML = data;
+            const yearEl = document.getElementById('year');
+            if (yearEl) yearEl.textContent = new Date().getFullYear();
+            // Fix tüzük link path for Talent Pool pages
+            const tuzukLink = document.querySelector('#footer a[href*="tuzuk"]');
+            if (tuzukLink && tuzukLink.getAttribute('href') === 'docs/tuzuk2025.pdf') {
+              tuzukLink.setAttribute('href', '../docs/tuzuk2025.pdf');
+            }
+          });
       });
 
     fetch("../Partials/contact-us-fragment.html")

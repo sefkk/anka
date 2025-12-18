@@ -36,10 +36,22 @@
         document.getElementById('navbar').innerHTML = data;
     });
 
-    fetch('Partials/footer.html')
+    fetch('Partials/footer-loggedin.html')
         .then(res => res.text())
         .then(data => {
         document.getElementById('footer').innerHTML = data;
+        const yearEl = document.getElementById('year');
+        if (yearEl) yearEl.textContent = new Date().getFullYear();
+    })
+    .catch(() => {
+        // Fallback to regular footer if logged-in footer doesn't exist
+        fetch('Partials/footer.html')
+            .then(res => res.text())
+            .then(data => {
+            document.getElementById('footer').innerHTML = data;
+            const yearEl = document.getElementById('year');
+            if (yearEl) yearEl.textContent = new Date().getFullYear();
+        });
     });
     // Dinamik kampanya listesi
     const discounts = [
