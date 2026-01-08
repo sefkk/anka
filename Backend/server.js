@@ -19,11 +19,12 @@ app.use(express.json());
 // ------------------- Admin Middleware -------------------
 const checkAdmin = async (req, res, next) => {
   try {
-    const username = req.body.username || req.query.username;
+    const username = (req.query && req.query.username) || (req.body && req.body.username);
     if (!username) {
       return res.status(400).json({ message: "Username is required" });
     }
-    const user = await User.findOne({ username: username.trim() });
+    const trimmedUsername = String(username).trim();
+    const user = await User.findOne({ username: trimmedUsername });
     if (!user || user.isAdmin !== true) {
       return res.status(403).json({ message: "Admin access required" });
     }
@@ -222,6 +223,98 @@ app.post("/api/apply", async (req, res) => {
 
 // ==================== ADMIN ROUTES ====================
 
+// ------------------- Check Available Username -------------------
+app.get("/api/admin/users/check-username", async (req, res) => {
+  try {
+    const { baseUsername } = req.query;
+    
+    if (!baseUsername) {
+      return res.status(400).json({ message: "baseUsername is required" });
+    }
+    
+    // Check if base username exists
+    let existingUser = await User.findOne({ username: baseUsername.trim() });
+    
+    // If base username doesn't exist, return it
+    if (!existingUser) {
+      return res.json({ available: true, username: baseUsername.trim() });
+    }
+    
+    // If base username exists, find the next available numbered version
+    let counter = 2;
+    let suggestedUsername = `${baseUsername.trim()}${counter}`;
+    
+    // Keep checking until we find an available username (max 100 attempts)
+    while (counter <= 100) {
+      existingUser = await User.findOne({ username: suggestedUsername });
+      if (!existingUser) {
+        return res.json({ available: false, username: suggestedUsername });
+      }
+      counter++;
+      suggestedUsername = `${baseUsername.trim()}${counter}`;
+    }
+    
+    // If we couldn't find one in 100 attempts, return error
+    return res.status(500).json({ message: "Could not find available username" });
+  } catch (err) {
+    console.error("❌ Failed to check username:", err.message);
+    res.status(500).json({ message: "Failed to check username", error: err.message });
+  }
+});
+
+// ------------------- Add User (Admin Only) -------------------
+app.post("/api/admin/users", async (req, res) => {
+  try {
+    const { name, surname, username: newUsername, password, gender, major, uni, yob, email, cvLink, isAdmin, adminUsername } = req.body;
+    
+    console.log(`Add user request - Admin: ${adminUsername}, New User: ${name} ${surname}, Username: ${newUsername}`);
+    
+    // Check admin authentication
+    const adminUser = await User.findOne({ username: (adminUsername || req.body.username || req.query.username || '').trim() });
+    if (!adminUser || adminUser.isAdmin !== true) {
+      return res.status(403).json({ message: "Admin access required" });
+    }
+    
+    // Validate required fields
+    if (!name || !surname || !newUsername || !password) {
+      return res.status(400).json({ message: "Name, surname, username, and password are required" });
+    }
+    
+    // Check if username already exists
+    const existingUser = await User.findOne({ username: newUsername.trim() });
+    if (existingUser) {
+      return res.status(400).json({ message: "Username already exists" });
+    }
+    
+    // Create user object
+    const userData = {
+      name: name.trim(),
+      surname: surname.trim(),
+      username: newUsername.trim(),
+      password: password.trim()
+    };
+    
+    // Add optional fields if provided
+    if (gender) userData.gender = gender.trim();
+    if (major) userData.major = major.trim();
+    if (uni) userData.uni = uni.trim();
+    if (yob) userData.yob = yob.trim();
+    if (email) userData.email = email.trim();
+    if (cvLink) userData.cvLink = cvLink.trim();
+    if (isAdmin === true) userData.isAdmin = true; // Only set if explicitly true
+    
+    const newUser = new User(userData);
+    await newUser.save();
+    
+    console.log(`✅ User created successfully: ${newUsername}`);
+    res.status(201).json({ message: "User created successfully", user: { username: newUser.username, name: newUser.name } });
+  } catch (err) {
+    console.error("❌ Failed to create user:", err.message);
+    console.error("❌ Error stack:", err.stack);
+    res.status(500).json({ message: "Failed to create user", error: err.message });
+  }
+});
+
 // ------------------- Check Admin Status -------------------
 app.post("/api/admin/check", async (req, res) => {
   try {
@@ -281,9 +374,12 @@ app.post("/api/admin/news", checkAdmin, async (req, res) => {
 app.delete("/api/admin/news/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const username = req.body.username || req.query.username;
+    const username = (req.query && req.query.username) || (req.body && req.body.username);
     
-    console.log(`Delete news request - ID: ${id}, Username: ${username}`);
+    console.log(`Delete news request - ID: ${id}`);
+    console.log(`Query params:`, req.query);
+    console.log(`Body:`, req.body);
+    console.log(`Username:`, username);
     
     if (!username) {
       return res.status(400).json({ message: "Username is required" });
@@ -300,7 +396,12 @@ app.delete("/api/admin/news/:id", async (req, res) => {
       return res.status(400).json({ message: "Invalid news ID format" });
     }
     
-    const user = await User.findOne({ username: username.trim() });
+    const trimmedUsername = String(username).trim();
+    console.log(`Looking up user: ${trimmedUsername}`);
+    
+    const user = await User.findOne({ username: trimmedUsername });
+    console.log(`User found:`, !!user, user ? `isAdmin: ${user.isAdmin}` : 'not found');
+    
     if (!user || user.isAdmin !== true) {
       return res.status(403).json({ message: "Admin access required" });
     }
@@ -354,9 +455,12 @@ app.post("/api/admin/startups", checkAdmin, async (req, res) => {
 app.delete("/api/admin/startups/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const username = req.body.username || req.query.username;
+    const username = (req.query && req.query.username) || (req.body && req.body.username);
     
-    console.log(`Delete startup request - ID: ${id}, Username: ${username}`);
+    console.log(`Delete startup request - ID: ${id}`);
+    console.log(`Query params:`, req.query);
+    console.log(`Body:`, req.body);
+    console.log(`Username:`, username);
     
     if (!username) {
       return res.status(400).json({ message: "Username is required" });
@@ -373,7 +477,12 @@ app.delete("/api/admin/startups/:id", async (req, res) => {
       return res.status(400).json({ message: "Invalid startup ID format" });
     }
     
-    const user = await User.findOne({ username: username.trim() });
+    const trimmedUsername = String(username).trim();
+    console.log(`Looking up user: ${trimmedUsername}`);
+    
+    const user = await User.findOne({ username: trimmedUsername });
+    console.log(`User found:`, !!user, user ? `isAdmin: ${user.isAdmin}` : 'not found');
+    
     if (!user || user.isAdmin !== true) {
       return res.status(403).json({ message: "Admin access required" });
     }
@@ -421,9 +530,12 @@ app.post("/api/admin/companies", checkAdmin, async (req, res) => {
 app.delete("/api/admin/companies/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const username = req.body.username || req.query.username;
+    const username = (req.query && req.query.username) || (req.body && req.body.username);
     
-    console.log(`Delete company request - ID: ${id}, Username: ${username}`);
+    console.log(`Delete company request - ID: ${id}`);
+    console.log(`Query params:`, req.query);
+    console.log(`Body:`, req.body);
+    console.log(`Username:`, username);
     
     if (!username) {
       return res.status(400).json({ message: "Username is required" });
@@ -440,7 +552,12 @@ app.delete("/api/admin/companies/:id", async (req, res) => {
       return res.status(400).json({ message: "Invalid company ID format" });
     }
     
-    const user = await User.findOne({ username: username.trim() });
+    const trimmedUsername = String(username).trim();
+    console.log(`Looking up user: ${trimmedUsername}`);
+    
+    const user = await User.findOne({ username: trimmedUsername });
+    console.log(`User found:`, !!user, user ? `isAdmin: ${user.isAdmin}` : 'not found');
+    
     if (!user || user.isAdmin !== true) {
       return res.status(403).json({ message: "Admin access required" });
     }
