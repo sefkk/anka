@@ -597,11 +597,11 @@ body{
         <div class="form-row">
           <div class="form-group">
             <label>Website</label>
-            <input type="url" name="website">
+            <input type="text" name="website" placeholder="https://example.com">
           </div>
           <div class="form-group">
             <label>Logo URL</label>
-            <input type="url" name="logoUrl">
+            <input type="text" name="logoUrl" placeholder="https://example.com/logo.png">
           </div>
         </div>
         <div class="form-group">
@@ -739,10 +739,10 @@ async function loadJobs() {
       return;
     }
     
-    container.innerHTML = jobs.map(job => `
+      container.innerHTML = jobs.map((job, index) => `
       <div class="item-card">
         <div class="item-info">
-          <h3>${job.name}</h3>
+          <h3>${(job.name || '').replace(/'/g, '&#39;').replace(/"/g, '&quot;')}</h3>
           <p><strong>Industry:</strong> ${job.industry || 'N/A'}</p>
           <p><strong>Location:</strong> ${job.headquarters || 'N/A'}</p>
           <p><strong>Job Type:</strong> ${job.jobtype || 'N/A'} | <strong>Experience:</strong> ${job.experience || 'N/A'}</p>
@@ -750,15 +750,32 @@ async function loadJobs() {
           <p><strong>Applicants:</strong> ${(job.applicants || []).length}</p>
         </div>
         <div class="item-actions">
-          <button class="btn btn-small applicants-btn" onclick="viewApplicants('${job.name}')">
+          <button class="btn btn-small applicants-btn" data-company-name="${(job.name || '').replace(/"/g, '&quot;')}" data-action="view-applicants">
             <i class="fas fa-users"></i> View Applicants
           </button>
-          <button class="btn btn-small btn-danger" onclick="deleteJob('${job._id}', '${job.name}')">
+          <button class="btn btn-small btn-danger" data-job-id="${job._id}" data-job-name="${(job.name || '').replace(/"/g, '&quot;')}" data-action="delete-job">
             <i class="fas fa-trash"></i> Delete
           </button>
         </div>
       </div>
     `).join('');
+    
+    // Attach event listeners for jobs
+    container.querySelectorAll('[data-action="delete-job"]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const id = this.getAttribute('data-job-id');
+        const name = this.getAttribute('data-job-name');
+        console.log('Delete job clicked:', id, name);
+        deleteJob(id, name);
+      });
+    });
+    
+    container.querySelectorAll('[data-action="view-applicants"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const companyName = btn.getAttribute('data-company-name');
+        viewApplicants(companyName);
+      });
+    });
   } catch (err) {
     console.error('Failed to load jobs:', err);
     document.getElementById('jobsList').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load jobs</p></div>';
@@ -794,22 +811,46 @@ document.getElementById('addJobForm').addEventListener('submit', async (e) => {
 
 // Delete Job
 async function deleteJob(id, name) {
+  console.log('deleteJob called with:', id, name);
+  if (!id) {
+    console.error('No ID provided for deletion');
+    showAlert('Error: No ID provided', 'error');
+    return;
+  }
+  
   if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
   
   try {
+    console.log('Deleting job:', `${API_BASE}/api/admin/companies/${id}?username=${username}`);
     const res = await fetch(`${API_BASE}/api/admin/companies/${id}?username=${username}`, {
       method: 'DELETE'
     });
     
-    const result = await res.json();
+    let result;
+    try {
+      result = await res.json();
+    } catch (jsonErr) {
+      console.error('Failed to parse response:', jsonErr);
+      const text = await res.text();
+      console.error('Response text:', text);
+      showAlert(`Server error (${res.status}): ${text || 'Unknown error'}`, 'error');
+      return;
+    }
+    
+    console.log('Delete response status:', res.status);
+    console.log('Delete response:', result);
+    
     if (res.ok) {
       showAlert('Job posting deleted successfully!', 'success');
       loadJobs();
     } else {
-      showAlert(result.message || 'Failed to delete job posting', 'error');
+      const errorMsg = result.error ? `${result.message}: ${result.error}` : (result.message || `Server error ${res.status}`);
+      console.error('Delete failed:', errorMsg, result);
+      showAlert(errorMsg || 'Failed to delete job posting', 'error');
     }
   } catch (err) {
-    showAlert('Error deleting job posting', 'error');
+    console.error('Delete error:', err);
+    showAlert('Error deleting job posting: ' + err.message, 'error');
   }
 }
 
@@ -862,18 +903,37 @@ async function loadStartups() {
     container.innerHTML = startups.map(startup => `
       <div class="item-card">
         <div class="item-info">
-          <h3>${startup.name}</h3>
+          <h3>${(startup.name || '').replace(/"/g, '&quot;')}</h3>
           <p><strong>Industry:</strong> ${startup.industry || 'N/A'}</p>
-          <p>${startup.description}</p>
+          <p>${startup.description || ''}</p>
           ${startup.website ? `<p><a href="${startup.website}" target="_blank">${startup.website}</a></p>` : ''}
         </div>
         <div class="item-actions">
-          <button class="btn btn-small btn-danger" onclick="deleteStartup('${startup._id}', '${startup.name}')">
+          <button class="btn btn-small btn-danger" data-startup-id="${startup._id}" data-startup-name="${(startup.name || '').replace(/"/g, '&quot;')}" data-action="delete-startup">
             <i class="fas fa-trash"></i> Delete
           </button>
         </div>
       </div>
     `).join('');
+    
+    // Attach delete event listeners for startups
+    container.querySelectorAll('[data-action="delete-startup"]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const id = this.getAttribute('data-startup-id');
+        const name = this.getAttribute('data-startup-name');
+        console.log('Delete startup clicked:', id, name);
+        deleteStartup(id, name);
+      });
+    });
+    
+    // Attach delete event listeners
+    container.querySelectorAll('[data-action="delete-startup"]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-startup-id');
+        const name = btn.getAttribute('data-startup-name');
+        deleteStartup(id, name);
+      });
+    });
   } catch (err) {
     console.error('Failed to load startups:', err);
     document.getElementById('startupsList').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load startups</p></div>';
@@ -909,22 +969,46 @@ document.getElementById('addStartupForm').addEventListener('submit', async (e) =
 
 // Delete Startup
 async function deleteStartup(id, name) {
+  console.log('deleteStartup called with:', id, name);
+  if (!id) {
+    console.error('No ID provided for deletion');
+    showAlert('Error: No ID provided', 'error');
+    return;
+  }
+  
   if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
   
   try {
+    console.log('Deleting startup:', `${API_BASE}/api/admin/startups/${id}?username=${username}`);
     const res = await fetch(`${API_BASE}/api/admin/startups/${id}?username=${username}`, {
       method: 'DELETE'
     });
     
-    const result = await res.json();
+    let result;
+    try {
+      result = await res.json();
+    } catch (jsonErr) {
+      console.error('Failed to parse response:', jsonErr);
+      const text = await res.text();
+      console.error('Response text:', text);
+      showAlert(`Server error (${res.status}): ${text || 'Unknown error'}`, 'error');
+      return;
+    }
+    
+    console.log('Delete response status:', res.status);
+    console.log('Delete response:', result);
+    
     if (res.ok) {
       showAlert('Startup deleted successfully!', 'success');
       loadStartups();
     } else {
-      showAlert(result.message || 'Failed to delete startup', 'error');
+      const errorMsg = result.error ? `${result.message}: ${result.error}` : (result.message || `Server error ${res.status}`);
+      console.error('Delete failed:', errorMsg, result);
+      showAlert(errorMsg || 'Failed to delete startup', 'error');
     }
   } catch (err) {
-    showAlert('Error deleting startup', 'error');
+    console.error('Delete error:', err);
+    showAlert('Error deleting startup: ' + err.message, 'error');
   }
 }
 
@@ -940,21 +1024,31 @@ async function loadNews() {
       return;
     }
     
-    container.innerHTML = news.map(item => `
+      container.innerHTML = news.map(item => `
       <div class="item-card">
         <div class="item-info">
-          <h3>${item.title}</h3>
-          <p><strong>Date:</strong> ${item.date}</p>
-          <p>${item.description.substring(0, 150)}${item.description.length > 150 ? '...' : ''}</p>
+          <h3>${(item.title || '').replace(/"/g, '&quot;')}</h3>
+          <p><strong>Date:</strong> ${item.date || ''}</p>
+          <p>${(item.description || '').substring(0, 150)}${(item.description || '').length > 150 ? '...' : ''}</p>
           ${item.imageUrl ? `<p><a href="${item.imageUrl}" target="_blank">View Image</a></p>` : ''}
         </div>
         <div class="item-actions">
-          <button class="btn btn-small btn-danger" onclick="deleteNews('${item._id}', '${item.title}')">
+          <button class="btn btn-small btn-danger" data-news-id="${item._id}" data-news-title="${(item.title || '').replace(/"/g, '&quot;')}" data-action="delete-news">
             <i class="fas fa-trash"></i> Delete
           </button>
         </div>
       </div>
     `).join('');
+    
+    // Attach delete event listeners for news
+    container.querySelectorAll('[data-action="delete-news"]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const id = this.getAttribute('data-news-id');
+        const title = this.getAttribute('data-news-title');
+        console.log('Delete news clicked:', id, title);
+        deleteNews(id, title);
+      });
+    });
   } catch (err) {
     console.error('Failed to load news:', err);
     document.getElementById('newsList').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load news</p></div>';
@@ -990,22 +1084,46 @@ document.getElementById('addNewsForm').addEventListener('submit', async (e) => {
 
 // Delete News
 async function deleteNews(id, title) {
+  console.log('deleteNews called with:', id, title);
+  if (!id) {
+    console.error('No ID provided for deletion');
+    showAlert('Error: No ID provided', 'error');
+    return;
+  }
+  
   if (!confirm(`Are you sure you want to delete "${title}"?`)) return;
   
   try {
+    console.log('Deleting news:', `${API_BASE}/api/admin/news/${id}?username=${username}`);
     const res = await fetch(`${API_BASE}/api/admin/news/${id}?username=${username}`, {
       method: 'DELETE'
     });
     
-    const result = await res.json();
+    let result;
+    try {
+      result = await res.json();
+    } catch (jsonErr) {
+      console.error('Failed to parse response:', jsonErr);
+      const text = await res.text();
+      console.error('Response text:', text);
+      showAlert(`Server error (${res.status}): ${text || 'Unknown error'}`, 'error');
+      return;
+    }
+    
+    console.log('Delete response status:', res.status);
+    console.log('Delete response:', result);
+    
     if (res.ok) {
       showAlert('News deleted successfully!', 'success');
       loadNews();
     } else {
-      showAlert(result.message || 'Failed to delete news', 'error');
+      const errorMsg = result.error ? `${result.message}: ${result.error}` : (result.message || `Server error ${res.status}`);
+      console.error('Delete failed:', errorMsg, result);
+      showAlert(errorMsg || 'Failed to delete news', 'error');
     }
   } catch (err) {
-    showAlert('Error deleting news', 'error');
+    console.error('Delete error:', err);
+    showAlert('Error deleting news: ' + err.message, 'error');
   }
 }
 
