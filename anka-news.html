@@ -27,33 +27,9 @@
         <p>Stay updated with the latest from ANKA Association</p>
     </div>
 </section>
-<!-- IMPORTANT: CHANGE THESE NEWS AS NEWS COME IN. THERE ARE FOUR THINGS TO CHANGE: TITLE, DESCRIPTION, IMAGE, AND DATE. -->
 <section class="news-cards-section">
-    <div class="news-cards-container">
-        <div class="news-card" data-title="T.C. Amsterdam Başkonsolosluk Ziyareti" data-description="Bugün, T.C. Amsterdam Başkonsolosumuz Sayın Mahmut Burak Ersoy'u makamında ziyaret ettik. Ziyaretimize, Eğitim Müşavirimiz Sayın Miyase Koyuncu Kaya ve Amsterdam Konsolosluğu Ticaret Ataşesi Sayın Kutgün Sinan da eşlik ettiler.
-
-        ANKA olarak, Başkonsolosumuz Sayın Mahmut Burak Ersoy'a derneğimizin programları, hedefleri ve gelecek planları hakkında bilgi verdik. Sayın Başkonsolosumuz, çalışmalarımızı takdir ederek desteklerini ifade etti.
-        
-        Nazik ev sahipliği için kendisine ve ziyaretimize eşlik eden Eğitim Müşavirimiz Sayın Miyase Koyuncu Kaya ile Amsterdam Konsolosluğu Ticaret Ataşesi Sayın Kutgün Sinan'a teşekkür ederiz.">
-            <div class="news-card-image">
-                <img src="Images/anka-news-1.jpeg" alt="ANKA News">
-            </div>
-            <div class="news-card-date">Feb 26, 2025</div>
-        </div>
-
-        <div class="news-card" data-title="T.C. Lahey Büyükelçilik Ziyareti" data-description="Bugün, T.C. Lahey Büyükelçimiz Sayın Selçuk Ünal'ı makamında ziyaret ettik. Ziyaretimize, Eğitim Müşavirimiz Sayın Miyase Koyuncu Kaya ve Ticaret Müşavirimiz Sayın Ömer İlhan da eşlik ettiler. ANKA olarak, Büyükelçimiz Sayın Selçuk Ünal'a derneğimizin programları, hedefleri ve gelecek planları hakkında bilgi verdik. Sayın Büyükelçimiz, çalışmalarımızı takdir ederek desteklerini ifade etti. Nazik ev sahipliği için kendisine ve ziyaretimize eşlik eden Ticaret Müşavirimiz Sayın Ömer İlhan ile Eğitim Müşavirimiz Sayın Miyase Koyuncu Kaya'ya teşekkür ederiz.">
-            <div class="news-card-image">
-                <img src="Images/anka-toplu.jpeg" alt="ANKA News">
-            </div>
-            <div class="news-card-date">Feb 19, 2025</div>
-        </div>
-
-        <!-- <div class="news-card" data-title="ANKA Yönetim Kurulu Yurtdışı Türkler Birliği Ziyareti" data-description="ANKA Yönetim Kurulu olarak, YTB Yurtdışı Vatandaşlar Daire Başkanlığı Daire Başkanı Sayın Fatih Nişancı'yı ve YTB'nin Hollanda Masası'nı Yunus Emre Enstitüsü'nde ziyaret ettik. Topluluğumuzun güncel durumu, hedefleri ve projeleri üzerine verimli bir toplantı gerçekleştirdik. ANKA'nın &quot;Beyin Göçünü Beyin Gücüne Dönüştürme&quot; hedefi doğrultusunda istişarelerde bulunarak, Sayın Daire Başkanı'nın değerli tecrübelerinden faydalanma fırsatı yakaladık.">
-            <div class="news-card-image">
-                <img src="Images/anka-news-2.jpeg" alt="ANKA News">
-            </div>
-            <div class="news-card-date">Feb 9, 2025</div>
-        </div> -->
+    <div class="news-cards-container" id="newsCardsContainer">
+        <!-- News cards will be loaded dynamically -->
     </div>
 </section>
 
@@ -89,52 +65,113 @@
       document.getElementById('footer').innerHTML = data;
     });
 
+  // Load News from API
+  async function loadNews() {
+    const container = document.getElementById('newsCardsContainer');
+    const API_URL = 'https://anka-vkrl.onrender.com/api/news';
+    
+    try {
+      console.log('Fetching news from:', API_URL);
+      const response = await fetch(API_URL);
+      
+      console.log('Response status:', response.status, response.statusText);
+      
+      if (!response.ok) {
+        // If 404, backend might not be deployed or endpoint doesn't exist
+        if (response.status === 404) {
+          console.warn('News endpoint not found (404). Backend might need deployment.');
+          container.innerHTML = '<p style="text-align:center; color:#6b6b6b; padding:3rem;">News feature is being set up. Please check back later.</p>';
+          return;
+        }
+        console.error('Failed to fetch news:', response.status, response.statusText);
+        container.innerHTML = '<p style="text-align:center; color:#6b6b6b; padding:3rem;">Failed to load news. Please try again later.</p>';
+        return;
+      }
+      
+      const news = await response.json();
+      console.log('Received news data:', news);
+      
+      if (!Array.isArray(news)) {
+        console.error('News is not an array:', news);
+        container.innerHTML = '<p style="text-align:center; color:#6b6b6b; padding:3rem;">No news available.</p>';
+        return;
+      }
+      
+      if (news.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#6b6b6b; padding:3rem;">No news available.</p>';
+        return;
+      }
+      
+      container.innerHTML = news.map(item => `
+        <div class="news-card" data-title="${(item.title || '').replace(/"/g, '&quot;')}" data-description="${(item.description || '').replace(/"/g, '&quot;')}">
+          <div class="news-card-image">
+            <img src="${item.imageUrl || ''}" alt="${item.title || 'News'}">
+          </div>
+          <div class="news-card-date">${item.date || ''}</div>
+        </div>
+      `).join('');
+      
+      // Re-attach event listeners after loading news
+      attachNewsModalListeners();
+    } catch (err) {
+      console.error('Failed to load news:', err);
+      container.innerHTML = '<p style="text-align:center; color:#6b6b6b; padding:3rem;">Failed to load news. Please try again later.</p>';
+    }
+  }
+
   // News Modal Functionality
-  const newsCards = document.querySelectorAll('.news-card');
-  const modal = document.getElementById('newsModal');
-  const modalImage = document.getElementById('modalImage');
-  const modalTitle = document.getElementById('modalTitle');
-  const modalDate = document.getElementById('modalDate');
-  const modalDescription = document.getElementById('modalDescription');
-  const closeBtn = document.querySelector('.news-modal-close');
+  function attachNewsModalListeners() {
+    const newsCards = document.querySelectorAll('.news-card');
+    const modal = document.getElementById('newsModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalDate = document.getElementById('modalDate');
+    const modalDescription = document.getElementById('modalDescription');
+    const closeBtn = document.querySelector('.news-modal-close');
 
-  newsCards.forEach(card => {
-    card.addEventListener('click', () => {
-      const img = card.querySelector('img');
-      const date = card.querySelector('.news-card-date').textContent;
-      const title = card.getAttribute('data-title');
-      const description = card.getAttribute('data-description');
+    if (newsCards.length > 0 && modal) {
+      newsCards.forEach(card => {
+        card.addEventListener('click', () => {
+          const img = card.querySelector('img');
+          const date = card.querySelector('.news-card-date').textContent;
+          const title = card.getAttribute('data-title');
+          const description = card.getAttribute('data-description');
 
-      modalImage.src = img.src;
-      modalImage.alt = img.alt;
-      modalTitle.textContent = title;
-      modalDate.textContent = date;
-      modalDescription.textContent = description;
+          modalImage.src = img.src;
+          modalImage.alt = img.alt;
+          modalTitle.textContent = title;
+          modalDate.textContent = date;
+          modalDescription.textContent = description;
 
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    });
-  });
+          modal.classList.add('active');
+          document.body.style.overflow = 'hidden';
+        });
+      });
 
-  closeBtn.addEventListener('click', () => {
-    modal.classList.remove('active');
-    document.body.style.overflow = '';
-  });
+      closeBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+      });
 
-  modal.addEventListener('click', (e) => {
-    if (e.target === modal) {
-      modal.classList.remove('active');
-      document.body.style.overflow = '';
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          modal.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
+
+      // Close on Escape key
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+          modal.classList.remove('active');
+          document.body.style.overflow = '';
+        }
+      });
     }
-  });
+  }
 
-  // Close on Escape key
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal.classList.contains('active')) {
-      modal.classList.remove('active');
-      document.body.style.overflow = '';
-    }
-  });
+  // Load news on page load
+  loadNews();
 </script>
 
 

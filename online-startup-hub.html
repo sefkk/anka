@@ -202,53 +202,9 @@
 </section>
 
 <section class="companies-section">
-  <div class="companies-grid">
-    <div class="company-card it araci-payi-card">
-      <a href="Online_Startup_Companies/araci-payi.html" class="card-link">
-        <h3>Aracı Payı</h3>
-        <p>Aracı Payı is a platform that brings buyers and sellers together through intermediaries for safe shopping and 
-          collaboration, offering fast and effective solutions for everyone. <br><br>
-          Sign up to post an ad, let intermediaries quickly 
-          find or sell the product/service you need, or become an intermediary yourself and start earning!</p>
-      </a>
-    </div>
-    <div class="company-card it power-box-card">
-      <a href="Online_Startup_Companies/power-box.html" class="card-link">
-        <h3>PowerBox</h3>
-        <p>PowerBox is a smart, portable energy and communication hub designed to empower communities during natural disasters.<br><br>
-          Built with cutting-edge technologies like solar energy, IoT, and AI, PowerBox ensures reliable access to electricity and 
-          decentralized communication when conventional infrastructure fails.</p>
-      </a>
-    </div>
-    <!-- <div class="company-card">
-      <a href="#" class="card-link">
-        <h3>FutureTech Solutions</h3>
-        <p>FutureTech Solutions specializes in developing innovative software for the modern enterprise, focusing on efficiency and scalability. Our solutions are designed to help businesses of all sizes thrive in a digital-first world.</p>
-      </a>
-    </div>
-    <div class="company-card">
-      <a href="#" class="card-link">
-        <h3>EcoHarvest Innovations</h3>
-        <p>EcoHarvest Innovations is dedicated to sustainable agriculture through the use of smart farming techniques. We create tools and platforms that help farmers maximize yield while minimizing environmental impact.</p>
-      </a>
-    </div>
-    <div class="company-card">
-      <a href="#" class="card-link">
-        <h3>AeroDynamics Labs</h3>
-        <p>AeroDynamics Labs pushes the boundaries of drone technology for commercial and recreational use. Our cutting-edge designs and software provide superior performance and user experience.</p>
-      </a>
-    </div>
-    <div class="company-card">
-      <a href="#" class="card-link">
-        <h3>Quantum Leap Studios</h3>
-        <p>Quantum Leap Studios is a creative hub for video game development. We focus on narrative-driven games that immerse players in rich, dynamic worlds, combining compelling storytelling with engaging gameplay.</p>
-      </a>
-    </div> -->
+  <div class="companies-grid" id="startupsGrid">
+    <!-- Startups will be loaded dynamically -->
   </div>
-
-  <!-- <div class="load-more-container">
-    <button class="load-more-button">Load More</button>
-  </div> --> 
 </section>
 
 <div id="footer"></div>
@@ -266,27 +222,38 @@
       document.getElementById('footer').innerHTML = data;
     });
 
-  // Simple script for Load More button (optional)
-  const loadMoreBtn = document.querySelector('.load-more-button');
-  const companiesGrid = document.querySelector('.companies-grid');
-  let counter = 0;
-
-  loadMoreBtn.addEventListener('click', () => {
-    // In a real application, you would fetch more data here.
-    // This is a placeholder to show the concept.
-    for (let i = 0; i < 6; i++) {
-      const newCompanyCard = document.createElement('div');
-      newCompanyCard.classList.add('company-card', 'new-card');
-      newCompanyCard.innerHTML = `
-        <a href="#" class="card-link">
-          <h3>New Company ${counter + 1}</h3>
-          <p>This is a description for a newly loaded company. It will be replaced with real data in a production environment.</p>
-        </a>
-      `;
-      companiesGrid.appendChild(newCompanyCard);
-      counter ++;
+  // Load Startups from API
+  async function loadStartups() {
+    try {
+      const response = await fetch('https://anka-vkrl.onrender.com/api/startups');
+      const startups = await response.json();
+      const container = document.getElementById('startupsGrid');
+      
+      if (startups.length === 0) {
+        container.innerHTML = '<div class="company-card"><p style="text-align:center; color:#555; padding:3rem;">No startups available.</p></div>';
+        return;
+      }
+      
+      container.innerHTML = startups.map(startup => {
+        const detailUrl = startup.detailPageUrl || '#';
+        const cardClass = startup.name.toLowerCase().replace(/\s+/g, '-') + '-card';
+        return `
+          <div class="company-card it ${cardClass}">
+            <a href="${detailUrl}" class="card-link">
+              <h3>${startup.name}</h3>
+              <p>${startup.description}</p>
+            </a>
+          </div>
+        `;
+      }).join('');
+    } catch (err) {
+      console.error('Failed to load startups:', err);
+      document.getElementById('startupsGrid').innerHTML = '<div class="company-card"><p style="text-align:center; color:#555; padding:3rem;">Failed to load startups.</p></div>';
     }
-  });
+  }
+
+  // Load startups on page load
+  loadStartups();
 </script>
 
 </body>
