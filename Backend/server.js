@@ -649,7 +649,7 @@ app.get("/api/legacy", async (req, res) => {
 
 app.post("/api/admin/legacy", checkAdmin, async (req, res) => {
   try {
-    const { name, position, year, category, image, linkedin } = req.body;
+    const { name, position, year, category, subcategory, image, linkedin } = req.body;
     if (!name || !position || !year || !category) {
       return res.status(400).json({ message: "Name, position, year, and category are required" });
     }
@@ -659,7 +659,15 @@ app.post("/api/admin/legacy", checkAdmin, async (req, res) => {
       return res.status(400).json({ message: "Category must be 'board', 'vice-chair', or 'committee'" });
     }
     
-    const legacy = new Legacy({ name, position, year, category, image, linkedin });
+    // Validate subcategory if category is committee
+    if (category === 'committee' && subcategory) {
+      const validSubcategories = ['it', 'marketing', 'entrepreneurship', 'academic', 'event', 'hr', 'law', 'int-relations'];
+      if (!validSubcategories.includes(subcategory)) {
+        return res.status(400).json({ message: "Invalid subcategory for committee" });
+      }
+    }
+    
+    const legacy = new Legacy({ name, position, year, category, subcategory, image, linkedin });
     await legacy.save();
     res.status(201).json({ message: "Legacy member added successfully", legacy });
   } catch (err) {
