@@ -526,6 +526,9 @@ body{
     <button class="tab-btn" data-tab="news">
       <i class="fas fa-newspaper"></i> News
     </button>
+    <button class="tab-btn" data-tab="legacy">
+      <i class="fas fa-history"></i> Legacy
+    </button>
     <button class="tab-btn" data-tab="users">
       <i class="fas fa-user-plus"></i> Add Member
     </button>
@@ -691,6 +694,63 @@ body{
     </div>
   </div>
 
+  <!-- Legacy Tab -->
+  <div id="legacy" class="tab-content">
+    <div class="admin-form">
+      <h2>Add Legacy Member</h2>
+      <form id="addLegacyForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Name *</label>
+            <input type="text" name="name" required>
+          </div>
+          <div class="form-group">
+            <label>Position *</label>
+            <input type="text" name="position" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Year *</label>
+            <input type="text" name="year" placeholder="e.g., 2024" required>
+          </div>
+          <div class="form-group">
+            <label>Category *</label>
+            <select name="category" required>
+              <option value="">Select...</option>
+              <option value="board">Board Committee</option>
+              <option value="vice-chair">Vice Chair</option>
+              <option value="committee">Committee Member</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Image URL</label>
+            <input type="text" name="image" placeholder="e.g., about-us/img/person.jpg">
+          </div>
+          <div class="form-group">
+            <label>LinkedIn URL</label>
+            <input type="url" name="linkedin" placeholder="https://linkedin.com/in/...">
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-plus"></i> Add Legacy Member
+        </button>
+      </form>
+    </div>
+
+    <div class="items-list">
+      <h2 style="padding:1.5rem; margin:0; border-bottom:2px solid rgba(0,0,0,.1);">Current Legacy Members</h2>
+      <div id="legacyList">
+        <div class="empty-state">
+          <i class="fas fa-spinner fa-spin"></i>
+          <p>Loading...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Users Tab -->
   <div id="users" class="tab-content">
     <div class="admin-form">
@@ -829,6 +889,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     if (tabId === 'talent-pool') loadJobs();
     else if (tabId === 'startups') loadStartups();
     else if (tabId === 'news') loadNews();
+    else if (tabId === 'legacy') loadLegacy();
   });
 });
 
@@ -1240,6 +1301,119 @@ async function deleteNews(id, title) {
   } catch (err) {
     console.error('Delete error:', err);
     showAlert('Error deleting news: ' + err.message, 'error');
+  }
+}
+
+// Load Legacy Members
+async function loadLegacy() {
+  const container = document.getElementById('legacyList');
+  if (!container) return;
+  
+  try {
+    const res = await fetch(`${API_BASE}/api/legacy`);
+    if (!res.ok) {
+      container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load legacy members</p></div>';
+      return;
+    }
+    
+    const legacy = await res.json();
+    if (!Array.isArray(legacy) || legacy.length === 0) {
+      container.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No legacy members yet</p></div>';
+      return;
+    }
+    
+    container.innerHTML = legacy.map(item => `
+      <div class="item-card">
+        <div class="item-info">
+          <h3>${(item.name || '').replace(/"/g, '&quot;')}</h3>
+          <p><strong>Position:</strong> ${item.position || ''}</p>
+          <p><strong>Year:</strong> ${item.year || ''}</p>
+          <p><strong>Category:</strong> ${item.category === 'board' ? 'Board Committee' : item.category === 'vice-chair' ? 'Vice Chair' : 'Committee Member'}</p>
+          ${item.image ? `<p><a href="${item.image}" target="_blank">View Image</a></p>` : ''}
+          ${item.linkedin ? `<p><a href="${item.linkedin}" target="_blank">LinkedIn</a></p>` : ''}
+        </div>
+        <div class="item-actions">
+          <button class="btn btn-small btn-danger" data-legacy-id="${item._id}" data-legacy-name="${(item.name || '').replace(/"/g, '&quot;')}" data-action="delete-legacy">
+            <i class="fas fa-trash"></i> Delete
+          </button>
+        </div>
+      </div>
+    `).join('');
+    
+    // Attach delete event listeners for legacy
+    container.querySelectorAll('[data-action="delete-legacy"]').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const id = this.getAttribute('data-legacy-id');
+        const name = this.getAttribute('data-legacy-name');
+        deleteLegacy(id, name);
+      });
+    });
+  } catch (err) {
+    console.error('Failed to load legacy members:', err);
+    container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load legacy members</p></div>';
+  }
+}
+
+// Add Legacy Member
+document.getElementById('addLegacyForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const data = Object.fromEntries(formData);
+  data.username = username;
+  
+  try {
+    const res = await fetch(`${API_BASE}/api/admin/legacy`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    
+    const result = await res.json();
+    if (res.ok) {
+      showAlert('Legacy member added successfully!', 'success');
+      e.target.reset();
+      loadLegacy();
+    } else {
+      showAlert(result.message || 'Failed to add legacy member', 'error');
+    }
+  } catch (err) {
+    showAlert('Error adding legacy member', 'error');
+  }
+});
+
+// Delete Legacy Member
+async function deleteLegacy(id, name) {
+  if (!id) {
+    showAlert('Error: No ID provided', 'error');
+    return;
+  }
+  
+  if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
+  
+  try {
+    const res = await fetch(`${API_BASE}/api/admin/legacy/${id}?username=${username}`, {
+      method: 'DELETE'
+    });
+    
+    let result;
+    try {
+      result = await res.json();
+    } catch (jsonErr) {
+      const text = await res.text();
+      showAlert(`Server error (${res.status}): ${text || 'Unknown error'}`, 'error');
+      return;
+    }
+    
+    if (res.ok) {
+      showAlert('Legacy member deleted successfully!', 'success');
+      loadLegacy();
+    } else {
+      const errorMsg = result.error ? `${result.message}: ${result.error}` : (result.message || `Server error ${res.status}`);
+      showAlert(errorMsg || 'Failed to delete legacy member', 'error');
+    }
+  } catch (err) {
+    console.error('Delete error:', err);
+    showAlert('Error deleting legacy member: ' + err.message, 'error');
   }
 }
 

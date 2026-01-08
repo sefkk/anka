@@ -5,6 +5,7 @@ const cors = require('cors');
 const User = require('./models/user');
 const News = require('./models/news');
 const Startup = require('./models/startup');
+const Legacy = require('./models/legacy');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -620,6 +621,93 @@ app.get("/api/admin/companies/:companyName/applicants", async (req, res) => {
   } catch (err) {
     console.error("Failed to fetch applicants:", err);
     res.status(500).json({ message: "Failed to fetch applicants" });
+  }
+});
+
+// ------------------- LEGACY API -------------------
+app.get("/api/legacy", async (req, res) => {
+  try {
+    console.log("📜 /api/legacy endpoint called");
+    
+    // Check if Legacy model is available
+    if (!Legacy) {
+      console.error("❌ Legacy model is not available");
+      return res.status(500).json({ message: "Legacy model not available", members: [] });
+    }
+    
+    const members = await Legacy.find().sort({ year: -1, createdAt: -1 });
+    console.log(`✅ Found ${members.length} legacy members`);
+    
+    // Always return an array, even if empty
+    res.json(members || []);
+  } catch (err) {
+    console.error("❌ Failed to fetch legacy members:", err);
+    // Return empty array instead of error to prevent frontend crashes
+    res.status(200).json([]);
+  }
+});
+
+app.post("/api/admin/legacy", checkAdmin, async (req, res) => {
+  try {
+    const { name, position, year, category, image, linkedin } = req.body;
+    if (!name || !position || !year || !category) {
+      return res.status(400).json({ message: "Name, position, year, and category are required" });
+    }
+    
+    // Validate category
+    if (!['board', 'vice-chair', 'committee'].includes(category)) {
+      return res.status(400).json({ message: "Category must be 'board', 'vice-chair', or 'committee'" });
+    }
+    
+    const legacy = new Legacy({ name, position, year, category, image, linkedin });
+    await legacy.save();
+    res.status(201).json({ message: "Legacy member added successfully", legacy });
+  } catch (err) {
+    console.error("Failed to add legacy member:", err);
+    res.status(500).json({ message: "Failed to add legacy member" });
+  }
+});
+
+app.delete("/api/admin/legacy/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const username = (req.query && req.query.username) || (req.body && req.body.username);
+    
+    console.log(`Delete legacy member request - ID: ${id}`);
+    
+    if (!username) {
+      return res.status(400).json({ message: "Username is required" });
+    }
+    
+    // Validate MongoDB ObjectId format
+    if (!id) {
+      return res.status(400).json({ message: "Legacy member ID is required" });
+    }
+    
+    // Check if it's a valid MongoDB ObjectId (24 hex characters)
+    if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+      console.error(`Invalid legacy member ID format: ${id}`);
+      return res.status(400).json({ message: "Invalid legacy member ID format" });
+    }
+    
+    const trimmedUsername = String(username).trim();
+    const user = await User.findOne({ username: trimmedUsername });
+    
+    if (!user || user.isAdmin !== true) {
+      return res.status(403).json({ message: "Admin access required" });
+    }
+    
+    const legacy = await Legacy.findByIdAndDelete(id);
+    
+    if (!legacy) {
+      return res.status(404).json({ message: "Legacy member not found" });
+    }
+    
+    console.log(`Legacy member deleted successfully: ${id}`);
+    res.json({ message: "Legacy member deleted successfully" });
+  } catch (err) {
+    console.error("❌ Failed to delete legacy member:", err.message);
+    res.status(500).json({ message: "Failed to delete legacy member", error: err.message });
   }
 });
 
