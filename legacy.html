@@ -392,87 +392,6 @@
       document.getElementById('footer').innerHTML = data;
     });
 
-  // Legacy members data
-  // Category options: "board", "vice-chair", "committee"
-  // You can add more members here with their information
-  const legacyMembers = [
-    // Board Committee Examples
-    {
-      name: "John Doe",
-      position: "President",
-      year: "2024",
-      category: "board",
-      image: "about-us/img/placeholder.jpg",
-      linkedin: "#"
-    },
-    {
-      name: "Bob Johnson",
-      position: "Secretary",
-      year: "2023",
-      category: "board",
-      image: "about-us/img/placeholder.jpg",
-      linkedin: "#"
-    },
-    {
-      name: "Alice Williams",
-      position: "Treasurer",
-      year: "2023",
-      category: "board",
-      image: "about-us/img/placeholder.jpg",
-      linkedin: "#"
-    },
-    // Vice Chairs Examples
-    {
-      name: "Jane Smith",
-      position: "Vice President",
-      year: "2024",
-      category: "vice-chair",
-      image: "about-us/img/placeholder.jpg",
-      linkedin: "#"
-    },
-    {
-      name: "Robert Brown",
-      position: "Vice Chair",
-      year: "2022",
-      category: "vice-chair",
-      image: "about-us/img/placeholder.jpg",
-      linkedin: "#"
-    },
-    // Committee Members Examples
-    {
-      name: "Charlie Brown",
-      position: "IT Committee Head",
-      year: "2022",
-      category: "committee",
-      image: "about-us/img/placeholder.jpg",
-      linkedin: "#"
-    },
-    {
-      name: "Diana Prince",
-      position: "Marketing Committee Head",
-      year: "2022",
-      category: "committee",
-      image: "about-us/img/placeholder.jpg",
-      linkedin: "#"
-    },
-    {
-      name: "Edward Norton",
-      position: "Event Committee Head",
-      year: "2021",
-      category: "committee",
-      image: "about-us/img/placeholder.jpg",
-      linkedin: "#"
-    },
-    {
-      name: "Fiona Apple",
-      position: "HR Committee Head",
-      year: "2021",
-      category: "committee",
-      image: "about-us/img/placeholder.jpg",
-      linkedin: "#"
-    }
-  ];
-
   // Category configuration
   const categories = {
     "board": {
@@ -489,6 +408,51 @@
     }
   };
 
+  // Global variable to store legacy members
+  let legacyMembers = [];
+
+  // Load legacy members from API
+  async function loadLegacyMembers() {
+    const API_URL = 'https://anka-vkrl.onrender.com/api/legacy';
+    
+    try {
+      console.log('Fetching legacy members from:', API_URL);
+      const response = await fetch(API_URL);
+      
+      console.log('Response status:', response.status, response.statusText);
+      
+      if (!response.ok) {
+        if (response.status === 404) {
+          console.warn('Legacy endpoint not found (404). Backend might need deployment.');
+          document.getElementById('legacySections').innerHTML = '<p style="text-align:center; color:var(--muted); padding:3rem;">Legacy feature is being set up. Please check back later.</p>';
+          return;
+        }
+        console.error('Failed to fetch legacy members:', response.status, response.statusText);
+        document.getElementById('legacySections').innerHTML = '<p style="text-align:center; color:var(--muted); padding:3rem;">Failed to load legacy members. Please try again later.</p>';
+        return;
+      }
+      
+      const members = await response.json();
+      console.log('Received legacy members data:', members);
+      
+      if (!Array.isArray(members)) {
+        console.error('Legacy members is not an array:', members);
+        document.getElementById('legacySections').innerHTML = '<p style="text-align:center; color:var(--muted); padding:3rem;">No legacy members available.</p>';
+        return;
+      }
+      
+      legacyMembers = members;
+      
+      // Initialize UI after loading data
+      populateYearSelector();
+      renderLegacyMembers();
+      
+    } catch (err) {
+      console.error('Failed to load legacy members:', err);
+      document.getElementById('legacySections').innerHTML = '<p style="text-align:center; color:var(--muted); padding:3rem;">Failed to load legacy members. Please try again later.</p>';
+    }
+  }
+
   // Get unique years and sort them
   function getUniqueYears(members) {
     const years = [...new Set(members.map(m => m.year))];
@@ -497,6 +461,10 @@
 
   // Populate year selector
   function populateYearSelector() {
+    if (!legacyMembers || legacyMembers.length === 0) {
+      return;
+    }
+    
     const years = getUniqueYears(legacyMembers);
     const yearSelect = document.getElementById('yearSelect');
     
@@ -516,6 +484,16 @@
   function renderLegacyMembers(filterYear = 'all') {
     const sectionsContainer = document.getElementById('legacySections');
     sectionsContainer.innerHTML = '';
+
+    if (!legacyMembers || legacyMembers.length === 0) {
+      sectionsContainer.innerHTML = `
+        <div class="no-results">
+          <i class="fas fa-search"></i>
+          <p>No legacy members available.</p>
+        </div>
+      `;
+      return;
+    }
 
     // Filter members by year
     const filteredMembers = filterYear === 'all' 
@@ -570,9 +548,12 @@
         card.className = 'card';
         card.setAttribute('aria-label', `Past Member: ${member.name}`);
         
+        const linkedinUrl = member.linkedin || '#';
+        const imageUrl = member.image || 'about-us/img/placeholder.jpg';
+        
         card.innerHTML = `
-          <a class="media" href="${member.linkedin}" target="_blank" rel="noopener" aria-label="${member.name} — LinkedIn (yeni sekme)">
-            <img src="${member.image}" alt="${member.name}" loading="lazy" onerror="this.src='about-us/img/placeholder.jpg'" />
+          <a class="media" href="${linkedinUrl}" target="_blank" rel="noopener" aria-label="${member.name} — LinkedIn (yeni sekme)">
+            <img src="${imageUrl}" alt="${member.name}" loading="lazy" onerror="this.src='about-us/img/placeholder.jpg'" />
             <span class="badge">${member.year}</span>
           </a>
           <div class="content">
@@ -592,8 +573,8 @@
 
   // Initialize
   document.addEventListener('DOMContentLoaded', () => {
-    populateYearSelector();
-    renderLegacyMembers();
+    // Load legacy members from API
+    loadLegacyMembers();
 
     // Add event listener for year filter
     document.getElementById('yearSelect').addEventListener('change', (e) => {
