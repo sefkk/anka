@@ -716,11 +716,27 @@ body{
           </div>
           <div class="form-group">
             <label>Category *</label>
-            <select name="category" required>
+            <select name="category" id="legacyCategory" required>
               <option value="">Select...</option>
               <option value="board">Board Committee</option>
               <option value="vice-chair">Vice Chair</option>
               <option value="committee">Committee Member</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row" id="subcategoryRow" style="display: none;">
+          <div class="form-group">
+            <label>Committee Subcategory</label>
+            <select name="subcategory" id="legacySubcategory">
+              <option value="">Select Committee...</option>
+              <option value="it">IT Committee</option>
+              <option value="marketing">Marketing Committee</option>
+              <option value="entrepreneurship">Entrepreneurship & Business Committee</option>
+              <option value="academic">Academic Support Committee</option>
+              <option value="event">Event Planning Committee</option>
+              <option value="hr">HR Committee</option>
+              <option value="law">Law Committee</option>
+              <option value="int-relations">International Relations Committee</option>
             </select>
           </div>
         </div>
@@ -848,6 +864,21 @@ body{
 
 <script>
 const API_BASE = 'https://anka-vkrl.onrender.com';
+
+// Helper function to get subcategory display name
+function getSubcategoryName(subcategory) {
+  const names = {
+    'it': 'IT Committee',
+    'marketing': 'Marketing Committee',
+    'entrepreneurship': 'Entrepreneurship & Business Committee',
+    'academic': 'Academic Support Committee',
+    'event': 'Event Planning Committee',
+    'hr': 'HR Committee',
+    'law': 'Law Committee',
+    'int-relations': 'International Relations Committee'
+  };
+  return names[subcategory] || subcategory;
+}
 const username = sessionStorage.getItem('username');
 const isAdminValue = sessionStorage.getItem('isAdmin');
 const isAdmin = isAdminValue === 'true';
@@ -1329,6 +1360,7 @@ async function loadLegacy() {
           <p><strong>Position:</strong> ${item.position || ''}</p>
           <p><strong>Year:</strong> ${item.year || ''}</p>
           <p><strong>Category:</strong> ${item.category === 'board' ? 'Board Committee' : item.category === 'vice-chair' ? 'Vice Chair' : 'Committee Member'}</p>
+          ${item.subcategory ? `<p><strong>Committee:</strong> ${getSubcategoryName(item.subcategory)}</p>` : ''}
           ${item.image ? `<p><a href="${item.image}" target="_blank">View Image</a></p>` : ''}
           ${item.linkedin ? `<p><a href="${item.linkedin}" target="_blank">LinkedIn</a></p>` : ''}
         </div>
@@ -1354,12 +1386,31 @@ async function loadLegacy() {
   }
 }
 
+// Show/hide subcategory field based on category selection
+document.getElementById('legacyCategory')?.addEventListener('change', function() {
+  const subcategoryRow = document.getElementById('subcategoryRow');
+  const subcategorySelect = document.getElementById('legacySubcategory');
+  if (this.value === 'committee') {
+    subcategoryRow.style.display = 'flex';
+    subcategorySelect.required = true;
+  } else {
+    subcategoryRow.style.display = 'none';
+    subcategorySelect.required = false;
+    subcategorySelect.value = '';
+  }
+});
+
 // Add Legacy Member
 document.getElementById('addLegacyForm')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const formData = new FormData(e.target);
   const data = Object.fromEntries(formData);
   data.username = username;
+  
+  // Only include subcategory if category is committee
+  if (data.category !== 'committee') {
+    delete data.subcategory;
+  }
   
   try {
     const res = await fetch(`${API_BASE}/api/admin/legacy`, {
@@ -1372,6 +1423,7 @@ document.getElementById('addLegacyForm')?.addEventListener('submit', async (e) =
     if (res.ok) {
       showAlert('Legacy member added successfully!', 'success');
       e.target.reset();
+      document.getElementById('subcategoryRow').style.display = 'none';
       loadLegacy();
     } else {
       showAlert(result.message || 'Failed to add legacy member', 'error');

@@ -408,6 +408,18 @@
     }
   };
 
+  // Subcategory display names
+  const subcategoryNames = {
+    'it': 'IT Committee',
+    'marketing': 'Marketing Committee',
+    'entrepreneurship': 'Entrepreneurship & Business Committee',
+    'academic': 'Academic Support Committee',
+    'event': 'Event Planning Committee',
+    'hr': 'HR Committee',
+    'law': 'Law Committee',
+    'int-relations': 'International Relations Committee'
+  };
+
   // Global variable to store legacy members
   let legacyMembers = [];
 
@@ -532,42 +544,113 @@
         return; // Skip empty categories
       }
 
-      const section = document.createElement('section');
-      section.className = 'legacy-section';
-      
-      const sectionTitle = document.createElement('h2');
-      sectionTitle.className = 'legacy-section-title';
-      sectionTitle.textContent = categories[categoryKey].title;
-      section.appendChild(sectionTitle);
+      // Special handling for committee members - group by subcategory
+      if (categoryKey === 'committee') {
+        // Group committee members by subcategory
+        const membersBySubcategory = {};
+        categoryMembers.forEach(member => {
+          const subcat = member.subcategory || 'other';
+          if (!membersBySubcategory[subcat]) {
+            membersBySubcategory[subcat] = [];
+          }
+          membersBySubcategory[subcat].push(member);
+        });
 
-      const grid = document.createElement('div');
-      grid.className = 'legacy-grid';
-      
-      categoryMembers.forEach(member => {
-        const card = document.createElement('article');
-        card.className = 'card';
-        card.setAttribute('aria-label', `Past Member: ${member.name}`);
+        // Create main section for Committee Members
+        const mainSection = document.createElement('section');
+        mainSection.className = 'legacy-section';
         
-        const linkedinUrl = member.linkedin || '#';
-        const imageUrl = member.image || 'about-us/img/placeholder.jpg';
-        
-        card.innerHTML = `
-          <a class="media" href="${linkedinUrl}" target="_blank" rel="noopener" aria-label="${member.name} — LinkedIn (yeni sekme)">
-            <img src="${imageUrl}" alt="${member.name}" loading="lazy" onerror="this.src='about-us/img/placeholder.jpg'" />
-            <span class="badge">${member.year}</span>
-          </a>
-          <div class="content">
-            <h3 class="name">${member.name}</h3>
-            <p class="role">${member.position}</p>
-            <p class="year-badge">Served in ${member.year}</p>
-          </div>
-        `;
-        
-        grid.appendChild(card);
-      });
+        const mainSectionTitle = document.createElement('h2');
+        mainSectionTitle.className = 'legacy-section-title';
+        mainSectionTitle.textContent = categories[categoryKey].title;
+        mainSection.appendChild(mainSectionTitle);
 
-      section.appendChild(grid);
-      sectionsContainer.appendChild(section);
+        // Sort subcategories for consistent display
+        const sortedSubcategories = Object.keys(membersBySubcategory).sort();
+        
+        sortedSubcategories.forEach(subcat => {
+          const subcatMembers = membersBySubcategory[subcat];
+          if (!subcatMembers || subcatMembers.length === 0) return;
+
+          // Create subsection for each subcategory
+          const subsection = document.createElement('div');
+          subsection.style.marginBottom = '40px';
+          
+          const subsectionTitle = document.createElement('h3');
+          subsectionTitle.style.cssText = 'font-size: clamp(20px, 2.5vw, 28px); font-weight: 700; color: var(--brand-navy); margin-bottom: 24px; text-align: center; letter-spacing: 0.03em;';
+          subsectionTitle.textContent = subcategoryNames[subcat] || subcat;
+          subsection.appendChild(subsectionTitle);
+
+          const grid = document.createElement('div');
+          grid.className = 'legacy-grid';
+          
+          subcatMembers.forEach(member => {
+            const card = document.createElement('article');
+            card.className = 'card';
+            card.setAttribute('aria-label', `Past Member: ${member.name}`);
+            
+            const linkedinUrl = member.linkedin || '#';
+            const imageUrl = member.image || 'about-us/img/placeholder.jpg';
+            
+            card.innerHTML = `
+              <a class="media" href="${linkedinUrl}" target="_blank" rel="noopener" aria-label="${member.name} — LinkedIn (yeni sekme)">
+                <img src="${imageUrl}" alt="${member.name}" loading="lazy" onerror="this.src='about-us/img/placeholder.jpg'" />
+                <span class="badge">${member.year}</span>
+              </a>
+              <div class="content">
+                <h3 class="name">${member.name}</h3>
+                <p class="role">${member.position}</p>
+                <p class="year-badge">Served in ${member.year}</p>
+              </div>
+            `;
+            
+            grid.appendChild(card);
+          });
+
+          subsection.appendChild(grid);
+          mainSection.appendChild(subsection);
+        });
+
+        sectionsContainer.appendChild(mainSection);
+      } else {
+        // Regular section for board and vice-chair
+        const section = document.createElement('section');
+        section.className = 'legacy-section';
+        
+        const sectionTitle = document.createElement('h2');
+        sectionTitle.className = 'legacy-section-title';
+        sectionTitle.textContent = categories[categoryKey].title;
+        section.appendChild(sectionTitle);
+
+        const grid = document.createElement('div');
+        grid.className = 'legacy-grid';
+        
+        categoryMembers.forEach(member => {
+          const card = document.createElement('article');
+          card.className = 'card';
+          card.setAttribute('aria-label', `Past Member: ${member.name}`);
+          
+          const linkedinUrl = member.linkedin || '#';
+          const imageUrl = member.image || 'about-us/img/placeholder.jpg';
+          
+          card.innerHTML = `
+            <a class="media" href="${linkedinUrl}" target="_blank" rel="noopener" aria-label="${member.name} — LinkedIn (yeni sekme)">
+              <img src="${imageUrl}" alt="${member.name}" loading="lazy" onerror="this.src='about-us/img/placeholder.jpg'" />
+              <span class="badge">${member.year}</span>
+            </a>
+            <div class="content">
+              <h3 class="name">${member.name}</h3>
+              <p class="role">${member.position}</p>
+              <p class="year-badge">Served in ${member.year}</p>
+            </div>
+          `;
+          
+          grid.appendChild(card);
+        });
+
+        section.appendChild(grid);
+        sectionsContainer.appendChild(section);
+      }
     });
   }
 
