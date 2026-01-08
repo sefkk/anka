@@ -181,9 +181,7 @@
     }
 
     .badge{
-      position:absolute; 
-      inset:12px auto auto 12px; 
-      padding:6px 10px; 
+      padding:8px 14px; 
       border-radius:999px;
       background:linear-gradient(135deg,var(--accent),var(--accent-2)); 
       color:#1f2937;
@@ -196,7 +194,23 @@
     }
 
     .content{ 
-      padding:16px 18px 20px; 
+      padding:24px 20px; 
+      text-align: center;
+    }
+    
+    .card a {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+    
+    .card a:hover {
+      text-decoration: none;
+    }
+    
+    .card a:hover .name {
+      color: var(--brand-sand);
+      transition: color 0.3s ease;
     }
     .name{ 
       margin:0; 
@@ -590,17 +604,15 @@
             card.setAttribute('aria-label', `Past Member: ${member.name}`);
             
             const linkedinUrl = member.linkedin || '#';
-            const imageUrl = member.image || 'about-us/img/placeholder.jpg';
+            const hasLinkedIn = member.linkedin && member.linkedin !== '#';
             
             card.innerHTML = `
-              <a class="media" href="${linkedinUrl}" target="_blank" rel="noopener" aria-label="${member.name} — LinkedIn (yeni sekme)">
-                <img src="${imageUrl}" alt="${member.name}" loading="lazy" onerror="this.src='about-us/img/placeholder.jpg'" />
-                <span class="badge">${member.year}</span>
-              </a>
-              <div class="content">
-                <h3 class="name">${member.name}</h3>
-                <p class="role">${member.position}</p>
-                <p class="year-badge">Served in ${member.year}</p>
+              <div class="content" style="padding: 24px 20px; text-align: center;">
+                ${hasLinkedIn ? `<a href="${linkedinUrl}" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">` : ''}
+                  <span class="badge" style="position: static; display: inline-block; margin-bottom: 12px;">${member.year}</span>
+                  <h3 class="name" style="margin-top: 0;">${member.name}</h3>
+                  <p class="role">${member.position}</p>
+                ${hasLinkedIn ? `</a>` : ''}
               </div>
             `;
             
@@ -631,17 +643,15 @@
           card.setAttribute('aria-label', `Past Member: ${member.name}`);
           
           const linkedinUrl = member.linkedin || '#';
-          const imageUrl = member.image || 'about-us/img/placeholder.jpg';
+          const hasLinkedIn = member.linkedin && member.linkedin !== '#';
           
           card.innerHTML = `
-            <a class="media" href="${linkedinUrl}" target="_blank" rel="noopener" aria-label="${member.name} — LinkedIn (yeni sekme)">
-              <img src="${imageUrl}" alt="${member.name}" loading="lazy" onerror="this.src='about-us/img/placeholder.jpg'" />
-              <span class="badge">${member.year}</span>
-            </a>
-            <div class="content">
-              <h3 class="name">${member.name}</h3>
-              <p class="role">${member.position}</p>
-              <p class="year-badge">Served in ${member.year}</p>
+            <div class="content" style="padding: 24px 20px; text-align: center;">
+              ${hasLinkedIn ? `<a href="${linkedinUrl}" target="_blank" rel="noopener" style="text-decoration: none; color: inherit;">` : ''}
+                <span class="badge" style="position: static; display: inline-block; margin-bottom: 12px;">${member.year}</span>
+                <h3 class="name" style="margin-top: 0;">${member.name}</h3>
+                <p class="role">${member.position}</p>
+              ${hasLinkedIn ? `</a>` : ''}
             </div>
           `;
           
