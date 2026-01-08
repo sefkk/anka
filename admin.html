@@ -742,10 +742,6 @@ body{
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Image URL</label>
-            <input type="text" name="image" placeholder="e.g., about-us/img/person.jpg">
-          </div>
-          <div class="form-group">
             <label>LinkedIn URL</label>
             <input type="url" name="linkedin" placeholder="https://linkedin.com/in/...">
           </div>
@@ -1361,7 +1357,6 @@ async function loadLegacy() {
           <p><strong>Year:</strong> ${item.year || ''}</p>
           <p><strong>Category:</strong> ${item.category === 'board' ? 'Board Committee' : item.category === 'vice-chair' ? 'Vice Chair' : 'Committee Member'}</p>
           ${item.subcategory ? `<p><strong>Committee:</strong> ${getSubcategoryName(item.subcategory)}</p>` : ''}
-          ${item.image ? `<p><a href="${item.image}" target="_blank">View Image</a></p>` : ''}
           ${item.linkedin ? `<p><a href="${item.linkedin}" target="_blank">LinkedIn</a></p>` : ''}
         </div>
         <div class="item-actions">
