@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
   major: String,
   uni: String,
   yob: String,
+  email: String,
   cvLink: String,
   isAdmin: Boolean  // Sadece admin kullanıcılarda true olacak
 });

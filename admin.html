@@ -224,6 +224,29 @@ body{
   background-color: #f5f7fa;
 }
 
+#users{
+  background-color: #f5f7fa;
+}
+
+.form-group small{
+  display:block; margin-top:.25rem; color:var(--muted);
+  font-size:.85rem;
+}
+
+.form-group input[readonly]{
+  background:#f8f9fa; cursor:not-allowed;
+  opacity:.8;
+  transition: color 0.3s ease;
+}
+
+.form-group input[readonly].username-available{
+  color:#22c55e !important;
+}
+
+.form-group input[readonly].username-taken{
+  color:#f59e0b !important;
+}
+
 .btn{
   padding:1rem 2.25rem; border:none; border-radius:12px;
   font-size:1rem; font-weight:600; cursor:pointer;
@@ -503,6 +526,9 @@ body{
     <button class="tab-btn" data-tab="news">
       <i class="fas fa-newspaper"></i> News
     </button>
+    <button class="tab-btn" data-tab="users">
+      <i class="fas fa-user-plus"></i> Add Member
+    </button>
   </div>
 
   <!-- Talent Pool Tab -->
@@ -664,6 +690,84 @@ body{
       </div>
     </div>
   </div>
+
+  <!-- Users Tab -->
+  <div id="users" class="tab-content">
+    <div class="admin-form">
+      <h2>Add New Member</h2>
+      <form id="addUserForm">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Name *</label>
+            <input type="text" name="name" id="userName" required>
+          </div>
+          <div class="form-group">
+            <label>Surname *</label>
+            <input type="text" name="surname" id="userSurname" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Username *</label>
+            <input type="text" name="username" id="userUsername" required readonly>
+            <small style="color:var(--muted); font-size:.85rem;">Auto-generated from name.surname</small>
+          </div>
+          <div class="form-group">
+            <label>Password *</label>
+            <input type="password" name="password" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" name="email">
+          </div>
+          <div class="form-group">
+            <label>Gender</label>
+            <select name="gender">
+              <option value="">Select...</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+              <option value="Prefer not to say">Prefer not to say</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Major</label>
+            <input type="text" name="major">
+          </div>
+          <div class="form-group">
+            <label>University</label>
+            <input type="text" name="uni">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Year of Birth</label>
+            <input type="text" name="yob" placeholder="e.g., 2000">
+          </div>
+          <div class="form-group">
+            <label>CV Link</label>
+            <input type="url" name="cvLink" placeholder="https://...">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" name="isAdmin" value="true" style="width:auto; margin-right:.5rem;">
+            Admin User
+          </label>
+          <small style="display:block; color:var(--muted); font-size:.85rem; margin-top:.25rem;">
+            Check this box to make this user an admin
+          </small>
+        </div>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-user-plus"></i> Add Member
+        </button>
+      </form>
+    </div>
+  </div>
 </div>
 
 <!-- Applicants Modal -->
@@ -704,10 +808,22 @@ if (!isAdmin) {
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const tabId = btn.dataset.tab;
+    console.log('Tab clicked:', tabId);
+    
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
     btn.classList.add('active');
-    document.getElementById(tabId).classList.add('active');
+    
+    const tabElement = document.getElementById(tabId);
+    console.log('Tab element found:', tabElement, 'ID:', tabId);
+    
+    if (tabElement) {
+      tabElement.classList.add('active');
+      console.log('Tab activated:', tabId, 'Has active class:', tabElement.classList.contains('active'));
+    } else {
+      console.error('Tab element not found:', tabId);
+      console.log('Available tab contents:', Array.from(document.querySelectorAll('.tab-content')).map(el => el.id));
+    }
     
     // Reload data when switching tabs
     if (tabId === 'talent-pool') loadJobs();
@@ -1127,6 +1243,118 @@ async function deleteNews(id, title) {
   }
 }
 
+// Add User
+document.getElementById('addUserForm')?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.target);
+  const data = {};
+  
+  // Get all form values
+  for (const [key, value] of formData.entries()) {
+    if (key === 'isAdmin') {
+      data.isAdmin = value === 'true' ? true : undefined;
+    } else if (value.trim() !== '') {
+      data[key] = value.trim();
+    }
+  }
+  
+  // Add admin username for authentication (this is the admin's username, not the new user's)
+  data.adminUsername = username;
+  
+  // The new user's username is in data.username (from the form)
+  console.log('Adding user with data:', { ...data, password: '***' });
+  
+  try {
+    const res = await fetch(`${API_BASE}/api/admin/users`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    
+    let result;
+    try {
+      result = await res.json();
+    } catch (jsonErr) {
+      const text = await res.text();
+      showAlert(`Server error (${res.status}): ${text || 'Unknown error'}`, 'error');
+      return;
+    }
+    
+    if (res.ok) {
+      showAlert('Member added successfully!', 'success');
+      e.target.reset();
+      const usernameInput = document.getElementById('userUsername');
+      if (usernameInput) usernameInput.value = '';
+    } else {
+      const errorMsg = result.error ? `${result.message}: ${result.error}` : (result.message || `Server error ${res.status}`);
+      showAlert(errorMsg || 'Failed to add member', 'error');
+    }
+  } catch (err) {
+    console.error('Error adding user:', err);
+    showAlert('Error adding member: ' + err.message, 'error');
+  }
+});
+
+// Auto-generate username from name.surname with availability check
+let usernameCheckTimeout;
+document.getElementById('userName')?.addEventListener('input', updateUsername);
+document.getElementById('userSurname')?.addEventListener('input', updateUsername);
+
+async function updateUsername() {
+  const name = document.getElementById('userName')?.value.trim() || '';
+  const surname = document.getElementById('userSurname')?.value.trim() || '';
+  const usernameInput = document.getElementById('userUsername');
+  
+  if (!usernameInput || !name || !surname) {
+    if (usernameInput) usernameInput.value = '';
+    return;
+  }
+  
+  // Clear previous timeout
+  clearTimeout(usernameCheckTimeout);
+  
+  // Generate base username
+  const baseUsername = `${name}.${surname}`.toLowerCase()
+    .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
+    .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
+    .replace(/[^a-z0-9.]/g, '');
+  
+  // Show base username immediately
+  usernameInput.value = baseUsername;
+  usernameInput.classList.remove('username-available', 'username-taken');
+  usernameInput.style.color = '#666';
+  
+  // Debounce: Wait 500ms after user stops typing before checking availability
+  usernameCheckTimeout = setTimeout(async () => {
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/users/check-username?baseUsername=${encodeURIComponent(baseUsername)}`);
+      const result = await res.json();
+      
+      if (res.ok && result.username) {
+        usernameInput.value = result.username;
+        
+        // Change color and class based on availability
+        usernameInput.classList.remove('username-available', 'username-taken');
+        if (result.available) {
+          usernameInput.classList.add('username-available');
+          usernameInput.style.color = '#22c55e'; // Green for available
+        } else {
+          usernameInput.classList.add('username-taken');
+          usernameInput.style.color = '#f59e0b'; // Orange for auto-incremented
+        }
+      } else {
+        usernameInput.classList.remove('username-available', 'username-taken');
+        usernameInput.style.color = '#666';
+      }
+    } catch (err) {
+      console.error('Error checking username availability:', err);
+      usernameInput.classList.remove('username-available', 'username-taken');
+      usernameInput.style.color = '#666';
+    }
+  }, 500);
+}
+
+
 // Modal close
 document.querySelector('.modal-close').addEventListener('click', () => {
   document.getElementById('applicantsModal').classList.remove('active');
@@ -1137,6 +1365,10 @@ document.getElementById('applicantsModal').addEventListener('click', (e) => {
     document.getElementById('applicantsModal').classList.remove('active');
   }
 });
+
+// Debug: Check all tab contents on load
+console.log('Available tab contents on load:', Array.from(document.querySelectorAll('.tab-content')).map(el => ({ id: el.id, classes: el.className })));
+console.log('Users tab element:', document.getElementById('users'));
 
 // Initial load
 loadJobs();
