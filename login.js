@@ -36,18 +36,25 @@ async function onSubmit(event) {
     // ✅ Yanıtı al
     const data = await response.json();
     console.log("Login response:", data);
+    console.log("isAdmin from backend:", data.isAdmin, "Type:", typeof data.isAdmin);
 
     // Backend yanıtında kullanıcı nesnesi varsa onu al
     // Örneğin { user: { username: "alice.smith", name: "Alice" } }
     const user = data.user || data;
 
-    // Session storage’a kullanıcı bilgilerini kaydet
+    // Session storage'a kullanıcı bilgilerini kaydet
     sessionStorage.setItem("isLoggedIn", "true");
     sessionStorage.setItem("username", user.username || username);
     sessionStorage.setItem("name", user.name || username.split(".")[0]); // fallback olarak username'den isim çıkar
+    
+    // isAdmin değerini doğru şekilde kaydet
+    const isAdminValue = data.isAdmin === true ? 'true' : 'false';
+    sessionStorage.setItem("isAdmin", isAdminValue);
 
     console.log("Stored username:", sessionStorage.getItem("username"));
     console.log("Stored name:", sessionStorage.getItem("name"));
+    console.log("Stored isAdmin:", sessionStorage.getItem("isAdmin"));
+    console.log("isAdmin check:", sessionStorage.getItem("isAdmin") === 'true');
 
     // Başarılı girişte yönlendir
     window.location.href = "loggedIn.html";

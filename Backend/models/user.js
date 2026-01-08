@@ -12,7 +12,8 @@ const userSchema = new mongoose.Schema({
   major: String,
   uni: String,
   yob: String,
-  cvLink: String
+  cvLink: String,
+  isAdmin: Boolean  // Sadece admin kullanıcılarda true olacak
 });
 
 // 3. parametre olarak koleksiyon adını belirtiyoruz
