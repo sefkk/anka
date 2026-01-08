@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <title>ANKA Legacy | Past Members</title>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Favicon (optional) -->
+  <link rel="icon" href="favicon.ico" type="image/x-icon" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- Your main stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+
+  <style>
+    :root{
+      /* ANKA palette */
+      --brand-navy:#0e2a47;
+      --brand-sand:#df8c60;
+      --brand-yellow:#f5d36c;
+      --brand-red:#e16c5b;
+      --brand-sky:#90c2e7;
+      --brand-lilac:#c8a8e9;
+
+      --bg:#ffffff;
+      --card:#ffffff;
+      --text:#13233a;
+      --muted:#5e6c84;
+      --line:rgba(17,24,39,.08);
+      --ring:rgba(17,24,39,.14);
+      --accent:var(--brand-sand);
+      --accent-2:var(--brand-yellow);
+    }
+
+    *{ box-sizing:border-box; }
+    html,body{ height:100%; }
+    body{
+      margin:0; background:var(--bg);
+      color:var(--text);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      line-height:1.5;
+    }
+
+    .background-image-legacy {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50vh;
+      background-image: url("Images/abt-us-bg.jpg");
+      background-size: cover;
+      background-position: center;
+      z-index: -1;
+      opacity: 0.6;
+    }
+
+    .greeting-content-legacy {
+      padding-top: 40px;
+    }
+
+    .greeting-content-legacy h1 {
+      font-family: "Lora", serif;
+      font-optical-sizing: auto;
+      font-weight: 700;
+      font-style: normal;
+      font-size: 3rem;
+      color: white;
+      margin-left: 70px;
+      margin-top: -15px;
+    }
+
+    .greeting-content-legacy p {
+      font-size: 1.25rem;
+      color: white;
+      margin: 40px 70px 50px 70px;
+      font-weight: 550;
+    }
+
+    .container-legacy{ 
+      max-width:1200px; 
+      margin-inline:auto; 
+      padding:48px 20px 80px; 
+    }
+
+    .header-legacy{ 
+      text-align:center; 
+      margin-bottom:48px; 
+    }
+    .header-legacy h1{
+      margin:0 0 6px; 
+      font-weight:800; 
+      letter-spacing:.22em; 
+      text-transform:uppercase;
+      font-size:clamp(20px,3.6vw,36px); 
+      color:var(--brand-navy);
+    }
+    .header-legacy p{ 
+      margin:0; 
+      color:var(--muted); 
+      font-size:clamp(14px,1.4vw,16px); 
+    }
+
+    /* Year Filter */
+    .year-filter-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+
+    .year-filter-label {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--brand-navy);
+    }
+
+    .year-select {
+      padding: 12px 24px;
+      font-size: 1rem;
+      border: 2px solid var(--brand-sand);
+      border-radius: 8px;
+      background: white;
+      color: var(--brand-navy);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+      min-width: 150px;
+    }
+
+    .year-select:hover {
+      border-color: var(--brand-navy);
+      background: var(--brand-sand);
+      color: white;
+    }
+
+    .year-select:focus {
+      outline: none;
+      border-color: var(--brand-navy);
+      box-shadow: 0 0 0 3px rgba(14, 42, 71, 0.1);
+    }
+
+    /* Card base - matching about-us.html */
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:24px; 
+      overflow:hidden;
+      box-shadow:0 10px 24px rgba(2,6,23,.08);
+      transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+    }
+    .card:hover{ 
+      transform:translateY(-4px); 
+      box-shadow:0 18px 44px rgba(2,6,23,.14); 
+      border-color:var(--ring); 
+    }
+
+    .card.hidden {
+      display: none;
+    }
+
+    .media{ 
+      position:relative; 
+      display:block; 
+      width:100%; 
+      aspect-ratio:4/5; 
+      background:#eef2f8; 
+    }
+    .media img{ 
+      width:100%; 
+      height:100%; 
+      display:block; 
+      object-fit:cover; 
+    }
+
+    .badge{
+      position:absolute; 
+      inset:12px auto auto 12px; 
+      padding:6px 10px; 
+      border-radius:999px;
+      background:linear-gradient(135deg,var(--accent),var(--accent-2)); 
+      color:#1f2937;
+      font-weight:800; 
+      font-size:.75rem; 
+      letter-spacing:.06em; 
+      text-transform:uppercase;
+      box-shadow:0 4px 12px rgba(0,0,0,.15);
+      border:1px solid rgba(0,0,0,.06);
+    }
+
+    .content{ 
+      padding:16px 18px 20px; 
+    }
+    .name{ 
+      margin:0; 
+      font-size:clamp(18px,2vw,22px); 
+      font-weight:800; 
+      color:var(--brand-navy); 
+    }
+    .role{ 
+      margin:6px 0 0; 
+      color:var(--muted); 
+      font-size:.98rem; 
+    }
+    .year-badge{ 
+      margin:8px 0 0; 
+      color:var(--brand-sand); 
+      font-size:.9rem; 
+      font-weight:600; 
+    }
+
+    /* Section headers */
+    .legacy-section {
+      margin-bottom: 60px;
+    }
+
+    .legacy-section-title {
+      font-size: clamp(24px, 3vw, 32px);
+      font-weight: 800;
+      color: var(--brand-navy);
+      margin-bottom: 32px;
+      text-align: center;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      position: relative;
+      padding-bottom: 16px;
+    }
+
+    .legacy-section-title::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, var(--brand-sand), var(--brand-yellow));
+      border-radius: 2px;
+    }
+
+    /* Members grid */
+    .legacy-grid{ 
+      display:grid; 
+      gap:28px; 
+      grid-template-columns:repeat(4, 1fr); 
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--muted);
+      font-size: 1.2rem;
+      grid-column: 1 / -1;
+    }
+
+    .no-results i {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: var(--brand-sand);
+      opacity: 0.5;
+    }
+
+    /* Responsive */
+    @media (max-width: 1100px){ 
+      .legacy-grid{ 
+        grid-template-columns:repeat(3, 1fr); 
+      } 
+    }
+    @media (max-width: 840px){ 
+      .legacy-grid{ 
+        grid-template-columns:repeat(2, 1fr); 
+      } 
+    }
+    @media (max-width: 520px){ 
+      .legacy-grid{ 
+        grid-template-columns:1fr; 
+      } 
+    }
+
+    @media (max-width: 900px) {
+      .legacy-section-title {
+        font-size: 1.8rem;
+        margin-bottom: 24px;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .background-image-legacy {
+        height: 35vh;
+        opacity: 0.55;
+      }
+
+      .greeting-content-legacy {
+        padding-top: 25px;
+      }
+
+      .greeting-content-legacy h1 {
+        font-size: 2.4rem;
+        margin: 0 15px 20px 15px;
+        line-height: 1.1;
+        margin-left: 0;
+      }
+
+      .greeting-content-legacy p {
+        font-size: 1.1rem;
+        margin: 15px 15px 30px 15px;
+        font-weight: 500;
+        color: #fefefe;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+      }
+
+      .year-filter-container {
+        flex-direction: column;
+        gap: 15px;
+      }
+
+      .year-select {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+
+    @keyframes fadeSlideIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  
+<div class="background-image-legacy"></div>
+  
+<header>
+    <div id="navbar"></div>
+</header>
+
+<!-- Greeting -->
+<section class="greeting-banner-srthub">
+  <div class="greeting-content-srthub">
+    <h1>ANKA Legacy</h1>
+    <h1>Honoring Our Past Members</h1>
+    <p>Throughout the years, ANKA has been shaped by dedicated individuals who have contributed their time, energy, and passion to our community. This page honors all those who have served in various positions, helping build ANKA into what it is today. Explore our history and the remarkable people who have been part of our journey.</p>
+  </div>
+</section>
+
+<main class="container-legacy" aria-labelledby="legacy-title">
+  <header class="header-legacy">
+    <h1 id="legacy-title">Past Members</h1>
+    <p>Celebrating the contributions of our alumni</p>
+  </header>
+
+  <!-- Year Filter -->
+  <div class="year-filter-container">
+    <label for="yearSelect" class="year-filter-label">Filter by Year:</label>
+    <select id="yearSelect" class="year-select">
+      <option value="all">All Years</option>
+      <!-- Years will be populated dynamically -->
+    </select>
+  </div>
+
+  <!-- Legacy Members Sections -->
+  <div id="legacySections">
+    <!-- Sections will be populated dynamically -->
+  </div>
+</main>
+
+<!-- Footer -->
+<div id="footer"></div>
+
+<!-- Javascript Sources -->
+<script>
+  // Load navbar and footer
+  fetch('Partials/navbar.html')
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById('navbar').innerHTML = data;
+    });
+
+  fetch('Partials/footer.html')
+    .then(res => res.text())
+    .then(data => {
+      document.getElementById('footer').innerHTML = data;
+    });
+
+  // Legacy members data
+  // Category options: "board", "vice-chair", "committee"
+  // You can add more members here with their information
+  const legacyMembers = [
+    // Board Committee Examples
+    {
+      name: "John Doe",
+      position: "President",
+      year: "2024",
+      category: "board",
+      image: "about-us/img/placeholder.jpg",
+      linkedin: "#"
+    },
+    {
+      name: "Bob Johnson",
+      position: "Secretary",
+      year: "2023",
+      category: "board",
+      image: "about-us/img/placeholder.jpg",
+      linkedin: "#"
+    },
+    {
+      name: "Alice Williams",
+      position: "Treasurer",
+      year: "2023",
+      category: "board",
+      image: "about-us/img/placeholder.jpg",
+      linkedin: "#"
+    },
+    // Vice Chairs Examples
+    {
+      name: "Jane Smith",
+      position: "Vice President",
+      year: "2024",
+      category: "vice-chair",
+      image: "about-us/img/placeholder.jpg",
+      linkedin: "#"
+    },
+    {
+      name: "Robert Brown",
+      position: "Vice Chair",
+      year: "2022",
+      category: "vice-chair",
+      image: "about-us/img/placeholder.jpg",
+      linkedin: "#"
+    },
+    // Committee Members Examples
+    {
+      name: "Charlie Brown",
+      position: "IT Committee Head",
+      year: "2022",
+      category: "committee",
+      image: "about-us/img/placeholder.jpg",
+      linkedin: "#"
+    },
+    {
+      name: "Diana Prince",
+      position: "Marketing Committee Head",
+      year: "2022",
+      category: "committee",
+      image: "about-us/img/placeholder.jpg",
+      linkedin: "#"
+    },
+    {
+      name: "Edward Norton",
+      position: "Event Committee Head",
+      year: "2021",
+      category: "committee",
+      image: "about-us/img/placeholder.jpg",
+      linkedin: "#"
+    },
+    {
+      name: "Fiona Apple",
+      position: "HR Committee Head",
+      year: "2021",
+      category: "committee",
+      image: "about-us/img/placeholder.jpg",
+      linkedin: "#"
+    }
+  ];
+
+  // Category configuration
+  const categories = {
+    "board": {
+      title: "Board Committee",
+      order: 1
+    },
+    "vice-chair": {
+      title: "Vice Chairs",
+      order: 2
+    },
+    "committee": {
+      title: "Committee Members",
+      order: 3
+    }
+  };
+
+  // Get unique years and sort them
+  function getUniqueYears(members) {
+    const years = [...new Set(members.map(m => m.year))];
+    return years.sort((a, b) => b - a); // Sort descending (newest first)
+  }
+
+  // Populate year selector
+  function populateYearSelector() {
+    const years = getUniqueYears(legacyMembers);
+    const yearSelect = document.getElementById('yearSelect');
+    
+    // Clear existing options except "All Years"
+    yearSelect.innerHTML = '<option value="all">All Years</option>';
+    
+    // Add year options
+    years.forEach(year => {
+      const option = document.createElement('option');
+      option.value = year;
+      option.textContent = year;
+      yearSelect.appendChild(option);
+    });
+  }
+
+  // Render legacy members by sections
+  function renderLegacyMembers(filterYear = 'all') {
+    const sectionsContainer = document.getElementById('legacySections');
+    sectionsContainer.innerHTML = '';
+
+    // Filter members by year
+    const filteredMembers = filterYear === 'all' 
+      ? legacyMembers 
+      : legacyMembers.filter(m => m.year === filterYear);
+
+    if (filteredMembers.length === 0) {
+      sectionsContainer.innerHTML = `
+        <div class="no-results">
+          <i class="fas fa-search"></i>
+          <p>No members found for the selected year.</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Group members by category
+    const membersByCategory = {};
+    filteredMembers.forEach(member => {
+      const category = member.category || 'committee';
+      if (!membersByCategory[category]) {
+        membersByCategory[category] = [];
+      }
+      membersByCategory[category].push(member);
+    });
+
+    // Sort categories by order
+    const sortedCategories = Object.keys(categories).sort((a, b) => 
+      categories[a].order - categories[b].order
+    );
+
+    // Render each section
+    sortedCategories.forEach(categoryKey => {
+      const categoryMembers = membersByCategory[categoryKey];
+      if (!categoryMembers || categoryMembers.length === 0) {
+        return; // Skip empty categories
+      }
+
+      const section = document.createElement('section');
+      section.className = 'legacy-section';
+      
+      const sectionTitle = document.createElement('h2');
+      sectionTitle.className = 'legacy-section-title';
+      sectionTitle.textContent = categories[categoryKey].title;
+      section.appendChild(sectionTitle);
+
+      const grid = document.createElement('div');
+      grid.className = 'legacy-grid';
+      
+      categoryMembers.forEach(member => {
+        const card = document.createElement('article');
+        card.className = 'card';
+        card.setAttribute('aria-label', `Past Member: ${member.name}`);
+        
+        card.innerHTML = `
+          <a class="media" href="${member.linkedin}" target="_blank" rel="noopener" aria-label="${member.name} — LinkedIn (yeni sekme)">
+            <img src="${member.image}" alt="${member.name}" loading="lazy" onerror="this.src='about-us/img/placeholder.jpg'" />
+            <span class="badge">${member.year}</span>
+          </a>
+          <div class="content">
+            <h3 class="name">${member.name}</h3>
+            <p class="role">${member.position}</p>
+            <p class="year-badge">Served in ${member.year}</p>
+          </div>
+        `;
+        
+        grid.appendChild(card);
+      });
+
+      section.appendChild(grid);
+      sectionsContainer.appendChild(section);
+    });
+  }
+
+  // Initialize
+  document.addEventListener('DOMContentLoaded', () => {
+    populateYearSelector();
+    renderLegacyMembers();
+
+    // Add event listener for year filter
+    document.getElementById('yearSelect').addEventListener('change', (e) => {
+      renderLegacyMembers(e.target.value);
+    });
+  });
+</script>
+
+</body>
+
+</html>
