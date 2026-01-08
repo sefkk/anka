@@ -238,25 +238,6 @@ footer.site-footer{
   </div>
 </section>
 
-<!-- Admin Panel Link (only visible to admins) -->
-<script>
-  const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
-  if (isAdmin) {
-    const servicesSection = document.querySelector('.services-section .container');
-    const adminLink = document.createElement('div');
-    adminLink.style.marginTop = '2rem';
-    adminLink.style.textAlign = 'center';
-    adminLink.innerHTML = `
-      <a href="admin.html" style="display:inline-flex; align-items:center; gap:.5rem; padding:.75rem 1.5rem; 
-        background:linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color:#fff; 
-        text-decoration:none; border-radius:12px; font-weight:600; box-shadow:0 4px 12px rgba(231,76,60,.3);
-        transition:transform .3s ease;">
-        <i class="fas fa-shield-alt"></i> Admin Panel
-      </a>
-    `;
-    servicesSection.appendChild(adminLink);
-  }
-</script>
 
 <div id="footer"></div>
 
