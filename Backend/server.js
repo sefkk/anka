@@ -282,21 +282,46 @@ app.delete("/api/admin/news/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const username = req.body.username || req.query.username;
+    
+    console.log(`Delete news request - ID: ${id}, Username: ${username}`);
+    
     if (!username) {
       return res.status(400).json({ message: "Username is required" });
     }
+    
+    // Validate MongoDB ObjectId format
+    if (!id) {
+      return res.status(400).json({ message: "News ID is required" });
+    }
+    
+    // Check if it's a valid MongoDB ObjectId (24 hex characters)
+    if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+      console.error(`Invalid news ID format: ${id}`);
+      return res.status(400).json({ message: "Invalid news ID format" });
+    }
+    
     const user = await User.findOne({ username: username.trim() });
     if (!user || user.isAdmin !== true) {
       return res.status(403).json({ message: "Admin access required" });
     }
+    
+    console.log(`Attempting to delete news with ID: ${id}`);
+    console.log(`News model available:`, !!News);
+    
     const news = await News.findByIdAndDelete(id);
+    console.log(`News delete result:`, news ? 'Found and deleted' : 'Not found');
+    
     if (!news) {
       return res.status(404).json({ message: "News not found" });
     }
+    
+    console.log(`News deleted successfully: ${id}`);
     res.json({ message: "News deleted successfully" });
   } catch (err) {
-    console.error("Failed to delete news:", err);
-    res.status(500).json({ message: "Failed to delete news" });
+    console.error("❌ Failed to delete news:", err.message);
+    console.error("❌ Error stack:", err.stack);
+    console.error("❌ Full error:", err);
+    res.status(500).json({ message: "Failed to delete news", error: err.message });
   }
 });
 
@@ -330,21 +355,46 @@ app.delete("/api/admin/startups/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const username = req.body.username || req.query.username;
+    
+    console.log(`Delete startup request - ID: ${id}, Username: ${username}`);
+    
     if (!username) {
       return res.status(400).json({ message: "Username is required" });
     }
+    
+    // Validate MongoDB ObjectId format
+    if (!id) {
+      return res.status(400).json({ message: "Startup ID is required" });
+    }
+    
+    // Check if it's a valid MongoDB ObjectId (24 hex characters)
+    if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+      console.error(`Invalid startup ID format: ${id}`);
+      return res.status(400).json({ message: "Invalid startup ID format" });
+    }
+    
     const user = await User.findOne({ username: username.trim() });
     if (!user || user.isAdmin !== true) {
       return res.status(403).json({ message: "Admin access required" });
     }
+    
+    console.log(`Attempting to delete startup with ID: ${id}`);
+    console.log(`Startup model available:`, !!Startup);
+    
     const startup = await Startup.findByIdAndDelete(id);
+    console.log(`Startup delete result:`, startup ? 'Found and deleted' : 'Not found');
+    
     if (!startup) {
       return res.status(404).json({ message: "Startup not found" });
     }
+    
+    console.log(`Startup deleted successfully: ${id}`);
     res.json({ message: "Startup deleted successfully" });
   } catch (err) {
-    console.error("Failed to delete startup:", err);
-    res.status(500).json({ message: "Failed to delete startup" });
+    console.error("❌ Failed to delete startup:", err.message);
+    console.error("❌ Error stack:", err.stack);
+    console.error("❌ Full error:", err);
+    res.status(500).json({ message: "Failed to delete startup", error: err.message });
   }
 });
 
@@ -372,21 +422,46 @@ app.delete("/api/admin/companies/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const username = req.body.username || req.query.username;
+    
+    console.log(`Delete company request - ID: ${id}, Username: ${username}`);
+    
     if (!username) {
       return res.status(400).json({ message: "Username is required" });
     }
+    
+    // Validate MongoDB ObjectId format
+    if (!id) {
+      return res.status(400).json({ message: "Company ID is required" });
+    }
+    
+    // Check if it's a valid MongoDB ObjectId (24 hex characters)
+    if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+      console.error(`Invalid company ID format: ${id}`);
+      return res.status(400).json({ message: "Invalid company ID format" });
+    }
+    
     const user = await User.findOne({ username: username.trim() });
     if (!user || user.isAdmin !== true) {
       return res.status(403).json({ message: "Admin access required" });
     }
+    
+    console.log(`Attempting to delete company with ID: ${id}`);
+    console.log(`Company model available:`, !!Company);
+    
     const company = await Company.findByIdAndDelete(id);
+    console.log(`Company delete result:`, company ? 'Found and deleted' : 'Not found');
+    
     if (!company) {
       return res.status(404).json({ message: "Company not found" });
     }
+    
+    console.log(`Company deleted successfully: ${id}`);
     res.json({ message: "Company deleted successfully" });
   } catch (err) {
-    console.error("Failed to delete company:", err);
-    res.status(500).json({ message: "Failed to delete company" });
+    console.error("❌ Failed to delete company:", err.message);
+    console.error("❌ Error stack:", err.stack);
+    console.error("❌ Full error:", err);
+    res.status(500).json({ message: "Failed to delete company", error: err.message });
   }
 });
 
