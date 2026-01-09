@@ -1,7 +1,16 @@
 // SLIDER 
 
 let slideIndex = 1;
-showSlides(slideIndex);
+
+// Only call showSlides when DOM is ready
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    showSlides(slideIndex);
+  });
+} else {
+  // DOM is already ready
+  showSlides(slideIndex);
+}
 
 function plusSlides(n) {
   showSlides(slideIndex += n);
@@ -15,6 +24,12 @@ function showSlides(n) {
   let i;
   let slides = document.getElementsByClassName("mySlides");
   let dots = document.getElementsByClassName("dot");
+  
+  // Safety check: if no slides exist, return early
+  if (slides.length === 0) {
+    return;
+  }
+  
   if (n > slides.length) {slideIndex = 1}
   if (n < 1) {slideIndex = slides.length}
   for (i = 0; i < slides.length; i++) {
@@ -23,23 +38,40 @@ function showSlides(n) {
   for (i = 0; i < dots.length; i++) {
     dots[i].className = dots[i].className.replace(" active", "");
   }
-  slides[slideIndex-1].style.display = "block";
-  dots[slideIndex-1].className += " active";
+  
+  // Safety check: ensure the slide index is valid
+  if (slides[slideIndex-1]) {
+    slides[slideIndex-1].style.display = "block";
+  }
+  if (dots[slideIndex-1]) {
+    dots[slideIndex-1].className += " active";
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
   const newsSection = document.querySelector('.news-background');
+  
+  // Safety check: only proceed if newsSection exists
+  if (!newsSection) {
+    return;
+  }
+  
   const title = newsSection.querySelector('h2');
   const shadow = newsSection.querySelector('.slider-shadow');
   const slideshow = newsSection.querySelector('.slideshow-container');  // select slideshow container
+
+  // Safety check: only create observer if elements exist
+  if (!title || !shadow || !slideshow) {
+    return;
+  }
 
   const observer = new IntersectionObserver((entries, observer) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         newsSection.classList.add('animate');
-        title.classList.add('animate');
-        shadow.classList.add('animate');
-        slideshow.classList.add('animate');
+        if (title) title.classList.add('animate');
+        if (shadow) shadow.classList.add('animate');
+        if (slideshow) slideshow.classList.add('animate');
         observer.unobserve(entry.target);
       }
     });
