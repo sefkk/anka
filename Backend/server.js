@@ -56,16 +56,6 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ message: 'Invalid username or password' });
         }
 
-        // Debug: Check isAdmin value - detailed logging
-        console.log(`\n=== LOGIN DEBUG for ${username} ===`);
-        console.log('Full user object:', JSON.stringify(user.toObject(), null, 2));
-        console.log('isAdmin value:', user.isAdmin);
-        console.log('isAdmin type:', typeof user.isAdmin);
-        console.log('isAdmin === true:', user.isAdmin === true);
-        console.log('isAdmin == true:', user.isAdmin == true);
-        console.log('Boolean(user.isAdmin):', Boolean(user.isAdmin));
-        console.log('================================\n');
-
         // Successful login
         const isAdminResult = user.isAdmin === true;
         res.status(200).json({ 
