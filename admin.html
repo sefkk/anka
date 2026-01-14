@@ -1019,28 +1019,8 @@ if (isMaster === true) {
     logsTabBtn.innerHTML = '<i class="fas fa-list-alt"></i> Logs';
     tabContainer.appendChild(logsTabBtn);
     
-    // Add event listener to the new tab button
-    logsTabBtn.addEventListener('click', () => {
-      const tabId = logsTabBtn.dataset.tab;
-      console.log('Tab clicked:', tabId);
-      
-      // Log tab switch
-      logAdminAction('tab_switch', {
-        tabId,
-        tabName: logsTabBtn.textContent.trim()
-      });
-      
-      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      logsTabBtn.classList.add('active');
-      
-      const tabElement = document.getElementById(tabId);
-      if (tabElement) {
-        tabElement.classList.add('active');
-      }
-      
-      if (tabId === 'logs' && isMaster === true) loadLogs();
-    });
+    // Logs tab button will use the general tab switching listener below
+    // No need for separate event listener to avoid duplicate logging
   }
   
   // Add Logs tab content (after users tab)
@@ -1094,40 +1074,41 @@ if (isMaster === true) {
   console.log('✅ Logs tab added for master admin');
 }
 
-// Tab switching
-document.querySelectorAll('.tab-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const tabId = btn.dataset.tab;
-    console.log('Tab clicked:', tabId);
-    
-    // Log tab switch
-    logAdminAction('tab_switch', {
-      tabId,
-      tabName: btn.textContent.trim()
-    });
-    
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-    btn.classList.add('active');
-    
-    const tabElement = document.getElementById(tabId);
-    console.log('Tab element found:', tabElement, 'ID:', tabId);
-    
-    if (tabElement) {
-      tabElement.classList.add('active');
-      console.log('Tab activated:', tabId, 'Has active class:', tabElement.classList.contains('active'));
-    } else {
-      console.error('Tab element not found:', tabId);
-      console.log('Available tab contents:', Array.from(document.querySelectorAll('.tab-content')).map(el => el.id));
-    }
-    
-    // Reload data when switching tabs
-    if (tabId === 'talent-pool') loadJobs();
-    else if (tabId === 'startups') loadStartups();
-    else if (tabId === 'news') loadNews();
-    else if (tabId === 'legacy') loadLegacy();
-    else if (tabId === 'logs' && isMaster === true) loadLogs();
+// Tab switching with event delegation (works for dynamically added tabs too)
+document.querySelector('.admin-tabs')?.addEventListener('click', (e) => {
+  const btn = e.target.closest('.tab-btn');
+  if (!btn) return;
+  
+  const tabId = btn.dataset.tab;
+  console.log('Tab clicked:', tabId);
+  
+  // Log tab switch (only once)
+  logAdminAction('tab_switch', {
+    tabId,
+    tabName: btn.textContent.trim()
   });
+  
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  
+  const tabElement = document.getElementById(tabId);
+  console.log('Tab element found:', tabElement, 'ID:', tabId);
+  
+  if (tabElement) {
+    tabElement.classList.add('active');
+    console.log('Tab activated:', tabId, 'Has active class:', tabElement.classList.contains('active'));
+  } else {
+    console.error('Tab element not found:', tabId);
+    console.log('Available tab contents:', Array.from(document.querySelectorAll('.tab-content')).map(el => el.id));
+  }
+  
+  // Reload data when switching tabs
+  if (tabId === 'talent-pool') loadJobs();
+  else if (tabId === 'startups') loadStartups();
+  else if (tabId === 'news') loadNews();
+  else if (tabId === 'legacy') loadLegacy();
+  else if (tabId === 'logs' && isMaster === true) loadLogs();
 });
 
 // Show alert
@@ -2035,79 +2016,104 @@ async function loadLogs() {
       return;
     }
     
+    // Format timestamp helper
+    const formatTime = (date) => {
+      return new Date(date).toLocaleString('tr-TR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+    };
+    
+    // Format action type
+    const formatActionType = (action) => {
+      return action.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    };
+    
     container.innerHTML = `
-      <div style="padding: 1rem; background: #f8f9fa; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--brand-2);">
-        <strong style="color: var(--brand-2);">Total Logs:</strong> ${data.count}
+      <div style="padding: 0.75rem 1rem; background: #f8f9fa; border-radius: 8px; margin-bottom: 1rem; font-size: 0.9rem;">
+        <strong>Total Logs:</strong> ${data.count}
       </div>
-      <div style="max-height: 600px; overflow-y: auto;">
-        ${data.logs.map(log => {
-          const timestamp = new Date(log.timestamp).toLocaleString('tr-TR', {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-          });
-          
-          const actionTypeColors = {
-            'page_enter': '#10b981',
-            'page_exit': '#ef4444',
-            'tab_switch': '#3b82f6',
-            'add_job': '#22c55e',
-            'delete_job': '#ef4444',
-            'add_startup': '#22c55e',
-            'delete_startup': '#ef4444',
-            'add_news': '#22c55e',
-            'delete_news': '#ef4444',
-            'add_legacy': '#22c55e',
-            'delete_legacy': '#ef4444',
-            'add_user': '#22c55e',
-            'view_applicants': '#3b82f6',
-            'keypress': '#6b7280',
-            'form_submit': '#8b5cf6'
-          };
-          
-          const actionColor = actionTypeColors[log.actionType] || '#6b7280';
-          
-          return `
-            <div class="item-card" style="margin-bottom: 1rem; border-left: 4px solid ${actionColor};">
-              <div class="item-info">
-                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
-                  <h3 style="margin: 0; color: ${actionColor}; font-weight: 700; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px;">
-                    ${log.actionType.replace(/_/g, ' ')}
-                  </h3>
-                  <small style="color: var(--muted); font-size: 0.85rem; white-space: nowrap;">
-                    ${timestamp}
-                  </small>
-                </div>
-                <p style="margin: 0.25rem 0; font-weight: 600;">
-                  <i class="fas fa-user" style="color: var(--brand-2);"></i> 
-                  <strong>Admin:</strong> ${log.adminUsername}
-                </p>
-                ${log.details && Object.keys(log.details).length > 0 ? `
-                  <details style="margin-top: 0.75rem;">
-                    <summary style="cursor: pointer; color: var(--brand-2); font-weight: 600; font-size: 0.9rem; padding: 0.5rem; background: #f8f9fa; border-radius: 6px;">
-                      <i class="fas fa-info-circle"></i> View Details
-                    </summary>
-                    <pre style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-top: 0.5rem; overflow-x: auto; font-size: 0.85rem; line-height: 1.6; border: 1px solid var(--border);">${JSON.stringify(log.details, null, 2)}</pre>
-                  </details>
-                ` : ''}
-                ${log.keyPressed ? `
-                  <p style="margin: 0.5rem 0; padding: 0.5rem; background: #f8f9fa; border-radius: 6px; font-size: 0.9rem;">
-                    <i class="fas fa-keyboard" style="color: var(--muted);"></i> 
-                    <strong>Key:</strong> <code style="background: white; padding: 0.2rem 0.4rem; border-radius: 4px;">${log.keyPressed}</code> 
-                    <span style="color: var(--muted);">(Code: ${log.keyCode})</span>
-                  </p>
-                ` : ''}
-                <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--muted); display: flex; gap: 1rem; flex-wrap: wrap;">
-                  <span><i class="fas fa-fingerprint"></i> Session: <code style="font-size: 0.75rem;">${log.sessionId ? log.sessionId.substring(0, 20) + '...' : 'N/A'}</code></span>
-                  <span><i class="fas fa-network-wired"></i> IP: <code style="font-size: 0.75rem;">${log.ipAddress || 'N/A'}</code></span>
-                </div>
-              </div>
-            </div>
-          `;
-        }).join('')}
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; background: white; border-radius: 8px; overflow: hidden;">
+          <thead>
+            <tr style="background: #f8f9fa; border-bottom: 2px solid var(--border);">
+              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 600; font-size: 0.85rem; color: var(--text);">Time</th>
+              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 600; font-size: 0.85rem; color: var(--text);">Admin</th>
+              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 600; font-size: 0.85rem; color: var(--text);">Action</th>
+              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 600; font-size: 0.85rem; color: var(--text);">Details</th>
+              <th style="padding: 0.75rem 1rem; text-align: left; font-weight: 600; font-size: 0.85rem; color: var(--text);">IP</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${data.logs.map((log, index) => {
+              const timestamp = formatTime(log.timestamp);
+              const actionType = formatActionType(log.actionType);
+              
+              // Action type colors
+              const actionColors = {
+                'page_enter': { bg: '#d1fae5', color: '#065f46' }, // Green
+                'page_exit': { bg: '#fee2e2', color: '#991b1b' }, // Red
+                'tab_switch': { bg: '#dbeafe', color: '#1e40af' }, // Blue
+                'add_job': { bg: '#d1fae5', color: '#065f46' }, // Green
+                'delete_job': { bg: '#fee2e2', color: '#991b1b' }, // Red
+                'add_startup': { bg: '#d1fae5', color: '#065f46' }, // Green
+                'delete_startup': { bg: '#fee2e2', color: '#991b1b' }, // Red
+                'add_news': { bg: '#d1fae5', color: '#065f46' }, // Green
+                'delete_news': { bg: '#fee2e2', color: '#991b1b' }, // Red
+                'add_legacy': { bg: '#d1fae5', color: '#065f46' }, // Green
+                'delete_legacy': { bg: '#fee2e2', color: '#991b1b' }, // Red
+                'add_user': { bg: '#d1fae5', color: '#065f46' }, // Green
+                'view_applicants': { bg: '#dbeafe', color: '#1e40af' }, // Blue
+                'keypress': { bg: '#f3f4f6', color: '#374151' }, // Gray
+                'form_submit': { bg: '#e9d5ff', color: '#6b21a8' }, // Purple
+                'form_reset': { bg: '#fef3c7', color: '#92400e' } // Yellow
+              };
+              
+              const actionColor = actionColors[log.actionType] || { bg: '#e5e7eb', color: '#374151' };
+              
+              // Get details summary
+              let detailsText = '-';
+              if (log.details && Object.keys(log.details).length > 0) {
+                if (log.details.jobName) detailsText = log.details.jobName;
+                else if (log.details.startupName) detailsText = log.details.startupName;
+                else if (log.details.newsTitle) detailsText = log.details.newsTitle;
+                else if (log.details.legacyName) detailsText = log.details.legacyName;
+                else if (log.details.newUsername) detailsText = `User: ${log.details.newUsername}`;
+                else if (log.details.companyName) detailsText = log.details.companyName;
+                else if (log.details.tabId) detailsText = log.details.tabId;
+                else if (log.details.keypressCount) detailsText = `${log.details.keypressCount} keys`;
+                else detailsText = 'View details';
+              }
+              
+              const rowBg = index % 2 === 0 ? '#ffffff' : '#f8f9fa';
+              
+              return `
+                <tr style="background: ${rowBg}; border-bottom: 1px solid var(--border); transition: background 0.2s;">
+                  <td style="padding: 0.75rem 1rem; font-size: 0.85rem; color: var(--muted); white-space: nowrap;">${timestamp}</td>
+                  <td style="padding: 0.75rem 1rem; font-size: 0.85rem; color: var(--text);">${log.adminUsername}</td>
+                  <td style="padding: 0.75rem 1rem; font-size: 0.85rem;">
+                    <span style="display: inline-block; padding: 0.25rem 0.5rem; border-radius: 4px; background: ${actionColor.bg}; color: ${actionColor.color}; font-weight: 500; font-size: 0.8rem;">
+                      ${actionType}
+                    </span>
+                  </td>
+                  <td style="padding: 0.75rem 1rem; font-size: 0.85rem; color: var(--text); max-width: 300px;">
+                    ${log.details && Object.keys(log.details).length > 0 ? `
+                      <details style="cursor: pointer;">
+                        <summary style="color: var(--brand-2); font-size: 0.85rem; outline: none;">${detailsText}</summary>
+                        <pre style="margin-top: 0.5rem; padding: 0.5rem; background: white; border: 1px solid var(--border); border-radius: 4px; font-size: 0.75rem; overflow-x: auto; max-height: 200px; overflow-y: auto;">${JSON.stringify(log.details, null, 2)}</pre>
+                      </details>
+                    ` : detailsText}
+                  </td>
+                  <td style="padding: 0.75rem 1rem; font-size: 0.8rem; color: var(--muted); font-family: monospace;">${log.ipAddress || 'N/A'}</td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
       </div>
     `;
   } catch (err) {
