@@ -842,6 +842,20 @@ body{
             Check this box to make this user an admin
           </small>
         </div>
+        <div class="form-group">
+          <label>Admin Permissions</label>
+          <div style="display:flex; flex-wrap:wrap; gap:.75rem;">
+            <label><input type="checkbox" name="canTalentPool" value="true" style="width:auto; margin-right:.35rem;"> Talent Pool</label>
+            <label><input type="checkbox" name="canStartups" value="true" style="width:auto; margin-right:.35rem;"> Startup Hub</label>
+            <label><input type="checkbox" name="canNews" value="true" style="width:auto; margin-right:.35rem;"> News</label>
+            <label><input type="checkbox" name="canLegacy" value="true" style="width:auto; margin-right:.35rem;"> Legacy</label>
+            <label><input type="checkbox" name="canUsers" value="true" style="width:auto; margin-right:.35rem;"> Add Member</label>
+            <label><input type="checkbox" name="canLogs" value="true" style="width:auto; margin-right:.35rem;"> Logs</label>
+          </div>
+          <small style="display:block; color:var(--muted); font-size:.85rem; margin-top:.25rem;">
+            Permissions default to off for new members.
+          </small>
+        </div>
         <button type="submit" class="btn btn-primary">
           <i class="fas fa-user-plus"></i> Add Member
         </button>
@@ -888,6 +902,14 @@ const isAdminValue = sessionStorage.getItem('isAdmin');
 const isAdmin = isAdminValue === 'true';
 const isMasterValue = sessionStorage.getItem('isMaster');
 const isMaster = isMasterValue === 'true'; // Boolean: true or false
+const permissions = {
+  canTalentPool: sessionStorage.getItem('canTalentPool') === 'true',
+  canStartups: sessionStorage.getItem('canStartups') === 'true',
+  canNews: sessionStorage.getItem('canNews') === 'true',
+  canLegacy: sessionStorage.getItem('canLegacy') === 'true',
+  canUsers: sessionStorage.getItem('canUsers') === 'true',
+  canLogs: sessionStorage.getItem('canLogs') === 'true'
+};
 
 // ==================== ADMIN LOGGING SYSTEM ====================
 // Generate unique session ID
@@ -1008,8 +1030,8 @@ if (!isAdmin) {
   window.location.href = 'login.html';
 }
 
-// Add Logs tab if user is master admin (isMaster is boolean: true/false)
-if (isMaster === true) {
+// Add Logs tab if user is master admin and has logs permission
+if (isMaster === true && permissions.canLogs === true) {
   // Add Logs tab button
   const tabContainer = document.querySelector('.admin-tabs');
   if (tabContainer) {
@@ -1074,12 +1096,54 @@ if (isMaster === true) {
   console.log('✅ Logs tab added for master admin');
 }
 
+const tabPermissions = {
+  'talent-pool': permissions.canTalentPool === true,
+  'startups': permissions.canStartups === true,
+  'news': permissions.canNews === true,
+  'legacy': permissions.canLegacy === true,
+  'users': permissions.canUsers === true,
+  'logs': permissions.canLogs === true && isMaster === true
+};
+
+function setActiveTab(tabId) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+  const tabButton = document.querySelector(`.tab-btn[data-tab="${tabId}"]`);
+  const tabContent = document.getElementById(tabId);
+  if (tabButton) tabButton.classList.add('active');
+  if (tabContent) tabContent.classList.add('active');
+}
+
+function applyTabPermissions() {
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    const tabId = btn.dataset.tab;
+    const allowed = tabPermissions[tabId] === true;
+    btn.style.display = allowed ? '' : 'none';
+    const tabContent = document.getElementById(tabId);
+    if (tabContent) {
+      tabContent.style.display = allowed ? '' : 'none';
+    }
+  });
+
+  const firstAllowedTab = Object.keys(tabPermissions).find(tabId => tabPermissions[tabId] === true);
+  if (firstAllowedTab) {
+    setActiveTab(firstAllowedTab);
+    return firstAllowedTab;
+  }
+
+  alert('No admin sections assigned. Please contact an administrator.');
+  window.location.href = 'loggedIn.html';
+  return null;
+}
+
 // Tab switching with event delegation (works for dynamically added tabs too)
 document.querySelector('.admin-tabs')?.addEventListener('click', (e) => {
   const btn = e.target.closest('.tab-btn');
   if (!btn) return;
   
   const tabId = btn.dataset.tab;
+  if (tabPermissions[tabId] !== true) return;
   console.log('Tab clicked:', tabId);
   
   // Log tab switch (only once)
@@ -1087,21 +1151,10 @@ document.querySelector('.admin-tabs')?.addEventListener('click', (e) => {
     tabId,
     tabName: btn.textContent.trim()
   });
-  
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-  btn.classList.add('active');
-  
+ 
+  setActiveTab(tabId);
   const tabElement = document.getElementById(tabId);
   console.log('Tab element found:', tabElement, 'ID:', tabId);
-  
-  if (tabElement) {
-    tabElement.classList.add('active');
-    console.log('Tab activated:', tabId, 'Has active class:', tabElement.classList.contains('active'));
-  } else {
-    console.error('Tab element not found:', tabId);
-    console.log('Available tab contents:', Array.from(document.querySelectorAll('.tab-content')).map(el => el.id));
-  }
   
   // Reload data when switching tabs
   if (tabId === 'talent-pool') loadJobs();
@@ -1841,11 +1894,19 @@ document.getElementById('addUserForm')?.addEventListener('submit', async (e) => 
   e.preventDefault();
   const formData = new FormData(e.target);
   const data = {};
+  const permissionKeys = new Set([
+    'canTalentPool',
+    'canStartups',
+    'canNews',
+    'canLegacy',
+    'canUsers',
+    'canLogs'
+  ]);
   
   // Get all form values
   for (const [key, value] of formData.entries()) {
-    if (key === 'isAdmin') {
-      data.isAdmin = value === 'true' ? true : undefined;
+    if (key === 'isAdmin' || permissionKeys.has(key)) {
+      data[key] = value === 'true' ? true : undefined;
     } else if (value.trim() !== '') {
       data[key] = value.trim();
     }
@@ -1864,7 +1925,8 @@ document.getElementById('addUserForm')?.addEventListener('submit', async (e) => 
       name: data.name, 
       surname: data.surname, 
       username: data.username,
-      isAdmin: data.isAdmin === true
+      isAdmin: data.isAdmin === true,
+      permissions: Array.from(permissionKeys).filter(key => data[key] === true)
     }
   });
   
@@ -2128,7 +2190,12 @@ console.log('Users tab element:', document.getElementById('users'));
 console.log('isMaster:', isMaster, 'Type:', typeof isMaster, 'Value:', isMasterValue);
 
 // Initial load
-loadJobs();
+const initialTab = applyTabPermissions();
+if (initialTab === 'talent-pool') loadJobs();
+else if (initialTab === 'startups') loadStartups();
+else if (initialTab === 'news') loadNews();
+else if (initialTab === 'legacy') loadLegacy();
+else if (initialTab === 'logs' && isMaster === true) loadLogs();
 </script>
 </body>
 </html>
