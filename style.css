@@ -252,11 +252,6 @@ html, body {
   color: white;
   text-align: center;
   padding: 32px;
-  border-radius: 18px;
-  background: rgba(10, 10, 10, 0.45);
-  backdrop-filter: blur(6px);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
-  opacity: 0;
   animation: fadeIn 1s ease-out 0.5s forwards;
   position: relative;
   z-index: 1;
@@ -647,6 +642,23 @@ html, body {
     font-size: 1.1rem;
   }
 
+  .overlay {
+    padding: 24px;
+  }
+
+  .hero-badge {
+    font-size: 0.85rem;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+  }
+
   .about-wrap {
     padding: 3.5rem 1.25rem;
   }
@@ -662,6 +674,28 @@ html, body {
   .about-badge {
     position: static;
     margin-top: 1rem;
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .home-highlights,
+  .home-programs {
+    padding: 3.5rem 1.25rem;
+  }
+
+  .focus-meta {
+    gap: 0.5rem;
+  }
+
+  .focus-meta span {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .highlight-grid,
+  .program-grid {
+    grid-template-columns: 1fr;
   }
 }
 
