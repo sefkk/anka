@@ -7,6 +7,7 @@ const News = require('./models/news');
 const Startup = require('./models/startup');
 const Legacy = require('./models/legacy');
 const Cookie = require('./models/cookie');
+const AdminLog = require('./models/adminLog');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -59,10 +60,12 @@ app.post('/login', async (req, res) => {
 
         // Successful login
         const isAdminResult = user.isAdmin === true;
+        const isMasterResult = user.isMaster === true;
         res.status(200).json({ 
             message: 'Login successful', 
             name: user.name,
-            isAdmin: isAdminResult
+            isAdmin: isAdminResult,
+            isMaster: isMasterResult
         });
     } catch (err) {
         console.error('Login route error:', err);
@@ -736,6 +739,95 @@ app.get("/api/user-info", async (req, res) => {
       ipAddress: 'Unknown',
       country: 'Unknown'
     });
+  }
+});
+
+// ------------------- Admin Logging API -------------------
+app.post("/api/admin/logs", async (req, res) => {
+  try {
+    const { adminUsername, actionType, details, keyPressed, keyCode, sessionId, ipAddress, userAgent, timestamp } = req.body;
+    
+    // Validate required fields
+    if (!adminUsername || !actionType) {
+      return res.status(400).json({ message: "adminUsername and actionType are required" });
+    }
+    
+    // Verify admin status (optional check - can be removed if performance is critical)
+    // const user = await User.findOne({ username: adminUsername.trim() });
+    // if (!user || user.isAdmin !== true) {
+    //   return res.status(403).json({ message: "Admin access required" });
+    // }
+    
+    // Get IP address if not provided
+    const logIpAddress = ipAddress || 
+      req.headers['x-forwarded-for']?.split(',')[0] || 
+      req.headers['x-real-ip'] || 
+      req.connection?.remoteAddress || 
+      req.socket?.remoteAddress ||
+      'Unknown';
+    
+    // Get user agent if not provided
+    const logUserAgent = userAgent || req.headers['user-agent'] || 'Unknown';
+    
+    const adminLog = new AdminLog({
+      adminUsername: adminUsername.trim(),
+      actionType,
+      details: details || {},
+      keyPressed: keyPressed || null,
+      keyCode: keyCode || null,
+      sessionId: sessionId || null,
+      ipAddress: logIpAddress.trim(),
+      userAgent: logUserAgent,
+      timestamp: timestamp ? new Date(timestamp) : new Date()
+    });
+    
+    await adminLog.save();
+    
+    // Don't log keypresses to console to avoid spam
+    if (actionType !== 'keypress') {
+      console.log(`📝 Admin Log: ${adminUsername} - ${actionType}${details ? ` - ${JSON.stringify(details).substring(0, 100)}` : ''}`);
+    }
+    
+    res.status(201).json({ message: "Log saved successfully", logId: adminLog._id });
+  } catch (err) {
+    console.error("❌ Failed to save admin log:", err);
+    res.status(500).json({ message: "Failed to save log", error: err.message });
+  }
+});
+
+// ------------------- Get Admin Logs (for viewing logs - admin only) -------------------
+app.get("/api/admin/logs", async (req, res) => {
+  try {
+    const { username, actionType, startDate, endDate, limit = 100 } = req.query;
+    
+    if (!username) {
+      return res.status(400).json({ message: "Username is required" });
+    }
+    
+    // Verify master admin status (only isMaster: true can view logs)
+    const user = await User.findOne({ username: username.trim() });
+    if (!user || user.isMaster !== true) {
+      return res.status(403).json({ message: "Master admin access required" });
+    }
+    
+    // Build query
+    const query = {};
+    if (actionType) query.actionType = actionType;
+    if (startDate || endDate) {
+      query.timestamp = {};
+      if (startDate) query.timestamp.$gte = new Date(startDate);
+      if (endDate) query.timestamp.$lte = new Date(endDate);
+    }
+    
+    const logs = await AdminLog.find(query)
+      .sort({ timestamp: -1 })
+      .limit(parseInt(limit))
+      .lean();
+    
+    res.json({ logs, count: logs.length });
+  } catch (err) {
+    console.error("❌ Failed to fetch admin logs:", err);
+    res.status(500).json({ message: "Failed to fetch logs", error: err.message });
   }
 });
 

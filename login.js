@@ -50,11 +50,17 @@ async function onSubmit(event) {
     // isAdmin değerini doğru şekilde kaydet
     const isAdminValue = data.isAdmin === true ? 'true' : 'false';
     sessionStorage.setItem("isAdmin", isAdminValue);
+    
+    // isMaster değerini doğru şekilde kaydet
+    const isMasterValue = data.isMaster === true ? 'true' : 'false';
+    sessionStorage.setItem("isMaster", isMasterValue);
 
     console.log("Stored username:", sessionStorage.getItem("username"));
     console.log("Stored name:", sessionStorage.getItem("name"));
     console.log("Stored isAdmin:", sessionStorage.getItem("isAdmin"));
+    console.log("Stored isMaster:", sessionStorage.getItem("isMaster"));
     console.log("isAdmin check:", sessionStorage.getItem("isAdmin") === 'true');
+    console.log("isMaster check:", sessionStorage.getItem("isMaster") === 'true');
 
     // Başarılı girişte yönlendir
     window.location.href = "loggedIn.html";
