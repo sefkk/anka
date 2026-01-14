@@ -53,6 +53,27 @@ const requireAdminPermission = (permission) => async (req, res, next) => {
   }
 };
 
+const requireMasterAdmin = async (req, res, next) => {
+  try {
+    const username = getAuthUsername(req);
+    if (!username) {
+      return res.status(400).json({ message: "Username is required" });
+    }
+
+    const trimmedUsername = String(username).trim();
+    const user = await User.findOne({ username: trimmedUsername });
+    if (!user || user.isAdmin !== true || user.isMaster !== true) {
+      return res.status(403).json({ message: "Master admin access required" });
+    }
+
+    req.adminUser = user;
+    next();
+  } catch (err) {
+    console.error("Master admin check error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 // ------------------- Test route -------------------
 app.get('/', (req, res) => {
     res.send("✅ Backend is running");
@@ -334,6 +355,64 @@ app.post("/api/admin/users", requireAdminPermission('canUsers'), async (req, res
     console.error("❌ Failed to create user:", err.message);
     console.error("❌ Error stack:", err.stack);
     res.status(500).json({ message: "Failed to create user", error: err.message });
+  }
+});
+
+// ------------------- List Users (Master Admin Only) -------------------
+app.get("/api/admin/users/list", requireMasterAdmin, async (req, res) => {
+  try {
+    const users = await User.find().select("-password").lean();
+    res.json({ users: users || [] });
+  } catch (err) {
+    console.error("❌ Failed to list users:", err.message);
+    res.status(500).json({ message: "Failed to list users", error: err.message });
+  }
+});
+
+// ------------------- Update User Permissions (Master Admin Only) -------------------
+app.patch("/api/admin/users/:username/permissions", requireMasterAdmin, async (req, res) => {
+  try {
+    const targetUsername = String(req.params.username || "").trim();
+    if (!targetUsername) {
+      return res.status(400).json({ message: "Target username is required" });
+    }
+
+    const allowedFields = [
+      "isAdmin",
+      "canTalentPool",
+      "canStartups",
+      "canNews",
+      "canLegacy",
+      "canUsers",
+      "canLogs"
+    ];
+
+    const update = {};
+    allowedFields.forEach((field) => {
+      if (typeof req.body[field] === "boolean") {
+        update[field] = req.body[field];
+      }
+    });
+
+    if (Object.keys(update).length === 0) {
+      return res.status(400).json({ message: "No permission fields provided" });
+    }
+
+    const updatedUser = await User.findOneAndUpdate(
+      { username: targetUsername },
+      { $set: update },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const { password, ...safeUser } = updatedUser.toObject();
+    res.json({ message: "User permissions updated", user: safeUser });
+  } catch (err) {
+    console.error("❌ Failed to update user permissions:", err.message);
+    res.status(500).json({ message: "Failed to update permissions", error: err.message });
   }
 });
 
