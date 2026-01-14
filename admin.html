@@ -911,6 +911,15 @@ const permissions = {
   canLogs: sessionStorage.getItem('canLogs') === 'true'
 };
 
+if (isMaster === true) {
+  permissions.canTalentPool = true;
+  permissions.canStartups = true;
+  permissions.canNews = true;
+  permissions.canLegacy = true;
+  permissions.canUsers = true;
+  permissions.canLogs = true;
+}
+
 // ==================== ADMIN LOGGING SYSTEM ====================
 // Generate unique session ID
 const sessionId = `admin_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -1133,7 +1142,6 @@ function applyTabPermissions() {
   }
 
   alert('No admin sections assigned. Please contact an administrator.');
-  window.location.href = 'loggedIn.html';
   return null;
 }
 

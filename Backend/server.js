@@ -41,7 +41,7 @@ const requireAdminPermission = (permission) => async (req, res, next) => {
       return res.status(403).json({ message: "Admin access required" });
     }
 
-    if (permission && user[permission] !== true) {
+    if (permission && user.isMaster !== true && user[permission] !== true) {
       return res.status(403).json({ message: "Permission required" });
     }
 
