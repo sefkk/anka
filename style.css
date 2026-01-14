@@ -252,9 +252,12 @@ html, body {
   color: white;
   text-align: center;
   padding: 32px;
-  animation: fadeIn 1s ease-out 0.5s forwards;
+  opacity: 0;
+  transform: scale(1.01);
+  animation: fadeIn 1.6s ease-in-out 0.2s both;
   position: relative;
   z-index: 1;
+  will-change: opacity, transform;
 }
 
 .overlay h1 {
