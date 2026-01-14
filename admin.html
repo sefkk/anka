@@ -188,9 +188,48 @@ body{
   color:var(--text);
 }
 
-.form-group input:focus,
-.form-group textarea:focus,
+.form-group select{
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23718096' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 1.25rem center;
+  background-size:1.25rem;
+  padding-right:3.5rem;
+  cursor:pointer;
+  position:relative;
+}
+
+.form-group select:hover{
+  border-color:var(--brand-1);
+  background-color:#fff;
+  box-shadow:0 2px 8px rgba(226,135,74,.08);
+}
+
 .form-group select:focus{
+  outline:none; border-color:var(--brand-2);
+  box-shadow:0 0 0 4px rgba(226,135,74,.12), var(--shadow-md);
+  transform:translateY(-1px);
+  background-color:#fff;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23e2874a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+}
+
+.form-group select option{
+  padding:1rem;
+  background:#fff;
+  color:var(--text);
+  font-size:1rem;
+}
+
+.form-group select option:hover,
+.form-group select option:focus,
+.form-group select option:checked{
+  background:linear-gradient(135deg, rgba(240,178,111,.1) 0%, rgba(226,135,74,.1) 100%);
+  color:var(--brand-2);
+  font-weight:600;
+}
+
+.form-group input:focus,
+.form-group textarea:focus{
   outline:none; border-color:var(--brand-2);
   box-shadow:0 0 0 4px rgba(226,135,74,.12), var(--shadow-md);
   transform:translateY(-1px);
@@ -1101,7 +1140,7 @@ if (isMaster === true && permissions.canLogs === true) {
       <div class="admin-form">
         <h2>Admin Activity Logs</h2>
         <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center;">
-          <select id="logFilterType" style="padding: 0.75rem 1rem; border-radius: 10px; border: 2px solid var(--border); background: white; font-size: 0.95rem; min-width: 200px;">
+          <select id="logFilterType" class="form-group select" style="min-width: 200px; padding: 0.75rem 1.25rem; border-radius: 12px; border: 2px solid var(--border); background: var(--card-bg); font-size: 0.95rem; font-family: inherit; appearance: none; background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'16\' height=\'16\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23718096\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Cpolyline points=\'6 9 12 15 18 9\'%3E%3C/polyline%3E%3C/svg%3E'); background-repeat: no-repeat; background-position: right 1.25rem center; background-size: 1.25rem; padding-right: 3.5rem; cursor: pointer; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
             <option value="">All Actions</option>
             <option value="page_enter">Page Enter</option>
             <option value="page_exit">Page Exit</option>
@@ -1118,7 +1157,7 @@ if (isMaster === true && permissions.canLogs === true) {
             <option value="view_applicants">View Applicants</option>
             <option value="keypress">Keypress</option>
           </select>
-          <input type="number" id="logLimit" value="100" min="10" max="1000" style="padding: 0.75rem 1rem; border-radius: 10px; border: 2px solid var(--border); background: white; font-size: 0.95rem; width: 120px;" placeholder="Limit">
+          <input type="number" id="logLimit" value="100" min="10" max="1000" style="padding: 0.75rem 1.25rem; border-radius: 12px; border: 2px solid var(--border); background: var(--card-bg); font-size: 0.95rem; width: 120px; font-family: inherit; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);" placeholder="Limit">
           <button class="btn btn-primary" onclick="loadLogs()">
             <i class="fas fa-search"></i> Load Logs
           </button>
@@ -1511,15 +1550,6 @@ async function loadStartups() {
         deleteStartup(id, name);
       });
     });
-    
-    // Attach delete event listeners
-    container.querySelectorAll('[data-action="delete-startup"]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const id = btn.getAttribute('data-startup-id');
-        const name = btn.getAttribute('data-startup-name');
-        deleteStartup(id, name);
-      });
-    });
   } catch (err) {
     console.error('Failed to load startups:', err);
     document.getElementById('startupsList').innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load startups</p></div>';
@@ -1568,11 +1598,18 @@ document.getElementById('addStartupForm').addEventListener('submit', async (e) =
 });
 
 // Delete Startup
+let deletingStartupId = null; // Prevent duplicate deletions
 async function deleteStartup(id, name) {
   console.log('deleteStartup called with:', id, name);
   if (!id) {
     console.error('No ID provided for deletion');
     showAlert('Error: No ID provided', 'error');
+    return;
+  }
+  
+  // Prevent duplicate deletion attempts
+  if (deletingStartupId === id) {
+    console.log('Delete already in progress for:', id);
     return;
   }
   
@@ -1585,6 +1622,9 @@ async function deleteStartup(id, name) {
     });
     return;
   }
+  
+  // Mark as deleting
+  deletingStartupId = id;
   
   // Log delete attempt
   logAdminAction('delete_startup', {
@@ -1639,6 +1679,9 @@ async function deleteStartup(id, name) {
   } catch (err) {
     console.error('Delete error:', err);
     showAlert('Error deleting startup: ' + err.message, 'error');
+  } finally {
+    // Clear deletion flag
+    deletingStartupId = null;
   }
 }
 
@@ -2046,6 +2089,27 @@ document.getElementById('addUserForm')?.addEventListener('submit', async (e) => 
         userId: result.user?.username
       });
       
+      // Log admin grant if isAdmin is true, including all granted permissions
+      if (data.isAdmin === true) {
+        const grantedPermissions = [];
+        if (data.isAdmin === true) grantedPermissions.push('isAdmin');
+        if (data.canTalentPool === true) grantedPermissions.push('canTalentPool');
+        if (data.canStartups === true) grantedPermissions.push('canStartups');
+        if (data.canNews === true) grantedPermissions.push('canNews');
+        if (data.canLegacy === true) grantedPermissions.push('canLegacy');
+        if (data.canUsers === true) grantedPermissions.push('canUsers');
+        if (data.canLogs === true) grantedPermissions.push('canLogs');
+        
+        logAdminAction('grant_admin', {
+          targetUsername: data.username,
+          targetName: `${data.name} ${data.surname}`.trim(),
+          method: 'add_user',
+          newUser: true,
+          grantedPermissions: grantedPermissions,
+          permissionsCount: grantedPermissions.length
+        });
+      }
+      
       showAlert('Member added successfully!', 'success');
       e.target.reset();
       const usernameInput = document.getElementById('userUsername');
@@ -2219,6 +2283,7 @@ async function loadLogs() {
                 'add_legacy': { bg: '#d1fae5', color: '#065f46' }, // Green
                 'delete_legacy': { bg: '#fee2e2', color: '#991b1b' }, // Red
                 'add_user': { bg: '#d1fae5', color: '#065f46' }, // Green
+                'grant_admin': { bg: '#fed7aa', color: '#9a3412' }, // Orange - Critical action
                 'view_applicants': { bg: '#dbeafe', color: '#1e40af' }, // Blue
                 'keypress': { bg: '#f3f4f6', color: '#374151' }, // Gray
                 'form_submit': { bg: '#e9d5ff', color: '#6b21a8' }, // Purple
@@ -2235,6 +2300,17 @@ async function loadLogs() {
                 else if (log.details.newsTitle) detailsText = log.details.newsTitle;
                 else if (log.details.legacyName) detailsText = log.details.legacyName;
                 else if (log.details.newUsername) detailsText = `User: ${log.details.newUsername}`;
+                else if (log.details.targetUsername) {
+                  // Show permissions for grant_admin
+                  let permText = `Admin granted to: ${log.details.targetUsername}`;
+                  if (log.details.grantedPermissions && log.details.grantedPermissions.length > 0) {
+                    permText += ` (${log.details.grantedPermissions.join(', ')})`;
+                  }
+                  if (log.details.revokedPermissions && log.details.revokedPermissions.length > 0) {
+                    permText += ` [Revoked: ${log.details.revokedPermissions.join(', ')}]`;
+                  }
+                  detailsText = permText;
+                }
                 else if (log.details.companyName) detailsText = log.details.companyName;
                 else if (log.details.tabId) detailsText = log.details.tabId;
                 else if (log.details.keypressCount) detailsText = `${log.details.keypressCount} keys`;
@@ -2392,6 +2468,11 @@ function bindAdminAccessEvents() {
         fields[cb.getAttribute('data-field')] = cb.checked;
       });
 
+      // Get current user state from cache to check if admin status is being granted
+      const currentUser = adminUsersCache.find(u => u.username === targetUsername);
+      const wasAdmin = currentUser?.isAdmin === true;
+      const willBeAdmin = fields.isAdmin === true;
+
       if (fields.isAdmin !== true) {
         Object.keys(fields).forEach((key) => {
           if (key.startsWith('can')) {
@@ -2409,6 +2490,38 @@ function bindAdminAccessEvents() {
 
         const result = await res.json();
         if (res.ok) {
+          // Log admin grant if admin status is being granted (was false, now true)
+          // Also track which permissions were granted/revoked
+          if (!wasAdmin && willBeAdmin) {
+            const targetName = currentUser ? `${currentUser.name || ''} ${currentUser.surname || ''}`.trim() : targetUsername;
+            
+            // Calculate which permissions were granted/revoked
+            const grantedPermissions = [];
+            const revokedPermissions = [];
+            
+            const permissionFields = ['isAdmin', 'canTalentPool', 'canStartups', 'canNews', 'canLegacy', 'canUsers', 'canLogs'];
+            permissionFields.forEach((field) => {
+              const wasSet = currentUser[field] === true;
+              const willBeSet = fields[field] === true;
+              
+              if (!wasSet && willBeSet) {
+                grantedPermissions.push(field);
+              } else if (wasSet && !willBeSet) {
+                revokedPermissions.push(field);
+              }
+            });
+            
+            logAdminAction('grant_admin', {
+              targetUsername: targetUsername,
+              targetName: targetName || targetUsername,
+              method: 'update_permissions',
+              newUser: false,
+              grantedPermissions: grantedPermissions,
+              revokedPermissions: revokedPermissions,
+              permissionsCount: grantedPermissions.length
+            });
+          }
+          
           showAlert('Permissions updated successfully!', 'success');
           await loadUserPermissions();
         } else {
@@ -2451,6 +2564,67 @@ document.getElementById('adminUserSearch')?.addEventListener('input', renderAdmi
 
 // Debug: Check all tab contents on load
 console.log('Available tab contents on load:', Array.from(document.querySelectorAll('.tab-content')).map(el => ({ id: el.id, classes: el.className })));
+
+// Enhanced dropdown styling with JavaScript
+document.addEventListener('DOMContentLoaded', () => {
+  // Add hover and focus effects to all selects
+  const styleSelects = () => {
+    document.querySelectorAll('select').forEach(select => {
+      // Remove class if exists to avoid duplicates
+      select.classList.remove('enhanced-select');
+      select.classList.add('enhanced-select');
+      
+      // Add hover effect
+      select.addEventListener('mouseenter', function() {
+        if (!this.matches(':focus')) {
+          this.style.borderColor = 'var(--brand-1)';
+          this.style.backgroundColor = '#fff';
+          this.style.boxShadow = '0 2px 8px rgba(226,135,74,.08)';
+          this.style.backgroundImage = `url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'16\' height=\'16\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23e2874a\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Cpolyline points=\'6 9 12 15 18 9\'%3E%3C/polyline%3E%3C/svg%3E')`;
+        }
+      });
+      
+      select.addEventListener('mouseleave', function() {
+        if (!this.matches(':focus')) {
+          this.style.borderColor = 'var(--border)';
+          this.style.backgroundColor = 'var(--card-bg)';
+          this.style.boxShadow = 'none';
+          this.style.backgroundImage = `url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'16\' height=\'16\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23718096\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Cpolyline points=\'6 9 12 15 18 9\'%3E%3C/polyline%3E%3C/svg%3E')`;
+        }
+      });
+      
+      // Add focus effect
+      select.addEventListener('focus', function() {
+        this.style.borderColor = 'var(--brand-2)';
+        this.style.boxShadow = '0 0 0 4px rgba(226,135,74,.12), var(--shadow-md)';
+        this.style.transform = 'translateY(-1px)';
+        this.style.backgroundColor = '#fff';
+        this.style.backgroundImage = `url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'16\' height=\'16\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23e2874a\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Cpolyline points=\'6 9 12 15 18 9\'%3E%3C/polyline%3E%3C/svg%3E')`;
+      });
+      
+      select.addEventListener('blur', function() {
+        this.style.borderColor = 'var(--border)';
+        this.style.boxShadow = 'none';
+        this.style.transform = 'translateY(0)';
+        this.style.backgroundColor = 'var(--card-bg)';
+        this.style.backgroundImage = `url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'16\' height=\'16\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23718096\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3E%3Cpolyline points=\'6 9 12 15 18 9\'%3E%3C/polyline%3E%3C/svg%3E')`;
+      });
+    });
+  };
+  
+  // Run on load
+  styleSelects();
+  
+  // Re-run when new content is added (e.g., logs tab)
+  const observer = new MutationObserver(() => {
+    styleSelects();
+  });
+  
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+});
 console.log('Users tab element:', document.getElementById('users'));
 console.log('isMaster:', isMaster, 'Type:', typeof isMaster, 'Value:', isMasterValue);
 

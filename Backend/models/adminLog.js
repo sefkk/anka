@@ -19,6 +19,7 @@ const adminLogSchema = new mongoose.Schema({
       'add_legacy',      // Legacy üye ekleme
       'delete_legacy',   // Legacy üye silme
       'add_user',        // Yeni üye ekleme
+      'grant_admin',     // Kullanıcıya adminlik verme
       'view_applicants', // Başvuranları görüntüleme
       'form_submit',     // Form gönderme
       'form_reset'       // Form sıfırlama
