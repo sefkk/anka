@@ -236,6 +236,42 @@ body{
   background-color: #f5f7fa;
 }
 
+#admin-access{
+  background-color: #f5f7fa;
+}
+
+#admin-access .admin-form,
+#admin-access .items-list{
+  box-shadow: none;
+}
+
+.permission-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: var(--shadow);
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+.permission-toggle input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--brand-2);
+}
+
+.permission-toggle input[type="checkbox"]:disabled {
+  accent-color: #cbd5e1;
+}
+
+.permission-toggle.disabled {
+  opacity: 0.6;
+}
+
 .form-group small{
   display:block; margin-top:.25rem; color:var(--muted);
   font-size:.85rem;
@@ -2272,6 +2308,8 @@ function renderAdminAccessList() {
     const isAdminUser = user.isAdmin === true;
     const disabledAttr = isMasterUser ? 'disabled' : '';
     const permDisabledAttr = (!isAdminUser || isMasterUser) ? 'disabled' : '';
+    const adminToggleClass = isMasterUser ? 'permission-toggle disabled' : 'permission-toggle';
+    const permToggleClass = (!isAdminUser || isMasterUser) ? 'permission-toggle disabled' : 'permission-toggle';
 
     return `
       <div class="item-card">
@@ -2282,31 +2320,31 @@ function renderAdminAccessList() {
           <p><strong>Master:</strong> ${isMasterUser ? 'Yes' : 'No'}</p>
         </div>
         <div class="item-actions">
-          <label style="display:flex; align-items:center; gap:.35rem;">
+          <label class="${adminToggleClass}">
             <input type="checkbox" data-field="isAdmin" ${isAdminUser ? 'checked' : ''} ${disabledAttr}>
             Admin
           </label>
-          <label style="display:flex; align-items:center; gap:.35rem;">
+          <label class="${permToggleClass}">
             <input type="checkbox" data-field="canTalentPool" ${user.canTalentPool === true ? 'checked' : ''} ${permDisabledAttr}>
             Talent Pool
           </label>
-          <label style="display:flex; align-items:center; gap:.35rem;">
+          <label class="${permToggleClass}">
             <input type="checkbox" data-field="canStartups" ${user.canStartups === true ? 'checked' : ''} ${permDisabledAttr}>
             Startups
           </label>
-          <label style="display:flex; align-items:center; gap:.35rem;">
+          <label class="${permToggleClass}">
             <input type="checkbox" data-field="canNews" ${user.canNews === true ? 'checked' : ''} ${permDisabledAttr}>
             News
           </label>
-          <label style="display:flex; align-items:center; gap:.35rem;">
+          <label class="${permToggleClass}">
             <input type="checkbox" data-field="canLegacy" ${user.canLegacy === true ? 'checked' : ''} ${permDisabledAttr}>
             Legacy
           </label>
-          <label style="display:flex; align-items:center; gap:.35rem;">
+          <label class="${permToggleClass}">
             <input type="checkbox" data-field="canUsers" ${user.canUsers === true ? 'checked' : ''} ${permDisabledAttr}>
             Users
           </label>
-          <label style="display:flex; align-items:center; gap:.35rem;">
+          <label class="${permToggleClass}">
             <input type="checkbox" data-field="canLogs" ${user.canLogs === true ? 'checked' : ''} ${permDisabledAttr}>
             Logs
           </label>
