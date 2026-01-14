@@ -224,7 +224,15 @@ body{
   background-color: #f5f7fa;
 }
 
+#legacy {
+  background-color: #f5f7fa;
+}
+
 #users{
+  background-color: #f5f7fa;
+}
+
+#logs{
   background-color: #f5f7fa;
 }
 
@@ -878,6 +886,115 @@ function getSubcategoryName(subcategory) {
 const username = sessionStorage.getItem('username');
 const isAdminValue = sessionStorage.getItem('isAdmin');
 const isAdmin = isAdminValue === 'true';
+const isMasterValue = sessionStorage.getItem('isMaster');
+const isMaster = isMasterValue === 'true'; // Boolean: true or false
+
+// ==================== ADMIN LOGGING SYSTEM ====================
+// Generate unique session ID
+const sessionId = `admin_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+
+// Keypress logging (debounced to avoid spam)
+let keypressBuffer = [];
+let keypressTimeout = null;
+const KEYPRESS_DEBOUNCE_MS = 5000; // Log keypresses every 5 seconds
+
+// Log function
+async function logAdminAction(actionType, details = {}, keyPressed = null, keyCode = null) {
+  if (!username) return;
+  
+  try {
+    const logData = {
+      adminUsername: username,
+      actionType,
+      details,
+      keyPressed,
+      keyCode,
+      sessionId,
+      timestamp: new Date().toISOString()
+    };
+    
+    await fetch(`${API_BASE}/api/admin/logs`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(logData)
+    });
+  } catch (err) {
+    console.error('Failed to log admin action:', err);
+    // Silently fail - don't interrupt user experience
+  }
+}
+
+// Log keypress (debounced)
+function logKeypress(key, code) {
+  keypressBuffer.push({ key, code, timestamp: Date.now() });
+  
+  // Clear existing timeout
+  if (keypressTimeout) {
+    clearTimeout(keypressTimeout);
+  }
+  
+  // Set new timeout to batch log keypresses
+  keypressTimeout = setTimeout(() => {
+    if (keypressBuffer.length > 0) {
+      logAdminAction('keypress', {
+        keypressCount: keypressBuffer.length,
+        keys: keypressBuffer.map(k => ({ key: k.key, code: k.code, timestamp: k.timestamp }))
+      });
+      keypressBuffer = [];
+    }
+  }, KEYPRESS_DEBOUNCE_MS);
+}
+
+// Log page enter
+logAdminAction('page_enter', {
+  url: window.location.href,
+  userAgent: navigator.userAgent,
+  screenResolution: `${window.screen.width}x${window.screen.height}`
+});
+
+// Log page exit
+window.addEventListener('beforeunload', () => {
+  // Use sendBeacon for reliable logging on page unload
+  const logData = JSON.stringify({
+    adminUsername: username,
+    actionType: 'page_exit',
+    details: {
+      url: window.location.href,
+      timeSpent: Date.now() - parseInt(sessionId.split('_')[1])
+    },
+    sessionId,
+    timestamp: new Date().toISOString()
+  });
+  
+  navigator.sendBeacon(`${API_BASE}/api/admin/logs`, logData);
+});
+
+// Also log on visibility change (tab switch, minimize, etc.)
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    logAdminAction('page_exit', {
+      reason: 'visibility_change',
+      url: window.location.href
+    });
+  } else {
+    logAdminAction('page_enter', {
+      reason: 'visibility_change',
+      url: window.location.href
+    });
+  }
+});
+
+// Log all keypresses
+document.addEventListener('keydown', (e) => {
+  // Don't log special keys that are used for navigation
+  if (['Tab', 'Shift', 'Control', 'Alt', 'Meta', 'Escape'].includes(e.key)) {
+    return;
+  }
+  
+  logKeypress(e.key, e.keyCode || e.code);
+});
+
+// ==================== END ADMIN LOGGING SYSTEM ====================
 
 // Debug logs
 console.log('Admin check - username:', username);
@@ -891,11 +1008,103 @@ if (!isAdmin) {
   window.location.href = 'login.html';
 }
 
+// Add Logs tab if user is master admin (isMaster is boolean: true/false)
+if (isMaster === true) {
+  // Add Logs tab button
+  const tabContainer = document.querySelector('.admin-tabs');
+  if (tabContainer) {
+    const logsTabBtn = document.createElement('button');
+    logsTabBtn.className = 'tab-btn';
+    logsTabBtn.setAttribute('data-tab', 'logs');
+    logsTabBtn.innerHTML = '<i class="fas fa-list-alt"></i> Logs';
+    tabContainer.appendChild(logsTabBtn);
+    
+    // Add event listener to the new tab button
+    logsTabBtn.addEventListener('click', () => {
+      const tabId = logsTabBtn.dataset.tab;
+      console.log('Tab clicked:', tabId);
+      
+      // Log tab switch
+      logAdminAction('tab_switch', {
+        tabId,
+        tabName: logsTabBtn.textContent.trim()
+      });
+      
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      logsTabBtn.classList.add('active');
+      
+      const tabElement = document.getElementById(tabId);
+      if (tabElement) {
+        tabElement.classList.add('active');
+      }
+      
+      if (tabId === 'logs' && isMaster === true) loadLogs();
+    });
+  }
+  
+  // Add Logs tab content (after users tab)
+  const usersTab = document.getElementById('users');
+  if (usersTab && usersTab.parentElement) {
+    const tabsContainer = usersTab.parentElement;
+    const logsTabContent = document.createElement('div');
+    logsTabContent.id = 'logs';
+    logsTabContent.className = 'tab-content';
+    logsTabContent.innerHTML = `
+      <div class="admin-form">
+        <h2>Admin Activity Logs</h2>
+        <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center;">
+          <select id="logFilterType" style="padding: 0.75rem 1rem; border-radius: 10px; border: 2px solid var(--border); background: white; font-size: 0.95rem; min-width: 200px;">
+            <option value="">All Actions</option>
+            <option value="page_enter">Page Enter</option>
+            <option value="page_exit">Page Exit</option>
+            <option value="tab_switch">Tab Switch</option>
+            <option value="add_job">Add Job</option>
+            <option value="delete_job">Delete Job</option>
+            <option value="add_startup">Add Startup</option>
+            <option value="delete_startup">Delete Startup</option>
+            <option value="add_news">Add News</option>
+            <option value="delete_news">Delete News</option>
+            <option value="add_legacy">Add Legacy</option>
+            <option value="delete_legacy">Delete Legacy</option>
+            <option value="add_user">Add User</option>
+            <option value="view_applicants">View Applicants</option>
+            <option value="keypress">Keypress</option>
+          </select>
+          <input type="number" id="logLimit" value="100" min="10" max="1000" style="padding: 0.75rem 1rem; border-radius: 10px; border: 2px solid var(--border); background: white; font-size: 0.95rem; width: 120px;" placeholder="Limit">
+          <button class="btn btn-primary" onclick="loadLogs()">
+            <i class="fas fa-search"></i> Load Logs
+          </button>
+        </div>
+      </div>
+
+      <div class="items-list">
+        <h2 style="padding:1.5rem; margin:0; border-bottom:2px solid rgba(0,0,0,.1);">Activity Logs</h2>
+        <div id="logsList">
+          <div class="empty-state">
+            <i class="fas fa-list-alt"></i>
+            <p>Click "Load Logs" to view activity</p>
+          </div>
+        </div>
+      </div>
+    `;
+    tabsContainer.appendChild(logsTabContent);
+  }
+  
+  console.log('✅ Logs tab added for master admin');
+}
+
 // Tab switching
 document.querySelectorAll('.tab-btn').forEach(btn => {
   btn.addEventListener('click', () => {
     const tabId = btn.dataset.tab;
     console.log('Tab clicked:', tabId);
+    
+    // Log tab switch
+    logAdminAction('tab_switch', {
+      tabId,
+      tabName: btn.textContent.trim()
+    });
     
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
@@ -917,6 +1126,7 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
     else if (tabId === 'startups') loadStartups();
     else if (tabId === 'news') loadNews();
     else if (tabId === 'legacy') loadLegacy();
+    else if (tabId === 'logs' && isMaster === true) loadLogs();
   });
 });
 
@@ -993,6 +1203,12 @@ document.getElementById('addJobForm').addEventListener('submit', async (e) => {
   const data = Object.fromEntries(formData);
   data.username = username;
   
+  // Log form submission
+  logAdminAction('form_submit', {
+    formType: 'add_job',
+    formData: { name: data.name, industry: data.industry }
+  });
+  
   try {
     const res = await fetch(`${API_BASE}/api/admin/companies`, {
       method: 'POST',
@@ -1002,6 +1218,13 @@ document.getElementById('addJobForm').addEventListener('submit', async (e) => {
     
     const result = await res.json();
     if (res.ok) {
+      // Log successful add
+      logAdminAction('add_job', {
+        jobName: data.name,
+        industry: data.industry,
+        companyId: result.company?._id
+      });
+      
       showAlert('Job posting added successfully!', 'success');
       e.target.reset();
       loadJobs();
@@ -1022,7 +1245,22 @@ async function deleteJob(id, name) {
     return;
   }
   
-  if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
+  if (!confirm(`Are you sure you want to delete "${name}"?`)) {
+    // Log cancellation
+    logAdminAction('delete_job', {
+      action: 'cancelled',
+      jobId: id,
+      jobName: name
+    });
+    return;
+  }
+  
+  // Log delete attempt
+  logAdminAction('delete_job', {
+    action: 'attempted',
+    jobId: id,
+    jobName: name
+  });
   
   try {
     console.log('Deleting job:', `${API_BASE}/api/admin/companies/${id}?username=${username}`);
@@ -1045,9 +1283,24 @@ async function deleteJob(id, name) {
     console.log('Delete response:', result);
     
     if (res.ok) {
+      // Log successful delete
+      logAdminAction('delete_job', {
+        action: 'success',
+        jobId: id,
+        jobName: name
+      });
+      
       showAlert('Job posting deleted successfully!', 'success');
       loadJobs();
     } else {
+      // Log failed delete
+      logAdminAction('delete_job', {
+        action: 'failed',
+        jobId: id,
+        jobName: name,
+        error: result.message || 'Unknown error'
+      });
+      
       const errorMsg = result.error ? `${result.message}: ${result.error}` : (result.message || `Server error ${res.status}`);
       console.error('Delete failed:', errorMsg, result);
       showAlert(errorMsg || 'Failed to delete job posting', 'error');
@@ -1060,6 +1313,11 @@ async function deleteJob(id, name) {
 
 // View Applicants
 async function viewApplicants(companyName) {
+  // Log view applicants action
+  logAdminAction('view_applicants', {
+    companyName: companyName
+  });
+  
   const modal = document.getElementById('applicantsModal');
   const content = document.getElementById('applicantsContent');
   const title = document.getElementById('modalCompanyName');
@@ -1151,6 +1409,12 @@ document.getElementById('addStartupForm').addEventListener('submit', async (e) =
   const data = Object.fromEntries(formData);
   data.username = username;
   
+  // Log form submission
+  logAdminAction('form_submit', {
+    formType: 'add_startup',
+    formData: { name: data.name, industry: data.industry }
+  });
+  
   try {
     const res = await fetch(`${API_BASE}/api/admin/startups`, {
       method: 'POST',
@@ -1160,6 +1424,14 @@ document.getElementById('addStartupForm').addEventListener('submit', async (e) =
     
     const result = await res.json();
     if (res.ok) {
+      // Log successful add
+      logAdminAction('add_startup', {
+        startupName: data.name,
+        industry: data.industry,
+        website: data.website,
+        startupId: result.startup?._id
+      });
+      
       showAlert('Startup added successfully!', 'success');
       e.target.reset();
       loadStartups();
@@ -1180,7 +1452,22 @@ async function deleteStartup(id, name) {
     return;
   }
   
-  if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
+  if (!confirm(`Are you sure you want to delete "${name}"?`)) {
+    // Log cancellation
+    logAdminAction('delete_startup', {
+      action: 'cancelled',
+      startupId: id,
+      startupName: name
+    });
+    return;
+  }
+  
+  // Log delete attempt
+  logAdminAction('delete_startup', {
+    action: 'attempted',
+    startupId: id,
+    startupName: name
+  });
   
   try {
     console.log('Deleting startup:', `${API_BASE}/api/admin/startups/${id}?username=${username}`);
@@ -1203,9 +1490,24 @@ async function deleteStartup(id, name) {
     console.log('Delete response:', result);
     
     if (res.ok) {
+      // Log successful delete
+      logAdminAction('delete_startup', {
+        action: 'success',
+        startupId: id,
+        startupName: name
+      });
+      
       showAlert('Startup deleted successfully!', 'success');
       loadStartups();
     } else {
+      // Log failed delete
+      logAdminAction('delete_startup', {
+        action: 'failed',
+        startupId: id,
+        startupName: name,
+        error: result.message || 'Unknown error'
+      });
+      
       const errorMsg = result.error ? `${result.message}: ${result.error}` : (result.message || `Server error ${res.status}`);
       console.error('Delete failed:', errorMsg, result);
       showAlert(errorMsg || 'Failed to delete startup', 'error');
@@ -1266,6 +1568,12 @@ document.getElementById('addNewsForm').addEventListener('submit', async (e) => {
   const data = Object.fromEntries(formData);
   data.username = username;
   
+  // Log form submission
+  logAdminAction('form_submit', {
+    formType: 'add_news',
+    formData: { title: data.title }
+  });
+  
   try {
     const res = await fetch(`${API_BASE}/api/admin/news`, {
       method: 'POST',
@@ -1275,6 +1583,13 @@ document.getElementById('addNewsForm').addEventListener('submit', async (e) => {
     
     const result = await res.json();
     if (res.ok) {
+      // Log successful add
+      logAdminAction('add_news', {
+        newsTitle: data.title,
+        date: data.date,
+        newsId: result.news?._id
+      });
+      
       showAlert('News added successfully!', 'success');
       e.target.reset();
       loadNews();
@@ -1295,7 +1610,22 @@ async function deleteNews(id, title) {
     return;
   }
   
-  if (!confirm(`Are you sure you want to delete "${title}"?`)) return;
+  if (!confirm(`Are you sure you want to delete "${title}"?`)) {
+    // Log cancellation
+    logAdminAction('delete_news', {
+      action: 'cancelled',
+      newsId: id,
+      newsTitle: title
+    });
+    return;
+  }
+  
+  // Log delete attempt
+  logAdminAction('delete_news', {
+    action: 'attempted',
+    newsId: id,
+    newsTitle: title
+  });
   
   try {
     console.log('Deleting news:', `${API_BASE}/api/admin/news/${id}?username=${username}`);
@@ -1318,9 +1648,24 @@ async function deleteNews(id, title) {
     console.log('Delete response:', result);
     
     if (res.ok) {
+      // Log successful delete
+      logAdminAction('delete_news', {
+        action: 'success',
+        newsId: id,
+        newsTitle: title
+      });
+      
       showAlert('News deleted successfully!', 'success');
       loadNews();
     } else {
+      // Log failed delete
+      logAdminAction('delete_news', {
+        action: 'failed',
+        newsId: id,
+        newsTitle: title,
+        error: result.message || 'Unknown error'
+      });
+      
       const errorMsg = result.error ? `${result.message}: ${result.error}` : (result.message || `Server error ${res.status}`);
       console.error('Delete failed:', errorMsg, result);
       showAlert(errorMsg || 'Failed to delete news', 'error');
@@ -1407,6 +1752,12 @@ document.getElementById('addLegacyForm')?.addEventListener('submit', async (e) =
     delete data.subcategory;
   }
   
+  // Log form submission
+  logAdminAction('form_submit', {
+    formType: 'add_legacy',
+    formData: { name: data.name, position: data.position, category: data.category }
+  });
+  
   try {
     const res = await fetch(`${API_BASE}/api/admin/legacy`, {
       method: 'POST',
@@ -1416,6 +1767,16 @@ document.getElementById('addLegacyForm')?.addEventListener('submit', async (e) =
     
     const result = await res.json();
     if (res.ok) {
+      // Log successful add
+      logAdminAction('add_legacy', {
+        legacyName: data.name,
+        position: data.position,
+        year: data.year,
+        category: data.category,
+        subcategory: data.subcategory,
+        legacyId: result.legacy?._id
+      });
+      
       showAlert('Legacy member added successfully!', 'success');
       e.target.reset();
       document.getElementById('subcategoryRow').style.display = 'none';
@@ -1435,7 +1796,22 @@ async function deleteLegacy(id, name) {
     return;
   }
   
-  if (!confirm(`Are you sure you want to delete "${name}"?`)) return;
+  if (!confirm(`Are you sure you want to delete "${name}"?`)) {
+    // Log cancellation
+    logAdminAction('delete_legacy', {
+      action: 'cancelled',
+      legacyId: id,
+      legacyName: name
+    });
+    return;
+  }
+  
+  // Log delete attempt
+  logAdminAction('delete_legacy', {
+    action: 'attempted',
+    legacyId: id,
+    legacyName: name
+  });
   
   try {
     const res = await fetch(`${API_BASE}/api/admin/legacy/${id}?username=${username}`, {
@@ -1452,9 +1828,24 @@ async function deleteLegacy(id, name) {
     }
     
     if (res.ok) {
+      // Log successful delete
+      logAdminAction('delete_legacy', {
+        action: 'success',
+        legacyId: id,
+        legacyName: name
+      });
+      
       showAlert('Legacy member deleted successfully!', 'success');
       loadLegacy();
     } else {
+      // Log failed delete
+      logAdminAction('delete_legacy', {
+        action: 'failed',
+        legacyId: id,
+        legacyName: name,
+        error: result.message || 'Unknown error'
+      });
+      
       const errorMsg = result.error ? `${result.message}: ${result.error}` : (result.message || `Server error ${res.status}`);
       showAlert(errorMsg || 'Failed to delete legacy member', 'error');
     }
@@ -1485,6 +1876,17 @@ document.getElementById('addUserForm')?.addEventListener('submit', async (e) => 
   // The new user's username is in data.username (from the form)
   console.log('Adding user with data:', { ...data, password: '***' });
   
+  // Log form submission
+  logAdminAction('form_submit', {
+    formType: 'add_user',
+    formData: { 
+      name: data.name, 
+      surname: data.surname, 
+      username: data.username,
+      isAdmin: data.isAdmin === true
+    }
+  });
+  
   try {
     const res = await fetch(`${API_BASE}/api/admin/users`, {
       method: 'POST',
@@ -1502,6 +1904,15 @@ document.getElementById('addUserForm')?.addEventListener('submit', async (e) => 
     }
     
     if (res.ok) {
+      // Log successful add
+      logAdminAction('add_user', {
+        newUsername: data.username,
+        newUserName: data.name,
+        newUserSurname: data.surname,
+        isAdmin: data.isAdmin === true,
+        userId: result.user?.username
+      });
+      
       showAlert('Member added successfully!', 'success');
       e.target.reset();
       const usernameInput = document.getElementById('userUsername');
@@ -1587,9 +1998,128 @@ document.getElementById('applicantsModal').addEventListener('click', (e) => {
   }
 });
 
+// Load Logs (Master Admin Only)
+async function loadLogs() {
+  // isMaster is boolean: true or false
+  if (isMaster !== true) {
+    console.error('Master admin access required to view logs. isMaster:', isMaster, 'Type:', typeof isMaster);
+    return;
+  }
+  
+  const container = document.getElementById('logsList');
+  if (!container) return;
+  
+  const filterType = document.getElementById('logFilterType')?.value || '';
+  const limit = document.getElementById('logLimit')?.value || 100;
+  
+  container.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading logs...</p></div>';
+  
+  try {
+    let url = `${API_BASE}/api/admin/logs?username=${username}&limit=${limit}`;
+    if (filterType) {
+      url += `&actionType=${filterType}`;
+    }
+    
+    const res = await fetch(url);
+    
+    if (!res.ok) {
+      const errorData = await res.json();
+      container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Error: ${errorData.message || 'Failed to load logs'}</p></div>`;
+      return;
+    }
+    
+    const data = await res.json();
+    
+    if (!data.logs || data.logs.length === 0) {
+      container.innerHTML = '<div class="empty-state"><i class="fas fa-inbox"></i><p>No logs found</p></div>';
+      return;
+    }
+    
+    container.innerHTML = `
+      <div style="padding: 1rem; background: #f8f9fa; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid var(--brand-2);">
+        <strong style="color: var(--brand-2);">Total Logs:</strong> ${data.count}
+      </div>
+      <div style="max-height: 600px; overflow-y: auto;">
+        ${data.logs.map(log => {
+          const timestamp = new Date(log.timestamp).toLocaleString('tr-TR', {
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+          });
+          
+          const actionTypeColors = {
+            'page_enter': '#10b981',
+            'page_exit': '#ef4444',
+            'tab_switch': '#3b82f6',
+            'add_job': '#22c55e',
+            'delete_job': '#ef4444',
+            'add_startup': '#22c55e',
+            'delete_startup': '#ef4444',
+            'add_news': '#22c55e',
+            'delete_news': '#ef4444',
+            'add_legacy': '#22c55e',
+            'delete_legacy': '#ef4444',
+            'add_user': '#22c55e',
+            'view_applicants': '#3b82f6',
+            'keypress': '#6b7280',
+            'form_submit': '#8b5cf6'
+          };
+          
+          const actionColor = actionTypeColors[log.actionType] || '#6b7280';
+          
+          return `
+            <div class="item-card" style="margin-bottom: 1rem; border-left: 4px solid ${actionColor};">
+              <div class="item-info">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+                  <h3 style="margin: 0; color: ${actionColor}; font-weight: 700; text-transform: uppercase; font-size: 0.9rem; letter-spacing: 0.5px;">
+                    ${log.actionType.replace(/_/g, ' ')}
+                  </h3>
+                  <small style="color: var(--muted); font-size: 0.85rem; white-space: nowrap;">
+                    ${timestamp}
+                  </small>
+                </div>
+                <p style="margin: 0.25rem 0; font-weight: 600;">
+                  <i class="fas fa-user" style="color: var(--brand-2);"></i> 
+                  <strong>Admin:</strong> ${log.adminUsername}
+                </p>
+                ${log.details && Object.keys(log.details).length > 0 ? `
+                  <details style="margin-top: 0.75rem;">
+                    <summary style="cursor: pointer; color: var(--brand-2); font-weight: 600; font-size: 0.9rem; padding: 0.5rem; background: #f8f9fa; border-radius: 6px;">
+                      <i class="fas fa-info-circle"></i> View Details
+                    </summary>
+                    <pre style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-top: 0.5rem; overflow-x: auto; font-size: 0.85rem; line-height: 1.6; border: 1px solid var(--border);">${JSON.stringify(log.details, null, 2)}</pre>
+                  </details>
+                ` : ''}
+                ${log.keyPressed ? `
+                  <p style="margin: 0.5rem 0; padding: 0.5rem; background: #f8f9fa; border-radius: 6px; font-size: 0.9rem;">
+                    <i class="fas fa-keyboard" style="color: var(--muted);"></i> 
+                    <strong>Key:</strong> <code style="background: white; padding: 0.2rem 0.4rem; border-radius: 4px;">${log.keyPressed}</code> 
+                    <span style="color: var(--muted);">(Code: ${log.keyCode})</span>
+                  </p>
+                ` : ''}
+                <div style="margin-top: 0.5rem; padding-top: 0.5rem; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--muted); display: flex; gap: 1rem; flex-wrap: wrap;">
+                  <span><i class="fas fa-fingerprint"></i> Session: <code style="font-size: 0.75rem;">${log.sessionId ? log.sessionId.substring(0, 20) + '...' : 'N/A'}</code></span>
+                  <span><i class="fas fa-network-wired"></i> IP: <code style="font-size: 0.75rem;">${log.ipAddress || 'N/A'}</code></span>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
+  } catch (err) {
+    console.error('Failed to load logs:', err);
+    container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load logs: ' + err.message + '</p></div>';
+  }
+}
+
 // Debug: Check all tab contents on load
 console.log('Available tab contents on load:', Array.from(document.querySelectorAll('.tab-content')).map(el => ({ id: el.id, classes: el.className })));
 console.log('Users tab element:', document.getElementById('users'));
+console.log('isMaster:', isMaster, 'Type:', typeof isMaster, 'Value:', isMasterValue);
 
 // Initial load
 loadJobs();
