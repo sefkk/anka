@@ -3,8 +3,8 @@
   'use strict';
 
   const COOKIE_CONSENT_KEY = 'cookieConsent';
-  const COOKIE_PREFERENCES_KEY = 'cookiePreferences';
   const COOKIE_EXPIRY_DAYS = 365;
+  const API_BASE = 'https://anka-vkrl.onrender.com';
 
   // Cookie utility functions
   function setCookie(name, value, days) {
@@ -34,22 +34,78 @@
     return getCookie(COOKIE_CONSENT_KEY) !== null;
   }
 
-  // Get user preferences
-  function getPreferences() {
-    const prefs = getCookie(COOKIE_PREFERENCES_KEY);
-    if (prefs) {
-      try {
-        return JSON.parse(prefs);
-      } catch (e) {
-        return null;
+  // Collect device and connection information
+  async function collectUserData() {
+    const data = {
+      userAgent: navigator.userAgent,
+      deviceBrand: getDeviceBrand(),
+      deviceType: getDeviceType(),
+      connectionType: getConnectionType(),
+      timestamp: new Date().toISOString()
+    };
+
+    // Get IP and country from backend
+    try {
+      const response = await fetch(`${API_BASE}/api/user-info`);
+      if (response.ok) {
+        const info = await response.json();
+        data.ipAddress = info.ipAddress || 'Unknown';
+        data.country = info.country || 'Unknown';
+      } else {
+        data.ipAddress = 'Unknown';
+        data.country = 'Unknown';
       }
+    } catch (err) {
+      console.error('Failed to fetch user info:', err);
+      data.ipAddress = 'Unknown';
+      data.country = 'Unknown';
     }
-    return null;
+
+    return data;
   }
 
-  // Save preferences
-  function savePreferences(preferences) {
-    setCookie(COOKIE_PREFERENCES_KEY, JSON.stringify(preferences), COOKIE_EXPIRY_DAYS);
+  // Detect device brand from user agent
+  function getDeviceBrand() {
+    const ua = navigator.userAgent.toLowerCase();
+    if (ua.includes('iphone') || ua.includes('ipad') || ua.includes('macintosh')) {
+      return 'Apple';
+    } else if (ua.includes('android')) {
+      return 'Android';
+    } else if (ua.includes('windows')) {
+      return 'Microsoft';
+    } else if (ua.includes('linux')) {
+      return 'Linux';
+    }
+    return 'Unknown';
+  }
+
+  // Detect device type
+  function getDeviceType() {
+    const ua = navigator.userAgent.toLowerCase();
+    if (/tablet|ipad|playbook|silk/i.test(ua)) {
+      return 'tablet';
+    } else if (/mobile|iphone|ipod|android|blackberry|opera|mini|windows\sce|palm|smartphone|iemobile/i.test(ua)) {
+      return 'phone';
+    } else {
+      return 'web';
+    }
+  }
+
+  // Detect connection type
+  function getConnectionType() {
+    if ('connection' in navigator) {
+      const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+      if (connection) {
+        const effectiveType = connection.effectiveType || 'unknown';
+        if (connection.type === 'wifi' || effectiveType.includes('wifi')) {
+          return 'wifi';
+        } else if (connection.type === 'cellular' || connection.type === 'cellular') {
+          return 'cellular';
+        }
+        return connection.type || 'unknown';
+      }
+    }
+    return 'unknown';
   }
 
   // Create cookie banner HTML (as popup modal)
@@ -65,7 +121,7 @@
           <h3>We Use Cookies</h3>
         </div>
         <div class="cookie-popup-body">
-          <p>We use cookies to enhance your browsing experience, analyze site traffic, and personalize content. By clicking "Accept All", you consent to our use of cookies. You can manage your preferences at any time.</p>
+          <p>We use cookies to collect your IP address, location (country), login/logout timestamps, device brand, device type, and internet connection type. By clicking "Accept", you consent to our use of cookies. Click "Reject" to decline.</p>
           <div class="cookie-consent-links">
             <a href="cookie-policy.html">Cookie Policy</a>
             <span>•</span>
@@ -73,83 +129,14 @@
           </div>
         </div>
         <div class="cookie-popup-footer">
-          <button id="cookieRejectAll" class="cookie-btn cookie-btn-secondary">Reject All</button>
-          <button id="cookieCustomize" class="cookie-btn cookie-btn-secondary">Customize</button>
-          <button id="cookieAcceptAll" class="cookie-btn cookie-btn-primary">Accept All</button>
+          <button id="cookieRejectAll" class="cookie-btn cookie-btn-secondary">Reject</button>
+          <button id="cookieAcceptAll" class="cookie-btn cookie-btn-primary">Accept</button>
         </div>
       </div>
     `;
     return banner;
   }
 
-  // Create cookie settings modal
-  function createCookieSettings() {
-    const modal = document.createElement('div');
-    modal.id = 'cookieSettingsModal';
-    modal.className = 'cookie-settings-modal';
-    // Set background immediately on creation - use cssText to override everything
-    modal.style.cssText = 'position: fixed !important; top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important; background: rgba(0, 0, 0, 0.85) !important; background-color: rgba(0, 0, 0, 0.85) !important; z-index: 10001 !important; display: flex !important; align-items: center !important; justify-content: center !important; padding: 20px !important; backdrop-filter: blur(8px) !important; -webkit-backdrop-filter: blur(8px) !important; opacity: 1 !important; visibility: visible !important;';
-    modal.innerHTML = `
-      <div class="cookie-settings-content">
-        <div class="cookie-settings-header">
-          <h2>Cookie Preferences</h2>
-          <button id="cookieSettingsClose" class="cookie-settings-close">&times;</button>
-        </div>
-        <div class="cookie-settings-body">
-          <p>Manage your cookie preferences. You can enable or disable different types of cookies below.</p>
-          
-          <div class="cookie-setting-item">
-            <div class="cookie-setting-info">
-              <h3>Essential Cookies <span class="cookie-required-badge">Required</span></h3>
-              <p>These cookies are necessary for the website to function and cannot be switched off.</p>
-            </div>
-            <label class="cookie-toggle">
-              <input type="checkbox" id="essentialCookies" checked disabled>
-              <span class="cookie-slider"></span>
-            </label>
-          </div>
-          
-          <div class="cookie-setting-item">
-            <div class="cookie-setting-info">
-              <h3>Functional Cookies</h3>
-              <p>These cookies enable enhanced functionality and personalization.</p>
-            </div>
-            <label class="cookie-toggle">
-              <input type="checkbox" id="functionalCookies" checked>
-              <span class="cookie-slider"></span>
-            </label>
-          </div>
-          
-          <div class="cookie-setting-item">
-            <div class="cookie-setting-info">
-              <h3>Analytics Cookies</h3>
-              <p>These cookies help us understand how visitors interact with our website.</p>
-            </div>
-            <label class="cookie-toggle">
-              <input type="checkbox" id="analyticsCookies">
-              <span class="cookie-slider"></span>
-            </label>
-          </div>
-          
-          <div class="cookie-setting-item">
-            <div class="cookie-setting-info">
-              <h3>Preference Cookies</h3>
-              <p>These cookies remember your preferences and settings.</p>
-            </div>
-            <label class="cookie-toggle">
-              <input type="checkbox" id="preferenceCookies" checked>
-              <span class="cookie-slider"></span>
-            </label>
-          </div>
-        </div>
-        <div class="cookie-settings-footer">
-          <button id="cookieSavePreferences" class="cookie-btn cookie-btn-primary">Save Preferences</button>
-          <button id="cookieAcceptAllModal" class="cookie-btn cookie-btn-secondary">Accept All</button>
-        </div>
-      </div>
-    `;
-    return modal;
-  }
 
   // Show cookie banner
   function showCookieBanner() {
@@ -189,209 +176,70 @@
         acceptAllCookies();
       } else if (e.target.id === 'cookieRejectAll' || e.target.closest('#cookieRejectAll')) {
         rejectAllCookies();
-      } else if (e.target.id === 'cookieCustomize' || e.target.closest('#cookieCustomize')) {
-        e.preventDefault();
-        e.stopPropagation();
-        showCookieSettings();
       }
     });
   }
 
-  // Show cookie settings modal
-  function showCookieSettings() {
-    // First, restore scroll in case it was blocked by popup
-    document.body.style.overflow = '';
-    
-    // Hide the cookie popup first (but don't remove it)
-    const popup = document.getElementById('cookieConsentBanner');
-    if (popup) {
-      popup.style.display = 'none';
-      popup.classList.remove('show');
-    }
-    
-    // Remove any existing modal
-    const existingModal = document.getElementById('cookieSettingsModal');
-    if (existingModal) {
-      existingModal.remove();
-    }
 
-    // Create and append modal directly to body (not inside any container)
-    const modal = createCookieSettings();
-    
-    // Ensure modal is appended to body, not inside any other element
-    if (document.body) {
-      document.body.appendChild(modal);
-    } else {
-      // Fallback: append to document root
-      document.documentElement.appendChild(modal);
-    }
-
-    // Background is already set in createCookieSettings via cssText
-    // Just add show class for animation
-    modal.classList.add('show');
-    
-    // Force a repaint to ensure styles are applied
-    void modal.offsetHeight;
-
-    // Load existing preferences after DOM is ready
-    setTimeout(() => {
-      const prefs = getPreferences();
-      const functionalCheckbox = document.getElementById('functionalCookies');
-      const analyticsCheckbox = document.getElementById('analyticsCookies');
-      const preferenceCheckbox = document.getElementById('preferenceCookies');
-      
-      if (functionalCheckbox) {
-        functionalCheckbox.checked = prefs ? (prefs.functional !== false) : true;
-      }
-      if (analyticsCheckbox) {
-        analyticsCheckbox.checked = prefs ? (prefs.analytics === true) : false;
-      }
-      if (preferenceCheckbox) {
-        preferenceCheckbox.checked = prefs ? (prefs.preference !== false) : true;
-      }
-    }, 50);
-
-    // Verify modal is visible and then block scroll
-    setTimeout(() => {
-      const modalElement = document.getElementById('cookieSettingsModal');
-      if (modalElement) {
-        const rect = modalElement.getBoundingClientRect();
-        const computedStyle = window.getComputedStyle(modalElement);
-        
-        // Only block scroll if modal is actually visible
-        if (rect.width > 0 && rect.height > 0 && 
-            computedStyle.opacity !== '0' && 
-            computedStyle.visibility !== 'hidden') {
-          document.body.style.overflow = 'hidden';
-        } else {
-          // If modal didn't appear, restore everything
-          document.body.style.overflow = '';
-          if (popup) {
-            popup.style.display = 'flex';
-          }
-        }
-      } else {
-        // Modal doesn't exist, restore scroll
-        document.body.style.overflow = '';
-        if (popup) {
-          popup.style.display = 'flex';
-        }
-      }
-    }, 100);
-    
-    // Safety timeout: if modal still not visible after 300ms, restore scroll
-    setTimeout(() => {
-      const modalElement = document.getElementById('cookieSettingsModal');
-      if (modalElement) {
-        const computedStyle = window.getComputedStyle(modalElement);
-        if (computedStyle.opacity === '0' || computedStyle.visibility === 'hidden') {
-          // Modal not visible, restore scroll and show popup
-          document.body.style.overflow = '';
-          if (popup) {
-            popup.style.display = 'flex';
-          }
-        }
-      } else {
-        // Modal removed, restore scroll
-        document.body.style.overflow = '';
-        if (popup) {
-          popup.style.display = 'flex';
-        }
-      }
-    }, 300);
-
-    // Event listeners - use event delegation to ensure they work
-    modal.addEventListener('click', (e) => {
-      if (e.target.id === 'cookieSettingsClose' || e.target.closest('#cookieSettingsClose')) {
-        hideCookieSettings();
-      } else if (e.target.id === 'cookieSavePreferences' || e.target.closest('#cookieSavePreferences')) {
-        saveCookiePreferences();
-      } else if (e.target.id === 'cookieAcceptAllModal' || e.target.closest('#cookieAcceptAllModal')) {
-        acceptAllCookies();
-      }
-    });
-
-    // Close on background click
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
-        hideCookieSettings();
-      }
-    });
-  }
-
-  // Hide cookie settings
-  function hideCookieSettings() {
-    const modal = document.getElementById('cookieSettingsModal');
-    if (modal) {
-      // Restore scroll immediately
-      document.body.style.overflow = '';
-      
-      modal.classList.remove('show');
-      
-      // Remove modal after animation
-      setTimeout(() => {
-        if (modal.parentNode) {
-          modal.parentNode.removeChild(modal);
-        }
-        // Show cookie popup again if it exists and user hasn't given consent
-        const popup = document.getElementById('cookieConsentBanner');
-        if (popup && !hasConsent()) {
-          popup.style.display = 'flex';
-        } else if (!hasConsent()) {
-          // If popup doesn't exist but consent not given, ensure scroll is enabled
-          document.body.style.overflow = '';
-        }
-      }, 300);
-    }
-  }
-
-  // Accept all cookies
-  function acceptAllCookies() {
+  // Accept cookies and save data
+  async function acceptAllCookies() {
     setCookie(COOKIE_CONSENT_KEY, 'accepted', COOKIE_EXPIRY_DAYS);
-    savePreferences({
-      essential: true,
-      functional: true,
-      analytics: true,
-      preference: true
-    });
-    hideCookieBanner();
-    hideCookieSettings();
-  }
-
-  // Reject all non-essential cookies
-  function rejectAllCookies() {
-    setCookie(COOKIE_CONSENT_KEY, 'rejected', COOKIE_EXPIRY_DAYS);
-    savePreferences({
-      essential: true,
-      functional: false,
-      analytics: false,
-      preference: false
-    });
-    hideCookieBanner();
-  }
-
-  // Save custom preferences
-  function saveCookiePreferences() {
-    const functionalCheckbox = document.getElementById('functionalCookies');
-    const analyticsCheckbox = document.getElementById('analyticsCookies');
-    const preferenceCheckbox = document.getElementById('preferenceCookies');
     
-    if (!functionalCheckbox || !analyticsCheckbox || !preferenceCheckbox) {
-      console.error('Cookie preference checkboxes not found');
-      return;
+    // Collect and save user data
+    const userData = await collectUserData();
+    userData.consentStatus = 'accepted';
+    userData.loginTimestamp = new Date().toISOString();
+    
+    // Save to backend
+    try {
+      await fetch(`${API_BASE}/api/cookies`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+      });
+    } catch (err) {
+      console.error('Failed to save cookie data:', err);
     }
     
-    const preferences = {
-      essential: true, // Always true
-      functional: functionalCheckbox.checked,
-      analytics: analyticsCheckbox.checked,
-      preference: preferenceCheckbox.checked
-    };
-
-    setCookie(COOKIE_CONSENT_KEY, 'custom', COOKIE_EXPIRY_DAYS);
-    savePreferences(preferences);
     hideCookieBanner();
-    hideCookieSettings();
+  }
+
+  // Reject cookies
+  async function rejectAllCookies() {
+    setCookie(COOKIE_CONSENT_KEY, 'rejected', COOKIE_EXPIRY_DAYS);
+    
+    // Still collect data but mark as rejected
+    const userData = await collectUserData();
+    userData.consentStatus = 'rejected';
+    userData.loginTimestamp = new Date().toISOString();
+    
+    // Save to backend
+    try {
+      await fetch(`${API_BASE}/api/cookies`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData)
+      });
+    } catch (err) {
+      console.error('Failed to save cookie data:', err);
+    }
+    
+    hideCookieBanner();
+  }
+
+  // Track logout timestamp
+  function trackLogout() {
+    const consent = getCookie(COOKIE_CONSENT_KEY);
+    if (consent === 'accepted' || consent === 'rejected') {
+      // Update logout timestamp in backend
+      fetch(`${API_BASE}/api/cookies/logout`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          logoutTimestamp: new Date().toISOString()
+        })
+      }).catch(err => console.error('Failed to track logout:', err));
+    }
   }
 
   // Hide cookie banner
@@ -425,9 +273,11 @@
 
   // Make functions globally available
   window.showCookieBanner = showCookieBanner;
-  window.showCookieSettings = showCookieSettings;
-  window.getCookiePreferences = getPreferences;
   window.hasCookieConsent = hasConsent;
+  window.trackLogout = trackLogout;
+  
+  // Track logout on page unload
+  window.addEventListener('beforeunload', trackLogout);
 
   // Safety check: Ensure scroll is enabled if popup isn't visible
   function checkScrollState() {

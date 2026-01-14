@@ -6,6 +6,7 @@ const User = require('./models/user');
 const News = require('./models/news');
 const Startup = require('./models/startup');
 const Legacy = require('./models/legacy');
+const Cookie = require('./models/cookie');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -706,6 +707,82 @@ app.delete("/api/admin/legacy/:id", async (req, res) => {
   } catch (err) {
     console.error("❌ Failed to delete legacy member:", err.message);
     res.status(500).json({ message: "Failed to delete legacy member", error: err.message });
+  }
+});
+
+// ------------------- User Info API (for cookie consent) -------------------
+app.get("/api/user-info", async (req, res) => {
+  try {
+    // Get IP address from request
+    const ipAddress = req.headers['x-forwarded-for']?.split(',')[0] || 
+                     req.headers['x-real-ip'] || 
+                     req.connection?.remoteAddress || 
+                     req.socket?.remoteAddress ||
+                     'Unknown';
+    
+    // Try to get country from IP (simplified - you might want to use a geolocation service)
+    // For now, we'll return Unknown and let frontend handle it if needed
+    const country = req.headers['cf-ipcountry'] || // Cloudflare header
+                    req.headers['x-country-code'] || // Custom header
+                    'Unknown';
+    
+    res.json({
+      ipAddress: ipAddress.trim(),
+      country: country
+    });
+  } catch (err) {
+    console.error("Failed to get user info:", err);
+    res.json({
+      ipAddress: 'Unknown',
+      country: 'Unknown'
+    });
+  }
+});
+
+// ------------------- Cookie Data API -------------------
+app.post("/api/cookies", async (req, res) => {
+  try {
+    const { ipAddress, country, loginTimestamp, deviceBrand, deviceType, connectionType, userAgent, consentStatus } = req.body;
+    
+    const cookieData = new Cookie({
+      ipAddress: ipAddress || 'Unknown',
+      country: country || 'Unknown',
+      loginTimestamp: loginTimestamp ? new Date(loginTimestamp) : new Date(),
+      deviceBrand: deviceBrand || 'Unknown',
+      deviceType: deviceType || 'Unknown',
+      connectionType: connectionType || 'Unknown',
+      userAgent: userAgent || 'Unknown',
+      consentStatus: consentStatus || 'unknown'
+    });
+    
+    await cookieData.save();
+    console.log(`✅ Cookie data saved: ${consentStatus} - ${ipAddress} - ${country}`);
+    res.status(201).json({ message: "Cookie data saved successfully" });
+  } catch (err) {
+    console.error("❌ Failed to save cookie data:", err);
+    res.status(500).json({ message: "Failed to save cookie data", error: err.message });
+  }
+});
+
+app.post("/api/cookies/logout", async (req, res) => {
+  try {
+    const { logoutTimestamp } = req.body;
+    
+    // Find the most recent cookie entry for this session and update logout timestamp
+    // In a real scenario, you might want to match by IP or session ID
+    const recentCookie = await Cookie.findOne().sort({ createdAt: -1 });
+    
+    if (recentCookie && !recentCookie.logoutTimestamp) {
+      recentCookie.logoutTimestamp = logoutTimestamp ? new Date(logoutTimestamp) : new Date();
+      await recentCookie.save();
+      console.log(`✅ Logout timestamp updated for cookie: ${recentCookie._id}`);
+      res.json({ message: "Logout timestamp updated successfully" });
+    } else {
+      res.json({ message: "No active session found" });
+    }
+  } catch (err) {
+    console.error("❌ Failed to update logout timestamp:", err);
+    res.status(500).json({ message: "Failed to update logout timestamp", error: err.message });
   }
 });
 
