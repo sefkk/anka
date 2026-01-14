@@ -349,6 +349,41 @@ app.post("/api/admin/users", requireAdminPermission('canUsers'), async (req, res
     const newUser = new User(userData);
     await newUser.save();
     
+    // Log admin grant if isAdmin is true, including all granted permissions
+    if (isAdmin === true) {
+      try {
+        const grantedPermissions = [];
+        if (isAdmin === true) grantedPermissions.push('isAdmin');
+        if (canTalentPool === true) grantedPermissions.push('canTalentPool');
+        if (canStartups === true) grantedPermissions.push('canStartups');
+        if (canNews === true) grantedPermissions.push('canNews');
+        if (canLegacy === true) grantedPermissions.push('canLegacy');
+        if (canUsers === true) grantedPermissions.push('canUsers');
+        if (canLogs === true) grantedPermissions.push('canLogs');
+        
+        const adminLog = new AdminLog({
+          adminUsername: adminUsername.trim(),
+          actionType: 'grant_admin',
+          details: {
+            targetUsername: newUsername.trim(),
+            targetName: `${name.trim()} ${surname.trim()}`.trim(),
+            method: 'add_user',
+            newUser: true,
+            grantedPermissions: grantedPermissions,
+            permissionsCount: grantedPermissions.length
+          },
+          timestamp: new Date(),
+          ipAddress: req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'Unknown',
+          userAgent: req.headers['user-agent'] || 'Unknown'
+        });
+        await adminLog.save();
+        console.log(`📝 Admin Log: ${adminUsername} granted admin to ${newUsername} with permissions: ${grantedPermissions.join(', ')}`);
+      } catch (logErr) {
+        console.error("❌ Failed to log admin grant:", logErr.message);
+        // Don't fail the request if logging fails
+      }
+    }
+    
     console.log(`✅ User created successfully: ${newUsername}`);
     res.status(201).json({ message: "User created successfully", user: { username: newUser.username, name: newUser.name } });
   } catch (err) {
@@ -398,6 +433,15 @@ app.patch("/api/admin/users/:username/permissions", requireMasterAdmin, async (r
       return res.status(400).json({ message: "No permission fields provided" });
     }
 
+    // Get current user state before update to check if admin status is being granted
+    const currentUser = await User.findOne({ username: targetUsername });
+    if (!currentUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    
+    const wasAdmin = currentUser.isAdmin === true;
+    const willBeAdmin = update.isAdmin === true;
+
     const updatedUser = await User.findOneAndUpdate(
       { username: targetUsername },
       { $set: update },
@@ -406,6 +450,57 @@ app.patch("/api/admin/users/:username/permissions", requireMasterAdmin, async (r
 
     if (!updatedUser) {
       return res.status(404).json({ message: "User not found" });
+    }
+
+    // Log admin grant if admin status is being granted (was false, now true)
+    // Also track which permissions were granted/revoked
+    if (!wasAdmin && willBeAdmin) {
+      try {
+        const adminUsername = getAuthUsername(req);
+        
+        // Calculate which permissions were granted
+        const grantedPermissions = [];
+        const revokedPermissions = [];
+        
+        allowedFields.forEach((field) => {
+          const wasSet = currentUser[field] === true;
+          const willBeSet = update[field] === true;
+          
+          if (!wasSet && willBeSet) {
+            grantedPermissions.push(field);
+          } else if (wasSet && !willBeSet) {
+            revokedPermissions.push(field);
+          }
+        });
+        
+        const adminLog = new AdminLog({
+          adminUsername: adminUsername ? adminUsername.trim() : 'Unknown',
+          actionType: 'grant_admin',
+          details: {
+            targetUsername: targetUsername,
+            targetName: `${updatedUser.name || ''} ${updatedUser.surname || ''}`.trim() || targetUsername,
+            method: 'update_permissions',
+            newUser: false,
+            grantedPermissions: grantedPermissions,
+            revokedPermissions: revokedPermissions,
+            permissionsCount: grantedPermissions.length
+          },
+          timestamp: new Date(),
+          ipAddress: req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress || 'Unknown',
+          userAgent: req.headers['user-agent'] || 'Unknown'
+        });
+        await adminLog.save();
+        console.log(`📝 Admin Log: ${adminUsername || 'Unknown'} granted admin to ${targetUsername}`);
+        if (grantedPermissions.length > 0) {
+          console.log(`   Granted: ${grantedPermissions.join(', ')}`);
+        }
+        if (revokedPermissions.length > 0) {
+          console.log(`   Revoked: ${revokedPermissions.join(', ')}`);
+        }
+      } catch (logErr) {
+        console.error("❌ Failed to log admin grant:", logErr.message);
+        // Don't fail the request if logging fails
+      }
     }
 
     const { password, ...safeUser } = updatedUser.toObject();
