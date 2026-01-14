@@ -54,11 +54,28 @@ async function onSubmit(event) {
     // isMaster değerini doğru şekilde kaydet
     const isMasterValue = data.isMaster === true ? 'true' : 'false';
     sessionStorage.setItem("isMaster", isMasterValue);
+  
+    const permissionKeys = [
+      'canTalentPool',
+      'canStartups',
+      'canNews',
+      'canLegacy',
+      'canUsers',
+      'canLogs'
+    ];
+    permissionKeys.forEach((key) => {
+      const value = data[key] === true ? 'true' : 'false';
+      sessionStorage.setItem(key, value);
+    });
 
     console.log("Stored username:", sessionStorage.getItem("username"));
     console.log("Stored name:", sessionStorage.getItem("name"));
     console.log("Stored isAdmin:", sessionStorage.getItem("isAdmin"));
     console.log("Stored isMaster:", sessionStorage.getItem("isMaster"));
+    console.log("Stored permissions:", permissionKeys.reduce((acc, key) => {
+      acc[key] = sessionStorage.getItem(key);
+      return acc;
+    }, {}));
     console.log("isAdmin check:", sessionStorage.getItem("isAdmin") === 'true');
     console.log("isMaster check:", sessionStorage.getItem("isMaster") === 'true');
 

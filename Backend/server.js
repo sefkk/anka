@@ -20,18 +20,32 @@ app.use(cors({
 app.use(express.json());
 
 // ------------------- Admin Middleware -------------------
-const checkAdmin = async (req, res, next) => {
+const getAuthUsername = (req) => {
+  return (
+    (req.body && (req.body.adminUsername || req.body.username)) ||
+    (req.query && req.query.username) ||
+    null
+  );
+};
+
+const requireAdminPermission = (permission) => async (req, res, next) => {
   try {
-    const username = (req.query && req.query.username) || (req.body && req.body.username);
+    const username = getAuthUsername(req);
     if (!username) {
       return res.status(400).json({ message: "Username is required" });
     }
+
     const trimmedUsername = String(username).trim();
     const user = await User.findOne({ username: trimmedUsername });
     if (!user || user.isAdmin !== true) {
       return res.status(403).json({ message: "Admin access required" });
     }
-    req.adminUser = user; // Store admin user in request
+
+    if (permission && user[permission] !== true) {
+      return res.status(403).json({ message: "Permission required" });
+    }
+
+    req.adminUser = user;
     next();
   } catch (err) {
     console.error("Admin check error:", err);
@@ -61,11 +75,20 @@ app.post('/login', async (req, res) => {
         // Successful login
         const isAdminResult = user.isAdmin === true;
         const isMasterResult = user.isMaster === true;
+        const permissions = {
+            canTalentPool: user.canTalentPool === true,
+            canStartups: user.canStartups === true,
+            canNews: user.canNews === true,
+            canLegacy: user.canLegacy === true,
+            canUsers: user.canUsers === true,
+            canLogs: user.canLogs === true
+        };
         res.status(200).json({ 
             message: 'Login successful', 
             name: user.name,
             isAdmin: isAdminResult,
-            isMaster: isMasterResult
+            isMaster: isMasterResult,
+            ...permissions
         });
     } catch (err) {
         console.error('Login route error:', err);
@@ -258,17 +281,15 @@ app.get("/api/admin/users/check-username", async (req, res) => {
 });
 
 // ------------------- Add User (Admin Only) -------------------
-app.post("/api/admin/users", async (req, res) => {
+app.post("/api/admin/users", requireAdminPermission('canUsers'), async (req, res) => {
   try {
-    const { name, surname, username: newUsername, password, gender, major, uni, yob, email, cvLink, isAdmin, adminUsername } = req.body;
+    const { 
+      name, surname, username: newUsername, password, gender, major, uni, yob, email, cvLink,
+      isAdmin, adminUsername,
+      canTalentPool, canStartups, canNews, canLegacy, canUsers, canLogs
+    } = req.body;
     
     console.log(`Add user request - Admin: ${adminUsername}, New User: ${name} ${surname}, Username: ${newUsername}`);
-    
-    // Check admin authentication
-    const adminUser = await User.findOne({ username: (adminUsername || req.body.username || req.query.username || '').trim() });
-    if (!adminUser || adminUser.isAdmin !== true) {
-      return res.status(403).json({ message: "Admin access required" });
-    }
     
     // Validate required fields
     if (!name || !surname || !newUsername || !password) {
@@ -297,6 +318,12 @@ app.post("/api/admin/users", async (req, res) => {
     if (email) userData.email = email.trim();
     if (cvLink) userData.cvLink = cvLink.trim();
     if (isAdmin === true) userData.isAdmin = true; // Only set if explicitly true
+    if (canTalentPool === true) userData.canTalentPool = true;
+    if (canStartups === true) userData.canStartups = true;
+    if (canNews === true) userData.canNews = true;
+    if (canLegacy === true) userData.canLegacy = true;
+    if (canUsers === true) userData.canUsers = true;
+    if (canLogs === true) userData.canLogs = true;
     
     const newUser = new User(userData);
     await newUser.save();
@@ -351,7 +378,7 @@ app.get("/api/news", async (req, res) => {
   }
 });
 
-app.post("/api/admin/news", checkAdmin, async (req, res) => {
+app.post("/api/admin/news", requireAdminPermission('canNews'), async (req, res) => {
   try {
     const { title, description, imageUrl, date } = req.body;
     if (!title || !description || !imageUrl || !date) {
@@ -366,19 +393,13 @@ app.post("/api/admin/news", checkAdmin, async (req, res) => {
   }
 });
 
-app.delete("/api/admin/news/:id", async (req, res) => {
+app.delete("/api/admin/news/:id", requireAdminPermission('canNews'), async (req, res) => {
   try {
     const { id } = req.params;
-    const username = (req.query && req.query.username) || (req.body && req.body.username);
-    
+
     console.log(`Delete news request - ID: ${id}`);
     console.log(`Query params:`, req.query);
     console.log(`Body:`, req.body);
-    console.log(`Username:`, username);
-    
-    if (!username) {
-      return res.status(400).json({ message: "Username is required" });
-    }
     
     // Validate MongoDB ObjectId format
     if (!id) {
@@ -389,16 +410,6 @@ app.delete("/api/admin/news/:id", async (req, res) => {
     if (!/^[0-9a-fA-F]{24}$/.test(id)) {
       console.error(`Invalid news ID format: ${id}`);
       return res.status(400).json({ message: "Invalid news ID format" });
-    }
-    
-    const trimmedUsername = String(username).trim();
-    console.log(`Looking up user: ${trimmedUsername}`);
-    
-    const user = await User.findOne({ username: trimmedUsername });
-    console.log(`User found:`, !!user, user ? `isAdmin: ${user.isAdmin}` : 'not found');
-    
-    if (!user || user.isAdmin !== true) {
-      return res.status(403).json({ message: "Admin access required" });
     }
     
     console.log(`Attempting to delete news with ID: ${id}`);
@@ -432,7 +443,7 @@ app.get("/api/startups", async (req, res) => {
   }
 });
 
-app.post("/api/admin/startups", checkAdmin, async (req, res) => {
+app.post("/api/admin/startups", requireAdminPermission('canStartups'), async (req, res) => {
   try {
     const { name, description, industry, website, logoUrl, detailPageUrl } = req.body;
     if (!name || !description) {
@@ -447,19 +458,13 @@ app.post("/api/admin/startups", checkAdmin, async (req, res) => {
   }
 });
 
-app.delete("/api/admin/startups/:id", async (req, res) => {
+app.delete("/api/admin/startups/:id", requireAdminPermission('canStartups'), async (req, res) => {
   try {
     const { id } = req.params;
-    const username = (req.query && req.query.username) || (req.body && req.body.username);
-    
+
     console.log(`Delete startup request - ID: ${id}`);
     console.log(`Query params:`, req.query);
     console.log(`Body:`, req.body);
-    console.log(`Username:`, username);
-    
-    if (!username) {
-      return res.status(400).json({ message: "Username is required" });
-    }
     
     // Validate MongoDB ObjectId format
     if (!id) {
@@ -470,16 +475,6 @@ app.delete("/api/admin/startups/:id", async (req, res) => {
     if (!/^[0-9a-fA-F]{24}$/.test(id)) {
       console.error(`Invalid startup ID format: ${id}`);
       return res.status(400).json({ message: "Invalid startup ID format" });
-    }
-    
-    const trimmedUsername = String(username).trim();
-    console.log(`Looking up user: ${trimmedUsername}`);
-    
-    const user = await User.findOne({ username: trimmedUsername });
-    console.log(`User found:`, !!user, user ? `isAdmin: ${user.isAdmin}` : 'not found');
-    
-    if (!user || user.isAdmin !== true) {
-      return res.status(403).json({ message: "Admin access required" });
     }
     
     console.log(`Attempting to delete startup with ID: ${id}`);
@@ -503,7 +498,7 @@ app.delete("/api/admin/startups/:id", async (req, res) => {
 });
 
 // ------------------- TALENT POOL ADMIN API -------------------
-app.post("/api/admin/companies", checkAdmin, async (req, res) => {
+app.post("/api/admin/companies", requireAdminPermission('canTalentPool'), async (req, res) => {
   try {
     const { name, industry, description_short, description_long, headquarters, website, logo_url, apply_url, experience, jobtype } = req.body;
     if (!name || !industry || !description_short) {
@@ -522,19 +517,13 @@ app.post("/api/admin/companies", checkAdmin, async (req, res) => {
   }
 });
 
-app.delete("/api/admin/companies/:id", async (req, res) => {
+app.delete("/api/admin/companies/:id", requireAdminPermission('canTalentPool'), async (req, res) => {
   try {
     const { id } = req.params;
-    const username = (req.query && req.query.username) || (req.body && req.body.username);
-    
+
     console.log(`Delete company request - ID: ${id}`);
     console.log(`Query params:`, req.query);
     console.log(`Body:`, req.body);
-    console.log(`Username:`, username);
-    
-    if (!username) {
-      return res.status(400).json({ message: "Username is required" });
-    }
     
     // Validate MongoDB ObjectId format
     if (!id) {
@@ -545,16 +534,6 @@ app.delete("/api/admin/companies/:id", async (req, res) => {
     if (!/^[0-9a-fA-F]{24}$/.test(id)) {
       console.error(`Invalid company ID format: ${id}`);
       return res.status(400).json({ message: "Invalid company ID format" });
-    }
-    
-    const trimmedUsername = String(username).trim();
-    console.log(`Looking up user: ${trimmedUsername}`);
-    
-    const user = await User.findOne({ username: trimmedUsername });
-    console.log(`User found:`, !!user, user ? `isAdmin: ${user.isAdmin}` : 'not found');
-    
-    if (!user || user.isAdmin !== true) {
-      return res.status(403).json({ message: "Admin access required" });
     }
     
     console.log(`Attempting to delete company with ID: ${id}`);
@@ -577,17 +556,9 @@ app.delete("/api/admin/companies/:id", async (req, res) => {
   }
 });
 
-app.get("/api/admin/companies/:companyName/applicants", async (req, res) => {
+app.get("/api/admin/companies/:companyName/applicants", requireAdminPermission('canTalentPool'), async (req, res) => {
   try {
     const { companyName } = req.params;
-    const username = req.query.username;
-    if (!username) {
-      return res.status(400).json({ message: "Username is required" });
-    }
-    const user = await User.findOne({ username: username.trim() });
-    if (!user || user.isAdmin !== true) {
-      return res.status(403).json({ message: "Admin access required" });
-    }
     
     const company = await Company.findOne({ name: new RegExp(`^${companyName}$`, "i") });
     if (!company) {
@@ -641,7 +612,7 @@ app.get("/api/legacy", async (req, res) => {
   }
 });
 
-app.post("/api/admin/legacy", checkAdmin, async (req, res) => {
+app.post("/api/admin/legacy", requireAdminPermission('canLegacy'), async (req, res) => {
   try {
     const { name, position, year, category, subcategory, image, linkedin } = req.body;
     if (!name || !position || !year || !category) {
@@ -670,16 +641,11 @@ app.post("/api/admin/legacy", checkAdmin, async (req, res) => {
   }
 });
 
-app.delete("/api/admin/legacy/:id", async (req, res) => {
+app.delete("/api/admin/legacy/:id", requireAdminPermission('canLegacy'), async (req, res) => {
   try {
     const { id } = req.params;
-    const username = (req.query && req.query.username) || (req.body && req.body.username);
-    
+
     console.log(`Delete legacy member request - ID: ${id}`);
-    
-    if (!username) {
-      return res.status(400).json({ message: "Username is required" });
-    }
     
     // Validate MongoDB ObjectId format
     if (!id) {
@@ -690,13 +656,6 @@ app.delete("/api/admin/legacy/:id", async (req, res) => {
     if (!/^[0-9a-fA-F]{24}$/.test(id)) {
       console.error(`Invalid legacy member ID format: ${id}`);
       return res.status(400).json({ message: "Invalid legacy member ID format" });
-    }
-    
-    const trimmedUsername = String(username).trim();
-    const user = await User.findOne({ username: trimmedUsername });
-    
-    if (!user || user.isAdmin !== true) {
-      return res.status(403).json({ message: "Admin access required" });
     }
     
     const legacy = await Legacy.findByIdAndDelete(id);
@@ -796,17 +755,12 @@ app.post("/api/admin/logs", async (req, res) => {
 });
 
 // ------------------- Get Admin Logs (for viewing logs - admin only) -------------------
-app.get("/api/admin/logs", async (req, res) => {
+app.get("/api/admin/logs", requireAdminPermission('canLogs'), async (req, res) => {
   try {
-    const { username, actionType, startDate, endDate, limit = 100 } = req.query;
-    
-    if (!username) {
-      return res.status(400).json({ message: "Username is required" });
-    }
+    const { actionType, startDate, endDate, limit = 100 } = req.query;
     
     // Verify master admin status (only isMaster: true can view logs)
-    const user = await User.findOne({ username: username.trim() });
-    if (!user || user.isMaster !== true) {
+    if (!req.adminUser || req.adminUser.isMaster !== true) {
       return res.status(403).json({ message: "Master admin access required" });
     }
     

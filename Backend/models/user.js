@@ -15,7 +15,13 @@ const userSchema = new mongoose.Schema({
   email: String,
   cvLink: String,
   isAdmin: Boolean,  // Sadece admin kullanıcılarda true olacak
-  isMaster: Boolean // Sadece master admin (IT) kullanıcılarda true olacak
+  isMaster: Boolean, // Sadece master admin (IT) kullanıcılarda true olacak
+  canTalentPool: { type: Boolean, default: false },
+  canStartups: { type: Boolean, default: false },
+  canNews: { type: Boolean, default: false },
+  canLegacy: { type: Boolean, default: false },
+  canUsers: { type: Boolean, default: false },
+  canLogs: { type: Boolean, default: false }
 });
 
 // 3. parametre olarak koleksiyon adını belirtiyoruz
