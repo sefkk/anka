@@ -1105,13 +1105,58 @@ if (isMaster === true && permissions.canLogs === true) {
   console.log('✅ Logs tab added for master admin');
 }
 
+// Add Admin Access tab for master admin
+if (isMaster === true) {
+  const tabContainer = document.querySelector('.admin-tabs');
+  if (tabContainer) {
+    const accessTabBtn = document.createElement('button');
+    accessTabBtn.className = 'tab-btn';
+    accessTabBtn.setAttribute('data-tab', 'admin-access');
+    accessTabBtn.innerHTML = '<i class="fas fa-user-shield"></i> Admin Access';
+    tabContainer.appendChild(accessTabBtn);
+  }
+
+  const usersTab = document.getElementById('users');
+  if (usersTab && usersTab.parentElement) {
+    const tabsContainer = usersTab.parentElement;
+    const accessTabContent = document.createElement('div');
+    accessTabContent.id = 'admin-access';
+    accessTabContent.className = 'tab-content';
+    accessTabContent.innerHTML = `
+      <div class="admin-form">
+        <h2>Admin Access & Permissions</h2>
+        <div style="display:flex; gap:1rem; flex-wrap:wrap; align-items:center;">
+          <input type="text" id="adminUserSearch" placeholder="Search by name or username" style="padding: 0.75rem 1rem; border-radius: 10px; border: 2px solid var(--border); background: white; font-size: 0.95rem; min-width: 260px;">
+          <button class="btn btn-primary" id="refreshAdminUsers">
+            <i class="fas fa-sync"></i> Refresh
+          </button>
+        </div>
+        <small style="display:block; color:var(--muted); font-size:.85rem; margin-top:.5rem;">
+          Toggle admin and section access for members. Master admins have full access by default.
+        </small>
+      </div>
+      <div class="items-list">
+        <h2 style="padding:1.5rem; margin:0; border-bottom:2px solid rgba(0,0,0,.1);">Members</h2>
+        <div id="adminAccessList">
+          <div class="empty-state">
+            <i class="fas fa-users"></i>
+            <p>Click Refresh to load users</p>
+          </div>
+        </div>
+      </div>
+    `;
+    tabsContainer.appendChild(accessTabContent);
+  }
+}
+
 const tabPermissions = {
   'talent-pool': permissions.canTalentPool === true,
   'startups': permissions.canStartups === true,
   'news': permissions.canNews === true,
   'legacy': permissions.canLegacy === true,
   'users': permissions.canUsers === true,
-  'logs': permissions.canLogs === true && isMaster === true
+  'logs': permissions.canLogs === true && isMaster === true,
+  'admin-access': isMaster === true
 };
 
 function setActiveTab(tabId) {
@@ -1170,6 +1215,7 @@ document.querySelector('.admin-tabs')?.addEventListener('click', (e) => {
   else if (tabId === 'news') loadNews();
   else if (tabId === 'legacy') loadLegacy();
   else if (tabId === 'logs' && isMaster === true) loadLogs();
+  else if (tabId === 'admin-access' && isMaster === true) loadUserPermissions();
 });
 
 // Show alert
@@ -2192,6 +2238,179 @@ async function loadLogs() {
   }
 }
 
+// ==================== Admin Access (Master Admin) ====================
+let adminUsersCache = [];
+
+function escapeHtml(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function renderAdminAccessList() {
+  const container = document.getElementById('adminAccessList');
+  if (!container) return;
+
+  const query = (document.getElementById('adminUserSearch')?.value || '').toLowerCase();
+  const filtered = adminUsersCache.filter((user) => {
+    const name = `${user.name || ''} ${user.surname || ''}`.trim().toLowerCase();
+    const usernameValue = String(user.username || '').toLowerCase();
+    return !query || name.includes(query) || usernameValue.includes(query);
+  });
+
+  if (filtered.length === 0) {
+    container.innerHTML = '<div class="empty-state"><i class="fas fa-users"></i><p>No users found</p></div>';
+    return;
+  }
+
+  container.innerHTML = filtered.map((user) => {
+    const fullName = `${user.name || ''} ${user.surname || ''}`.trim() || user.username || 'User';
+    const isMasterUser = user.isMaster === true;
+    const isAdminUser = user.isAdmin === true;
+    const disabledAttr = isMasterUser ? 'disabled' : '';
+    const permDisabledAttr = (!isAdminUser || isMasterUser) ? 'disabled' : '';
+
+    return `
+      <div class="item-card">
+        <div class="item-info">
+          <h3>${escapeHtml(fullName)}</h3>
+          <p><strong>Username:</strong> ${escapeHtml(user.username || '')}</p>
+          ${user.email ? `<p><strong>Email:</strong> ${escapeHtml(user.email)}</p>` : ''}
+          <p><strong>Master:</strong> ${isMasterUser ? 'Yes' : 'No'}</p>
+        </div>
+        <div class="item-actions">
+          <label style="display:flex; align-items:center; gap:.35rem;">
+            <input type="checkbox" data-field="isAdmin" ${isAdminUser ? 'checked' : ''} ${disabledAttr}>
+            Admin
+          </label>
+          <label style="display:flex; align-items:center; gap:.35rem;">
+            <input type="checkbox" data-field="canTalentPool" ${user.canTalentPool === true ? 'checked' : ''} ${permDisabledAttr}>
+            Talent Pool
+          </label>
+          <label style="display:flex; align-items:center; gap:.35rem;">
+            <input type="checkbox" data-field="canStartups" ${user.canStartups === true ? 'checked' : ''} ${permDisabledAttr}>
+            Startups
+          </label>
+          <label style="display:flex; align-items:center; gap:.35rem;">
+            <input type="checkbox" data-field="canNews" ${user.canNews === true ? 'checked' : ''} ${permDisabledAttr}>
+            News
+          </label>
+          <label style="display:flex; align-items:center; gap:.35rem;">
+            <input type="checkbox" data-field="canLegacy" ${user.canLegacy === true ? 'checked' : ''} ${permDisabledAttr}>
+            Legacy
+          </label>
+          <label style="display:flex; align-items:center; gap:.35rem;">
+            <input type="checkbox" data-field="canUsers" ${user.canUsers === true ? 'checked' : ''} ${permDisabledAttr}>
+            Users
+          </label>
+          <label style="display:flex; align-items:center; gap:.35rem;">
+            <input type="checkbox" data-field="canLogs" ${user.canLogs === true ? 'checked' : ''} ${permDisabledAttr}>
+            Logs
+          </label>
+          <button class="btn btn-small btn-primary" data-action="save-permissions" data-username="${escapeHtml(user.username || '')}" ${disabledAttr}>
+            <i class="fas fa-save"></i> Save
+          </button>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  bindAdminAccessEvents();
+}
+
+function bindAdminAccessEvents() {
+  const container = document.getElementById('adminAccessList');
+  if (!container) return;
+
+  container.querySelectorAll('input[data-field="isAdmin"]').forEach((checkbox) => {
+    checkbox.addEventListener('change', () => {
+      const row = checkbox.closest('.item-card');
+      if (!row) return;
+      const permCheckboxes = row.querySelectorAll('input[data-field^="can"]');
+      if (!checkbox.checked) {
+        permCheckboxes.forEach((cb) => {
+          cb.checked = false;
+          cb.disabled = true;
+        });
+      } else {
+        permCheckboxes.forEach((cb) => {
+          cb.disabled = false;
+        });
+      }
+    });
+  });
+
+  container.querySelectorAll('[data-action="save-permissions"]').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      const targetUsername = btn.getAttribute('data-username');
+      const row = btn.closest('.item-card');
+      if (!row || !targetUsername) return;
+
+      const fields = {};
+      row.querySelectorAll('input[type="checkbox"][data-field]').forEach((cb) => {
+        fields[cb.getAttribute('data-field')] = cb.checked;
+      });
+
+      if (fields.isAdmin !== true) {
+        Object.keys(fields).forEach((key) => {
+          if (key.startsWith('can')) {
+            fields[key] = false;
+          }
+        });
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/users/${encodeURIComponent(targetUsername)}/permissions?username=${encodeURIComponent(username)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(fields)
+        });
+
+        const result = await res.json();
+        if (res.ok) {
+          showAlert('Permissions updated successfully!', 'success');
+          await loadUserPermissions();
+        } else {
+          showAlert(result.message || 'Failed to update permissions', 'error');
+        }
+      } catch (err) {
+        showAlert('Error updating permissions', 'error');
+      }
+    });
+  });
+}
+
+async function loadUserPermissions() {
+  const container = document.getElementById('adminAccessList');
+  if (!container) return;
+
+  container.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading users...</p></div>';
+
+  try {
+    const res = await fetch(`${API_BASE}/api/admin/users/list?username=${encodeURIComponent(username)}`);
+    const data = await res.json();
+    if (!res.ok) {
+      container.innerHTML = `<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>${data.message || 'Failed to load users'}</p></div>`;
+      return;
+    }
+
+    adminUsersCache = Array.isArray(data.users) ? data.users : [];
+    renderAdminAccessList();
+  } catch (err) {
+    container.innerHTML = '<div class="empty-state"><i class="fas fa-exclamation-triangle"></i><p>Failed to load users</p></div>';
+  }
+}
+
+document.getElementById('refreshAdminUsers')?.addEventListener('click', (e) => {
+  e.preventDefault();
+  loadUserPermissions();
+});
+
+document.getElementById('adminUserSearch')?.addEventListener('input', renderAdminAccessList);
+
 // Debug: Check all tab contents on load
 console.log('Available tab contents on load:', Array.from(document.querySelectorAll('.tab-content')).map(el => ({ id: el.id, classes: el.className })));
 console.log('Users tab element:', document.getElementById('users'));
@@ -2204,6 +2423,7 @@ else if (initialTab === 'startups') loadStartups();
 else if (initialTab === 'news') loadNews();
 else if (initialTab === 'legacy') loadLegacy();
 else if (initialTab === 'logs' && isMaster === true) loadLogs();
+else if (initialTab === 'admin-access' && isMaster === true) loadUserPermissions();
 </script>
 </body>
 </html>
