@@ -582,6 +582,33 @@ body{
 #alertContainer{
   position:sticky; top:1rem; z-index:100; margin-bottom:1rem;
 }
+
+.admin-checkbox-label {
+  position: relative;
+  display: inline-block;
+  cursor: not-allowed;
+}
+
+.admin-checkbox-label .admin-checkbox-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  margin-bottom: 5px;
+  padding: 5px 10px;
+  background: #333;
+  color: #fff;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
+  z-index: 1000;
+}
+
+.admin-checkbox-label:hover .admin-checkbox-tooltip {
+  opacity: 1;
+}
 </style>
 </head>
 <body>
@@ -909,9 +936,10 @@ body{
           </div>
         </div>
         <div class="form-group">
-          <label>
-            <input type="checkbox" name="isAdmin" value="true" style="width:auto; margin-right:.5rem;">
+          <label class="admin-checkbox-label" style="position: relative; display: inline-block; cursor: not-allowed;">
+            <input type="checkbox" name="isAdmin" value="true" id="isAdminCheckbox" disabled style="width:auto; margin-right:.5rem; cursor: not-allowed; opacity: 0.6;">
             Admin User
+            <span class="admin-checkbox-tooltip">You don't have permission to edit</span>
           </label>
           <small style="display:block; color:var(--muted); font-size:.85rem; margin-top:.25rem;">
             Check this box to make this user an admin
@@ -920,12 +948,12 @@ body{
         <div class="form-group">
           <label>Admin Permissions</label>
           <div style="display:flex; flex-wrap:wrap; gap:.75rem;">
-            <label><input type="checkbox" name="canTalentPool" value="true" style="width:auto; margin-right:.35rem;"> Talent Pool</label>
-            <label><input type="checkbox" name="canStartups" value="true" style="width:auto; margin-right:.35rem;"> Startup Hub</label>
-            <label><input type="checkbox" name="canNews" value="true" style="width:auto; margin-right:.35rem;"> News</label>
-            <label><input type="checkbox" name="canLegacy" value="true" style="width:auto; margin-right:.35rem;"> Legacy</label>
-            <label><input type="checkbox" name="canUsers" value="true" style="width:auto; margin-right:.35rem;"> Add Member</label>
-            <label><input type="checkbox" name="canLogs" value="true" style="width:auto; margin-right:.35rem;"> Logs</label>
+            <label class="admin-checkbox-label"><input type="checkbox" name="canTalentPool" value="true" disabled style="width:auto; margin-right:.35rem; cursor: not-allowed; opacity: 0.6;"> Talent Pool<span class="admin-checkbox-tooltip">You don't have permission to edit</span></label>
+            <label class="admin-checkbox-label"><input type="checkbox" name="canStartups" value="true" disabled style="width:auto; margin-right:.35rem; cursor: not-allowed; opacity: 0.6;"> Startup Hub<span class="admin-checkbox-tooltip">You don't have permission to edit</span></label>
+            <label class="admin-checkbox-label"><input type="checkbox" name="canNews" value="true" disabled style="width:auto; margin-right:.35rem; cursor: not-allowed; opacity: 0.6;"> News<span class="admin-checkbox-tooltip">You don't have permission to edit</span></label>
+            <label class="admin-checkbox-label"><input type="checkbox" name="canLegacy" value="true" disabled style="width:auto; margin-right:.35rem; cursor: not-allowed; opacity: 0.6;"> Legacy<span class="admin-checkbox-tooltip">You don't have permission to edit</span></label>
+            <label class="admin-checkbox-label"><input type="checkbox" name="canUsers" value="true" disabled style="width:auto; margin-right:.35rem; cursor: not-allowed; opacity: 0.6;"> Add Member<span class="admin-checkbox-tooltip">You don't have permission to edit</span></label>
+            <label class="admin-checkbox-label"><input type="checkbox" name="canLogs" value="true" disabled style="width:auto; margin-right:.35rem; cursor: not-allowed; opacity: 0.6;"> Logs<span class="admin-checkbox-tooltip">You don't have permission to edit</span></label>
           </div>
           <small style="display:block; color:var(--muted); font-size:.85rem; margin-top:.25rem;">
             Permissions default to off for new members.
