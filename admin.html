@@ -309,6 +309,49 @@ body{
 
 .permission-toggle.disabled {
   opacity: 0.6;
+  cursor: not-allowed;
+  position: relative;
+}
+
+.permission-toggle.disabled::after {
+  content: 'You don\'t have permission to edit';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  margin-bottom: 0.5rem;
+  z-index: 1000;
+}
+
+.permission-toggle.disabled:hover::after {
+  opacity: 1;
+}
+
+.permission-toggle.disabled::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% - 5px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(0, 0, 0, 0.9);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+  z-index: 1000;
+}
+
+.permission-toggle.disabled:hover::before {
+  opacity: 1;
 }
 
 .form-group small{
@@ -908,27 +951,45 @@ body{
             <input type="url" name="cvLink" placeholder="https://...">
           </div>
         </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" name="location" placeholder="e.g., Istanbul, Turkey">
+          </div>
+        </div>
         <div class="form-group">
-          <label>
-            <input type="checkbox" name="isAdmin" value="true" style="width:auto; margin-right:.5rem;">
+          <label class="permission-toggle disabled" style="display:inline-flex; align-items:center; gap:.5rem; padding:.5rem 0; cursor:not-allowed;">
+            <input type="checkbox" name="isAdmin" value="true" disabled style="width:auto; margin-right:.5rem; cursor:not-allowed;">
             Admin User
           </label>
           <small style="display:block; color:var(--muted); font-size:.85rem; margin-top:.25rem;">
-            Check this box to make this user an admin
+            You don't have permission to grant admin status
           </small>
         </div>
         <div class="form-group">
           <label>Admin Permissions</label>
           <div style="display:flex; flex-wrap:wrap; gap:.75rem;">
-            <label><input type="checkbox" name="canTalentPool" value="true" style="width:auto; margin-right:.35rem;"> Talent Pool</label>
-            <label><input type="checkbox" name="canStartups" value="true" style="width:auto; margin-right:.35rem;"> Startup Hub</label>
-            <label><input type="checkbox" name="canNews" value="true" style="width:auto; margin-right:.35rem;"> News</label>
-            <label><input type="checkbox" name="canLegacy" value="true" style="width:auto; margin-right:.35rem;"> Legacy</label>
-            <label><input type="checkbox" name="canUsers" value="true" style="width:auto; margin-right:.35rem;"> Add Member</label>
-            <label><input type="checkbox" name="canLogs" value="true" style="width:auto; margin-right:.35rem;"> Logs</label>
+            <label class="permission-toggle disabled" style="display:inline-flex; align-items:center; gap:.35rem; cursor:not-allowed;">
+              <input type="checkbox" name="canTalentPool" value="true" disabled style="width:auto; margin-right:.35rem; cursor:not-allowed;"> Talent Pool
+            </label>
+            <label class="permission-toggle disabled" style="display:inline-flex; align-items:center; gap:.35rem; cursor:not-allowed;">
+              <input type="checkbox" name="canStartups" value="true" disabled style="width:auto; margin-right:.35rem; cursor:not-allowed;"> Startup Hub
+            </label>
+            <label class="permission-toggle disabled" style="display:inline-flex; align-items:center; gap:.35rem; cursor:not-allowed;">
+              <input type="checkbox" name="canNews" value="true" disabled style="width:auto; margin-right:.35rem; cursor:not-allowed;"> News
+            </label>
+            <label class="permission-toggle disabled" style="display:inline-flex; align-items:center; gap:.35rem; cursor:not-allowed;">
+              <input type="checkbox" name="canLegacy" value="true" disabled style="width:auto; margin-right:.35rem; cursor:not-allowed;"> Legacy
+            </label>
+            <label class="permission-toggle disabled" style="display:inline-flex; align-items:center; gap:.35rem; cursor:not-allowed;">
+              <input type="checkbox" name="canUsers" value="true" disabled style="width:auto; margin-right:.35rem; cursor:not-allowed;"> Add Member
+            </label>
+            <label class="permission-toggle disabled" style="display:inline-flex; align-items:center; gap:.35rem; cursor:not-allowed;">
+              <input type="checkbox" name="canLogs" value="true" disabled style="width:auto; margin-right:.35rem; cursor:not-allowed;"> Logs
+            </label>
           </div>
           <small style="display:block; color:var(--muted); font-size:.85rem; margin-top:.25rem;">
-            Permissions default to off for new members.
+            You don't have permission to edit admin permissions
           </small>
         </div>
         <button type="submit" class="btn btn-primary">
@@ -2396,35 +2457,35 @@ function renderAdminAccessList() {
           <p><strong>Master:</strong> ${isMasterUser ? 'Yes' : 'No'}</p>
         </div>
         <div class="item-actions">
-          <label class="${adminToggleClass}">
+          <label class="${adminToggleClass}" title="${isMasterUser ? 'You don\'t have permission to edit' : ''}">
             <input type="checkbox" data-field="isAdmin" ${isAdminUser ? 'checked' : ''} ${disabledAttr}>
             Admin
           </label>
-          <label class="${permToggleClass}">
+          <label class="${permToggleClass}" title="${(!isAdminUser || isMasterUser) ? 'You don\'t have permission to edit' : ''}">
             <input type="checkbox" data-field="canTalentPool" ${user.canTalentPool === true ? 'checked' : ''} ${permDisabledAttr}>
             Talent Pool
           </label>
-          <label class="${permToggleClass}">
+          <label class="${permToggleClass}" title="${(!isAdminUser || isMasterUser) ? 'You don\'t have permission to edit' : ''}">
             <input type="checkbox" data-field="canStartups" ${user.canStartups === true ? 'checked' : ''} ${permDisabledAttr}>
             Startups
           </label>
-          <label class="${permToggleClass}">
+          <label class="${permToggleClass}" title="${(!isAdminUser || isMasterUser) ? 'You don\'t have permission to edit' : ''}">
             <input type="checkbox" data-field="canNews" ${user.canNews === true ? 'checked' : ''} ${permDisabledAttr}>
             News
           </label>
-          <label class="${permToggleClass}">
+          <label class="${permToggleClass}" title="${(!isAdminUser || isMasterUser) ? 'You don\'t have permission to edit' : ''}">
             <input type="checkbox" data-field="canLegacy" ${user.canLegacy === true ? 'checked' : ''} ${permDisabledAttr}>
             Legacy
           </label>
-          <label class="${permToggleClass}">
+          <label class="${permToggleClass}" title="${(!isAdminUser || isMasterUser) ? 'You don\'t have permission to edit' : ''}">
             <input type="checkbox" data-field="canUsers" ${user.canUsers === true ? 'checked' : ''} ${permDisabledAttr}>
             Users
           </label>
-          <label class="${permToggleClass}">
+          <label class="${permToggleClass}" title="${(!isAdminUser || isMasterUser) ? 'You don\'t have permission to edit' : ''}">
             <input type="checkbox" data-field="canLogs" ${user.canLogs === true ? 'checked' : ''} ${permDisabledAttr}>
             Logs
           </label>
-          <button class="btn btn-small btn-primary" data-action="save-permissions" data-username="${escapeHtml(user.username || '')}" ${disabledAttr}>
+          <button class="btn btn-small btn-primary" data-action="save-permissions" data-username="${escapeHtml(user.username || '')}" ${disabledAttr} title="${isMasterUser ? 'You don\'t have permission to edit' : ''}">
             <i class="fas fa-save"></i> Save
           </button>
         </div>
