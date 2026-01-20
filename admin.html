@@ -1060,13 +1060,8 @@ if (isMaster === true) {
 // Generate unique session ID
 const sessionId = `admin_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-// Keypress logging (debounced to avoid spam)
-let keypressBuffer = [];
-let keypressTimeout = null;
-const KEYPRESS_DEBOUNCE_MS = 5000; // Log keypresses every 5 seconds
-
 // Log function
-async function logAdminAction(actionType, details = {}, keyPressed = null, keyCode = null) {
+async function logAdminAction(actionType, details = {}) {
   if (!username) return;
   
   try {
@@ -1074,8 +1069,6 @@ async function logAdminAction(actionType, details = {}, keyPressed = null, keyCo
       adminUsername: username,
       actionType,
       details,
-      keyPressed,
-      keyCode,
       sessionId,
       timestamp: new Date().toISOString()
     };
@@ -1089,27 +1082,6 @@ async function logAdminAction(actionType, details = {}, keyPressed = null, keyCo
     console.error('Failed to log admin action:', err);
     // Silently fail - don't interrupt user experience
   }
-}
-
-// Log keypress (debounced)
-function logKeypress(key, code) {
-  keypressBuffer.push({ key, code, timestamp: Date.now() });
-  
-  // Clear existing timeout
-  if (keypressTimeout) {
-    clearTimeout(keypressTimeout);
-  }
-  
-  // Set new timeout to batch log keypresses
-  keypressTimeout = setTimeout(() => {
-    if (keypressBuffer.length > 0) {
-      logAdminAction('keypress', {
-        keypressCount: keypressBuffer.length,
-        keys: keypressBuffer.map(k => ({ key: k.key, code: k.code, timestamp: k.timestamp }))
-      });
-      keypressBuffer = [];
-    }
-  }, KEYPRESS_DEBOUNCE_MS);
 }
 
 // Log page enter
@@ -1149,16 +1121,6 @@ document.addEventListener('visibilitychange', () => {
       url: window.location.href
     });
   }
-});
-
-// Log all keypresses
-document.addEventListener('keydown', (e) => {
-  // Don't log special keys that are used for navigation
-  if (['Tab', 'Shift', 'Control', 'Alt', 'Meta', 'Escape'].includes(e.key)) {
-    return;
-  }
-  
-  logKeypress(e.key, e.keyCode || e.code);
 });
 
 // ==================== END ADMIN LOGGING SYSTEM ====================
@@ -1216,7 +1178,6 @@ if (isMaster === true && permissions.canLogs === true) {
             <option value="delete_legacy">Delete Legacy</option>
             <option value="add_user">Add User</option>
             <option value="view_applicants">View Applicants</option>
-            <option value="keypress">Keypress</option>
           </select>
           <input type="number" id="logLimit" value="100" min="10" max="1000" style="padding: 0.75rem 1.25rem; border-radius: 12px; border: 2px solid var(--border); background: var(--card-bg); font-size: 0.95rem; width: 120px; font-family: inherit; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);" placeholder="Limit">
           <button class="btn btn-primary" onclick="loadLogs()">
@@ -2346,7 +2307,6 @@ async function loadLogs() {
                 'add_user': { bg: '#d1fae5', color: '#065f46' }, // Green
                 'grant_admin': { bg: '#fed7aa', color: '#9a3412' }, // Orange - Critical action
                 'view_applicants': { bg: '#dbeafe', color: '#1e40af' }, // Blue
-                'keypress': { bg: '#f3f4f6', color: '#374151' }, // Gray
                 'form_submit': { bg: '#e9d5ff', color: '#6b21a8' }, // Purple
                 'form_reset': { bg: '#fef3c7', color: '#92400e' } // Yellow
               };
@@ -2374,7 +2334,6 @@ async function loadLogs() {
                 }
                 else if (log.details.companyName) detailsText = log.details.companyName;
                 else if (log.details.tabId) detailsText = log.details.tabId;
-                else if (log.details.keypressCount) detailsText = `${log.details.keypressCount} keys`;
                 else detailsText = 'View details';
               }
               
