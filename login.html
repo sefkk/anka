@@ -11,35 +11,30 @@
 </head>
 <body class="login-body">
 
-    <!-- Navbar -->
-    <header>
-        <div id="navbar"></div>
-    </header>
-
     <section>
     <div class="login-container">
         <div class="login-box">
             <div class="icon">
                 <img src="Images/anka-logo.png" alt="Login Icon">
             </div>
-            <h2>Member Login</h2> 
-            <p>Please enter your username and password given to you by ANKA's HR Committee.</p>
+            <h2 data-i18n="login.title">Member Login</h2> 
+            <p data-i18n="login.subtitle">Please enter your username and password given to you by ANKA's HR Committee.</p>
             <form id="loginForm">
                 <div class="input-group">
-                    <input type="text" id="username" name="username" placeholder="username" required>
+                    <input type="text" id="username" name="username" placeholder="username" data-i18n-placeholder="login.username" required>
                 </div>
                 <div class="input-group">
-                    <input type="password" id="password" name="password" placeholder="password" required>
+                    <input type="password" id="password" name="password" placeholder="password" data-i18n-placeholder="login.password" required>
                 </div>
                 <div class="forgot-password">
                     <!-- <a href="#">Forgot Password &#x1F449;&#x1F448;</a> --> 
                 </div>
-                <button type="submit" id="loginBtn" class="btn">Log In</button>
+                <button type="submit" id="loginBtn" class="btn" data-i18n="login.submit">Log In</button>
             </form>
 
             <!-- Home link -->
             <p class="home-link">
-                <a class="home-button" href="index.html">🏠 Back to Home Page</a>
+                <a class="home-button" href="index.html" data-i18n="login.home">🏠 Back to Home Page</a>
             </p>
 
 
@@ -53,6 +48,7 @@
     </div>
     </section>
 
+    <script src="i18n.js"></script>
     <script src="login.js" defer></script>
     
 </body>

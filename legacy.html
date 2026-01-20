@@ -361,21 +361,21 @@
 <!-- Greeting -->
 <section class="greeting-banner-srthub">
   <div class="greeting-content-srthub">
-    <h1>ANKA Legacy</h1>
-    <h1>Honoring Our Past Members</h1>
-    <p>Throughout the years, ANKA has been shaped by dedicated individuals who have contributed their time, energy, and passion to our community. This page honors all those who have served in various positions, helping build ANKA into what it is today. Explore our history and the remarkable people who have been part of our journey.</p>
+    <h1 data-i18n="legacy.hero.title">ANKA Legacy</h1>
+    <h1 data-i18n="legacy.hero.subtitle">Honoring Our Past Members</h1>
+    <p data-i18n="legacy.hero.body">Throughout the years, ANKA has been shaped by dedicated individuals who have contributed their time, energy, and passion to our community. This page honors all those who have served in various positions, helping build ANKA into what it is today. Explore our history and the remarkable people who have been part of our journey.</p>
   </div>
 </section>
 
 <main class="container-legacy" aria-labelledby="legacy-title">
   <header class="header-legacy">
-    <h1 id="legacy-title">Past Members</h1>
-    <p>Celebrating the contributions of our alumni</p>
+    <h1 id="legacy-title" data-i18n="legacy.header.title">Past Members</h1>
+    <p data-i18n="legacy.header.subtitle">Celebrating the contributions of our alumni</p>
   </header>
 
   <!-- Year Filter -->
   <div class="year-filter-container">
-    <label for="yearSelect" class="year-filter-label">Filter by Year:</label>
+    <label for="yearSelect" class="year-filter-label" data-i18n="legacy.filter.label">Filter by Year:</label>
     <select id="yearSelect" class="year-select">
       <option value="all">All Years</option>
       <!-- Years will be populated dynamically -->
@@ -392,12 +392,16 @@
 <div id="footer"></div>
 
 <!-- Javascript Sources -->
+<script src="i18n.js"></script>
 <script>
   // Load navbar and footer
   fetch('Partials/navbar.html')
     .then(res => res.text())
     .then(data => {
       document.getElementById('navbar').innerHTML = data;
+      if (window.initI18n) {
+        window.initI18n();
+      }
     });
 
   fetch('Partials/footer.html')
@@ -406,32 +410,35 @@
       document.getElementById('footer').innerHTML = data;
     });
 
+  const t = (key, fallback) =>
+    (window.getI18nString ? window.getI18nString(key) : '') || fallback;
+
   // Category configuration
   const categories = {
     "board": {
-      title: "Board Committee",
+      titleKey: "legacy.categories.board",
       order: 1
     },
     "vice-chair": {
-      title: "Vice Chairs",
+      titleKey: "legacy.categories.vice_chair",
       order: 2
     },
     "committee": {
-      title: "Committee Members",
+      titleKey: "legacy.categories.committee",
       order: 3
     }
   };
 
   // Subcategory display names
   const subcategoryNames = {
-    'it': 'IT Committee',
-    'marketing': 'Marketing Committee',
-    'entrepreneurship': 'Entrepreneurship & Business Committee',
-    'academic': 'Academic Support Committee',
-    'event': 'Event Planning Committee',
-    'hr': 'HR Committee',
-    'law': 'Law Committee',
-    'int-relations': 'International Relations Committee'
+    'it': 'legacy.subcategories.it',
+    'marketing': 'legacy.subcategories.marketing',
+    'entrepreneurship': 'legacy.subcategories.entrepreneurship',
+    'academic': 'legacy.subcategories.academic',
+    'event': 'legacy.subcategories.event',
+    'hr': 'legacy.subcategories.hr',
+    'law': 'legacy.subcategories.law',
+    'int-relations': 'legacy.subcategories.ir'
   };
 
   // Global variable to store legacy members
@@ -450,11 +457,11 @@
       if (!response.ok) {
         if (response.status === 404) {
           console.warn('Legacy endpoint not found (404). Backend might need deployment.');
-          document.getElementById('legacySections').innerHTML = '<p style="text-align:center; color:var(--muted); padding:3rem;">Legacy feature is being set up. Please check back later.</p>';
+          document.getElementById('legacySections').innerHTML = `<p style="text-align:center; color:var(--muted); padding:3rem;">${t('legacy.messages.setup', 'Legacy feature is being set up. Please check back later.')}</p>`;
           return;
         }
         console.error('Failed to fetch legacy members:', response.status, response.statusText);
-        document.getElementById('legacySections').innerHTML = '<p style="text-align:center; color:var(--muted); padding:3rem;">Failed to load legacy members. Please try again later.</p>';
+        document.getElementById('legacySections').innerHTML = `<p style="text-align:center; color:var(--muted); padding:3rem;">${t('legacy.messages.error', 'Failed to load legacy members. Please try again later.')}</p>`;
         return;
       }
       
@@ -463,7 +470,7 @@
       
       if (!Array.isArray(members)) {
         console.error('Legacy members is not an array:', members);
-        document.getElementById('legacySections').innerHTML = '<p style="text-align:center; color:var(--muted); padding:3rem;">No legacy members available.</p>';
+        document.getElementById('legacySections').innerHTML = `<p style="text-align:center; color:var(--muted); padding:3rem;">${t('legacy.messages.empty', 'No legacy members available.')}</p>`;
         return;
       }
       
@@ -475,7 +482,7 @@
       
     } catch (err) {
       console.error('Failed to load legacy members:', err);
-      document.getElementById('legacySections').innerHTML = '<p style="text-align:center; color:var(--muted); padding:3rem;">Failed to load legacy members. Please try again later.</p>';
+      document.getElementById('legacySections').innerHTML = `<p style="text-align:center; color:var(--muted); padding:3rem;">${t('legacy.messages.error', 'Failed to load legacy members. Please try again later.')}</p>`;
     }
   }
 
@@ -495,7 +502,7 @@
     const yearSelect = document.getElementById('yearSelect');
     
     // Clear existing options except "All Years"
-    yearSelect.innerHTML = '<option value="all">All Years</option>';
+    yearSelect.innerHTML = `<option value="all">${t('legacy.filter.all', 'All Years')}</option>`;
     
     // Add year options
     years.forEach(year => {
@@ -515,7 +522,7 @@
       sectionsContainer.innerHTML = `
         <div class="no-results">
           <i class="fas fa-search"></i>
-          <p>No legacy members available.</p>
+          <p>${t('legacy.messages.empty', 'No legacy members available.')}</p>
         </div>
       `;
       return;
@@ -530,7 +537,7 @@
       sectionsContainer.innerHTML = `
         <div class="no-results">
           <i class="fas fa-search"></i>
-          <p>No members found for the selected year.</p>
+          <p>${t('legacy.messages.no_year', 'No members found for the selected year.')}</p>
         </div>
       `;
       return;
@@ -576,7 +583,7 @@
         
         const mainSectionTitle = document.createElement('h2');
         mainSectionTitle.className = 'legacy-section-title';
-        mainSectionTitle.textContent = categories[categoryKey].title;
+        mainSectionTitle.textContent = t(categories[categoryKey].titleKey, '');
         mainSection.appendChild(mainSectionTitle);
 
         // Sort subcategories for consistent display
@@ -592,7 +599,8 @@
           
           const subsectionTitle = document.createElement('h3');
           subsectionTitle.style.cssText = 'font-size: clamp(20px, 2.5vw, 28px); font-weight: 700; color: var(--brand-navy); margin-bottom: 24px; text-align: center; letter-spacing: 0.03em;';
-          subsectionTitle.textContent = subcategoryNames[subcat] || subcat;
+          const subcatKey = subcategoryNames[subcat];
+          subsectionTitle.textContent = subcatKey ? t(subcatKey, subcat) : subcat;
           subsection.appendChild(subsectionTitle);
 
           const grid = document.createElement('div');
@@ -601,7 +609,8 @@
           subcatMembers.forEach(member => {
             const card = document.createElement('article');
             card.className = 'card';
-            card.setAttribute('aria-label', `Past Member: ${member.name}`);
+            const ariaTemplate = t('legacy.aria.past_member', 'Past Member: {name}');
+            card.setAttribute('aria-label', ariaTemplate.replace('{name}', member.name));
             
             const linkedinUrl = member.linkedin || '#';
             const hasLinkedIn = member.linkedin && member.linkedin !== '#';
@@ -631,7 +640,7 @@
         
         const sectionTitle = document.createElement('h2');
         sectionTitle.className = 'legacy-section-title';
-        sectionTitle.textContent = categories[categoryKey].title;
+        sectionTitle.textContent = t(categories[categoryKey].titleKey, '');
         section.appendChild(sectionTitle);
 
         const grid = document.createElement('div');
@@ -640,7 +649,8 @@
         categoryMembers.forEach(member => {
           const card = document.createElement('article');
           card.className = 'card';
-          card.setAttribute('aria-label', `Past Member: ${member.name}`);
+          const ariaTemplate = t('legacy.aria.past_member', 'Past Member: {name}');
+          card.setAttribute('aria-label', ariaTemplate.replace('{name}', member.name));
           
           const linkedinUrl = member.linkedin || '#';
           const hasLinkedIn = member.linkedin && member.linkedin !== '#';

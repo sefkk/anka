@@ -13,17 +13,24 @@
   <!-- Navbar -->
   <header class="navbar">
     <div class="container nav-container">
-      <h1 class="logo"><a href="../loggedIn.html">myANKA</a></h1>
+      <h1 class="logo"><a href="../loggedIn.html" data-i18n="tp.nav.brand">myANKA</a></h1>
       <input type="checkbox" id="menu-toggle-tp" class="menu-toggle-tp" />
       <label for="menu-toggle-tp" class="hamburger-tp">&#9776;</label>
       <nav class="menu">
-        <a href="../Talent-Pool/talent-pool.html">TalentPool</a>
-        <a href="../Talent-Pool/job-search.html">Find Jobs</a>
-        <a href="../Talent-Pool/my-profile.html">My Profile</a>
-        <a href="../Talent-Pool/faq.html">FAQ</a>
+        <a href="../Talent-Pool/talent-pool.html" data-i18n="tp.nav.talent">TalentPool</a>
+        <a href="../Talent-Pool/job-search.html" data-i18n="tp.nav.jobs">Find Jobs</a>
+        <a href="../Talent-Pool/my-profile.html" data-i18n="tp.nav.profile">My Profile</a>
+        <a href="../Talent-Pool/faq.html" data-i18n="tp.nav.faq">FAQ</a>
       </nav>
-      <div class="auth-links">
-        <a href="#" class="login-link" id="welcomeMessage"></a>
+      <div class="nav-right">
+        <div class="auth-links">
+          <a href="#" class="login-link" id="welcomeMessage"></a>
+        </div>
+        <div class="lang-toggle" aria-label="Language selector">
+          <button type="button" class="lang-btn" data-lang="en">ENG</button>
+          <span class="lang-sep">|</span>
+          <button type="button" class="lang-btn" data-lang="tr">TR</button>
+        </div>
       </div>
     </div>
   </header>
@@ -31,36 +38,36 @@
   <!-- Job Search Filters Section -->
   <section class="job-search-section">
     <div class="container">
-      <h2>Job Search</h2>
+      <h2 data-i18n="tp.jobs.title">Job Search</h2>
 
       <div class="job-filters">
         <div class="filter">
-          <label for="jobType">Job Type</label>
+          <label for="jobType" data-i18n="tp.jobs.filters.type">Job Type</label>
           <select id="jobType">
-            <option value="">Select Job Type</option>
-            <option value="full-time">Full-time</option>
-            <option value="part-time">Part-time</option>
+            <option value="" data-i18n="tp.jobs.filters.type_placeholder">Select Job Type</option>
+            <option value="full-time" data-i18n="tp.jobs.filters.type_full">Full-time</option>
+            <option value="part-time" data-i18n="tp.jobs.filters.type_part">Part-time</option>
           </select>
         </div>
 
         <div class="filter">
-          <label for="experienceLevel">Experience Level</label>
+          <label for="experienceLevel" data-i18n="tp.jobs.filters.experience">Experience Level</label>
           <select id="experienceLevel">
-            <option value="">Select Experience Level</option>
-            <option value="internship">Internship</option>
-            <option value="junior">Junior / Entry</option>
-            <option value="mid">Mid Level</option>
-            <option value="senior">Senior</option>
+            <option value="" data-i18n="tp.jobs.filters.experience_placeholder">Select Experience Level</option>
+            <option value="internship" data-i18n="tp.jobs.filters.experience_intern">Internship</option>
+            <option value="junior" data-i18n="tp.jobs.filters.experience_junior">Junior / Entry</option>
+            <option value="mid" data-i18n="tp.jobs.filters.experience_mid">Mid Level</option>
+            <option value="senior" data-i18n="tp.jobs.filters.experience_senior">Senior</option>
           </select>
         </div>
 
         <div class="filter">
-          <label for="location">Location</label>
-          <input type="text" id="location" placeholder="Enter location">
+          <label for="location" data-i18n="tp.jobs.filters.location">Location</label>
+          <input type="text" id="location" placeholder="Enter location" data-i18n-placeholder="tp.jobs.filters.location_placeholder">
         </div>
 
         <div class="filter">
-          <button class="btn primary">Search</button>
+          <button class="btn primary" data-i18n="tp.jobs.filters.search">Search</button>
         </div>
       </div>
     </div>
@@ -68,7 +75,7 @@
 
   <!-- Job Results Section -->
   <section class="job-results-section container">
-    <h3>Available Jobs</h3>
+    <h3 data-i18n="tp.jobs.results.title">Available Jobs</h3>
     <div id="job-results" class="card-grid">
       <!-- Jobs will be injected here dynamically -->
     </div>
@@ -85,6 +92,7 @@
   <div id="footer"></div>
 
   <!-- Javascript Sources -->
+  <script src="../i18n.js"></script>
   <script>
     fetch('../Partials/footer-loggedin.html')
       .then(res => res.text())
@@ -125,6 +133,9 @@
           });
       });
 
+    const t = (key, fallback) =>
+      (window.getI18nString ? window.getI18nString(key) : '') || fallback;
+
     const isLoggedIn = sessionStorage.getItem('isLoggedIn');
     if (isLoggedIn !== 'true') {
         window.location.href = '../login.html';
@@ -132,9 +143,10 @@
         const userName = sessionStorage.getItem('name');
         const welcomeElement = document.getElementById('welcomeMessage');
         if (userName) {
-            welcomeElement.textContent = `Welcome ${userName}!`;
+            const template = t('tp.welcome', 'Welcome {name}!');
+            welcomeElement.textContent = template.replace('{name}', userName);
         } else {
-            welcomeElement.textContent = "Welcome member!";
+            welcomeElement.textContent = t('tp.welcome_member', 'Welcome member!');
         }
     }
   </script>

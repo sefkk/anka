@@ -19,51 +19,51 @@
 <div class="container">
     <!-- Hero -->
     <section class="hero hero-it">
-      <h1>IT Committee</h1>
-      <p>Driving innovation and digital transformation through technology and technical support at ANKA.</p>
+      <h1 data-i18n="committee_it.hero.title">IT Committee</h1>
+      <p data-i18n="committee_it.hero.body">Driving innovation and digital transformation through technology and technical support at ANKA.</p>
     </section>
     
     <!-- Team -->
     <section class="team team-it">
-      <h2 style="color:#800020; margin-bottom: 30px;" class="team-title">Our Team</h2>
+      <h2 style="color:#800020; margin-bottom: 30px;" class="team-title" data-i18n="committee_it.team.title">Our Team</h2>
       <div class="team-grid">
         <div class="team-member team-member-it">
           <img src="../about-us/img/orkun-min.JPG" alt="Member Name" />
           <h3>Orkun Sefik</h3>
-          <p>Chair</p>
+          <p data-i18n="committee_it.team.member1.role">Chair</p>
         </div>
         <div class="team-member team-member-it">
           <img src="../about-us/img/eda_c.JPG" alt="Member Name" />
           <h3>Eda Cetinkaya</h3>
-          <p>Vice Chair</p>
+          <p data-i18n="committee_it.team.member2.role">Vice Chair</p>
         </div>
         <div class="team-member team-member-it">
           <img src="../about-us/img/emre_y.jpeg" alt="Member Name" />
           <h3>Emre Yenen</h3>
-          <p>Data Analyst</p>
+          <p data-i18n="committee_it.team.member3.role">Data Analyst</p>
         </div>
         <div class="team-member team-member-it">
           <img src="../about-us/img/ipek.jpg" alt="Member Name" />
           <h3>İpek Öner</h3>
-          <p>Web Developer</p>
+          <p data-i18n="committee_it.team.member4.role">Web Developer</p>
         </div>
       </div>
     </section>
 
     <!-- Responsibilities -->
     <section class="responsibilities responsibilities-it">
-      <h2>Key Responsibilities</h2>
+      <h2 data-i18n="committee_it.responsibilities.title">Key Responsibilities</h2>
       <ul>
-        <li>Maintain and update ANKA’s website and digital platforms.</li>
-        <li>Develop software solutions to improve internal workflows.</li>
-        <li>Provide IT support to ANKA staff and committees.</li>
-        <li>Manage data security and privacy protocols.</li>
-        <li>Research and implement new technologies.</li>
-        <li>Develop and maintain the official ANKA website and internal systems.</li>
-        <li>Manage technical infrastructure including payment and security systems.</li>
-        <li>Provide technical support to other committees.</li>
-        <li>Improve automation and data handling tools.</li>
-        <li>Ensure cybersecurity and data protection across platforms.</li>
+        <li data-i18n="committee_it.responsibilities.item1">Maintain and update ANKA’s website and digital platforms.</li>
+        <li data-i18n="committee_it.responsibilities.item2">Develop software solutions to improve internal workflows.</li>
+        <li data-i18n="committee_it.responsibilities.item3">Provide IT support to ANKA staff and committees.</li>
+        <li data-i18n="committee_it.responsibilities.item4">Manage data security and privacy protocols.</li>
+        <li data-i18n="committee_it.responsibilities.item5">Research and implement new technologies.</li>
+        <li data-i18n="committee_it.responsibilities.item6">Develop and maintain the official ANKA website and internal systems.</li>
+        <li data-i18n="committee_it.responsibilities.item7">Manage technical infrastructure including payment and security systems.</li>
+        <li data-i18n="committee_it.responsibilities.item8">Provide technical support to other committees.</li>
+        <li data-i18n="committee_it.responsibilities.item9">Improve automation and data handling tools.</li>
+        <li data-i18n="committee_it.responsibilities.item10">Ensure cybersecurity and data protection across platforms.</li>
       </ul>
     </section>
   </div>
@@ -72,11 +72,15 @@
 <div id="footer"></div>
 
 <!-- Javascript Sources -->
+<script src="../i18n.js"></script>
 <script>
   fetch('../Partials/navbar.html')
     .then(res => res.text())
     .then(data => {
       document.getElementById('navbar').innerHTML = data;
+      if (window.initI18n) {
+        window.initI18n();
+      }
     });
 
   fetch('../Partials/footer.html')

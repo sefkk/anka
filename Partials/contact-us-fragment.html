@@ -1,23 +1,23 @@
 
-<section class="contact-section">
-    <h2>Contact Us</h2>
-    <p class="contact-intro">Do you have further questions that haven't been answered through the FAQ? </p>
-    <p class="contact-intro">Feel free to reach out to us anytime through the form below. Without you, we're one person short!</p>
+  <section class="contact-section">
+    <h2 data-i18n="contact.title">Contact Us</h2>
+    <p class="contact-intro" data-i18n="contact.intro1">Do you have further questions that haven't been answered through the FAQ? </p>
+    <p class="contact-intro" data-i18n="contact.intro2">Feel free to reach out to us anytime through the form below. Without you, we're one person short!</p>
     <div class="contact-container">
       
       <!-- Contact Form -->
       <form class="contact-form" action="https://formsubmit.co/ankait.nl@gmail.com" method="POST">
-      <input type="text" name="name" placeholder="Your Name" required>
-      <input type="email" name="email" placeholder="Your Email" required>
-      <input type="text" name="subject" placeholder="Subject" required>
-      <textarea name="message" placeholder="Your Message" rows="6" required></textarea>
-      <button type="submit">Send Message</button>
+      <input type="text" name="name" placeholder="Your Name" data-i18n-placeholder="contact.form.name" required>
+      <input type="email" name="email" placeholder="Your Email" data-i18n-placeholder="contact.form.email" required>
+      <input type="text" name="subject" placeholder="Subject" data-i18n-placeholder="contact.form.subject" required>
+      <textarea name="message" placeholder="Your Message" data-i18n-placeholder="contact.form.message" rows="6" required></textarea>
+      <button type="submit" data-i18n="contact.form.submit">Send Message</button>
     </form>
   
       <!-- Contact Info -->
       <div class="contact-info">
-        <h3>Get in Touch</h3>
-        <p><i class="fas fa-map-marker-alt"></i> Netherlands</p>
+        <h3 data-i18n="contact.info.title">Get in Touch</h3>
+        <p><i class="fas fa-map-marker-alt"></i> <span data-i18n="contact.info.location">Netherlands</span></p>
         <p><i class="fas fa-envelope"></i> info@associationanka.org</p>
         <p><i class="fas fa-phone-alt"></i> +31 6 87985485 </p>
         <div class="social-links">

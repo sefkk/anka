@@ -23,8 +23,8 @@
 <!-- News Section -->
 <section class="news-hero-section">
     <div class="news-hero-content">
-        <h1>ANKA News</h1>
-        <p>Stay updated with the latest from ANKA Association</p>
+        <h1 data-i18n="news.hero.title">ANKA News</h1>
+        <p data-i18n="news.hero.subtitle">Stay updated with the latest from ANKA Association</p>
     </div>
 </section>
 <section class="news-cards-section">
@@ -52,11 +52,15 @@
 <div id="footer"></div>
 
 <!-- Javascript Sources -->
+<script src="i18n.js"></script>
 <script>
   fetch('Partials/navbar.html')
     .then(res => res.text())
     .then(data => {
       document.getElementById('navbar').innerHTML = data;
+      if (window.initI18n) {
+        window.initI18n();
+      }
     });
 
   fetch('Partials/footer.html')
@@ -66,6 +70,9 @@
     });
 
   // Load News from API
+  const t = (key, fallback) =>
+    (window.getI18nString ? window.getI18nString(key) : '') || fallback;
+
   async function loadNews() {
     const container = document.getElementById('newsCardsContainer');
     const API_URL = 'https://anka-vkrl.onrender.com/api/news';
@@ -80,11 +87,11 @@
         // If 404, backend might not be deployed or endpoint doesn't exist
         if (response.status === 404) {
           console.warn('News endpoint not found (404). Backend might need deployment.');
-          container.innerHTML = '<p style="text-align:center; color:#6b6b6b; padding:3rem;">News feature is being set up. Please check back later.</p>';
+          container.innerHTML = `<p style="text-align:center; color:#6b6b6b; padding:3rem;">${t('news.messages.setup', 'News feature is being set up. Please check back later.')}</p>`;
           return;
         }
         console.error('Failed to fetch news:', response.status, response.statusText);
-        container.innerHTML = '<p style="text-align:center; color:#6b6b6b; padding:3rem;">Failed to load news. Please try again later.</p>';
+        container.innerHTML = `<p style="text-align:center; color:#6b6b6b; padding:3rem;">${t('news.messages.error', 'Failed to load news. Please try again later.')}</p>`;
         return;
       }
       
@@ -93,12 +100,12 @@
       
       if (!Array.isArray(news)) {
         console.error('News is not an array:', news);
-        container.innerHTML = '<p style="text-align:center; color:#6b6b6b; padding:3rem;">No news available.</p>';
+        container.innerHTML = `<p style="text-align:center; color:#6b6b6b; padding:3rem;">${t('news.messages.empty', 'No news available.')}</p>`;
         return;
       }
       
       if (news.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#6b6b6b; padding:3rem;">No news available.</p>';
+        container.innerHTML = `<p style="text-align:center; color:#6b6b6b; padding:3rem;">${t('news.messages.empty', 'No news available.')}</p>`;
         return;
       }
       
@@ -115,7 +122,7 @@
       attachNewsModalListeners();
     } catch (err) {
       console.error('Failed to load news:', err);
-      container.innerHTML = '<p style="text-align:center; color:#6b6b6b; padding:3rem;">Failed to load news. Please try again later.</p>';
+      container.innerHTML = `<p style="text-align:center; color:#6b6b6b; padding:3rem;">${t('news.messages.error', 'Failed to load news. Please try again later.')}</p>`;
     }
   }
 

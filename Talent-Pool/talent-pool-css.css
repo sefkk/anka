@@ -33,6 +33,23 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.nav-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.logo {
+  margin: 0;
+  line-height: 1;
+  display: flex;
+  align-items: center;
 }
 
 .logo a{
@@ -42,6 +59,7 @@ body {
   font-weight: 700;
   font-size: 26px;
   text-decoration: none;
+  display: inline-block;
 }
 
 .logo a:hover {
@@ -50,6 +68,14 @@ body {
 }
 
 /* Keep existing menu styles */
+.menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  margin: 0 10px 0 150px;
+}
+
 .menu a {
   margin-right: 25px;
   text-decoration: none;
@@ -876,6 +902,46 @@ ul{
 
   .card h4 {
     font-size: 18px;
+  }
+}
+
+/* Language toggle */
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lang-btn {
+  border: 1px solid #e6e6e6;
+  background: #fff;
+  color: #333;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.lang-btn.active {
+  background-color: #fff1e6;
+  color: #000;
+  border-color: #f2d3be;
+}
+
+.lang-sep {
+  color: #999;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 900px) {
+  .lang-toggle {
+    margin-top: 8px;
+  }
+
+  .nav-right {
+    width: 100%;
+    justify-content: flex-end;
   }
 }
 
