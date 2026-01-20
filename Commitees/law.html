@@ -19,61 +19,61 @@
 <div class="container">
     <!-- Hero -->
     <section class="hero hero-law">
-      <h1>Law Committee</h1>
-      <p>Driving innovation and digital transformation through technology and technical support at ANKA.</p>
+      <h1 data-i18n="committee_law.hero.title">Law Committee</h1>
+      <p data-i18n="committee_law.hero.body">Driving innovation and digital transformation through technology and technical support at ANKA.</p>
     </section>
 
     <!-- Team -->
     <section class="team team-law">
-      <h2 style="color:#34495e; margin-bottom: 30px;">Our Team</h2>
+      <h2 style="color:#34495e; margin-bottom: 30px;" data-i18n="committee_law.team.title">Our Team</h2>
       <div class="team-grid">
         <div class="team-member team-member-law">
           <img src="../about-us/img/robin.jpeg" alt="Başkan">
           <h3>Robin Pola Ertan</h3> 
-          <p>Chair</p>
+          <p data-i18n="committee_law.team.member1.role">Chair</p>
         </div>
         <div class="team-member team-member-law">
           <img src="../about-us/img/berke.JPG" alt="Başkan Yardımcısı">
           <h3>Berke Çurku</h3>
-          <p>Vice Chair</p>
+          <p data-i18n="committee_law.team.member2.role">Vice Chair</p>
         </div>
         <div class="team-member team-member-law">
           <img src="../about-us/img/asya.JPG" alt="Komite Çalışanı">
           <h3>Asya Kafadar</h3>
-          <p>Communications Officer</p>
+          <p data-i18n="committee_law.team.member3.role">Communications Officer</p>
         </div>
         <div class="team-member team-member-law">
           <img src="../about-us/img/inci.JPG" alt="Komite Çalışanı">
           <h3>İnci Gürbüz</h3>
-          <p>Researcher</p>
+          <p data-i18n="committee_law.team.member4.role">Researcher</p>
         </div>
         <div class="team-member team-member-law">
           <img src="../about-us/img/defne-barutçuoğlu.jpeg" alt="Komite Çalışanı">
           <h3>Defne Barutçuoğlu</h3>
-          <p>Researcher</p>
+          <p data-i18n="committee_law.team.member5.role">Researcher</p>
         </div>
         <div class="team-member team-member-law">
           <img src="../about-us/img/sıla-tanju.jpeg" alt="Komite Çalışanı">
           <h3>Sıla Tanju</h3>
-          <p>Researcher</p>
+          <p data-i18n="committee_law.team.member6.role">Researcher</p>
         </div>
         <div class="team-member team-member-law">
           <img src="../about-us/img/çağan-sertakar.jpeg" alt="Komite Çalışanı">
           <h3>Çağan Sertakar</h3>
-          <p>Researcher</p>
+          <p data-i18n="committee_law.team.member7.role">Researcher</p>
         </div>
       </div>
     </section>
 
     <!-- Responsibilities -->
     <section class="responsibilities responsibilities-law">
-      <h2>Key Responsibilities</h2>
+      <h2 data-i18n="committee_law.responsibilities.title">Key Responsibilities</h2>
       <ul>
-        <li>Ensure all ANKA activities comply with Dutch and international law</li>
-        <li>Provide legal insights and organize law-related seminars</li>
-        <li>Support members with career guidance in the legal field</li>
-        <li>Draft and review contracts and internal regulations</li>
-        <li>Monitor legal risk and ethical practices</li>
+        <li data-i18n="committee_law.responsibilities.item1">Ensure all ANKA activities comply with Dutch and international law</li>
+        <li data-i18n="committee_law.responsibilities.item2">Provide legal insights and organize law-related seminars</li>
+        <li data-i18n="committee_law.responsibilities.item3">Support members with career guidance in the legal field</li>
+        <li data-i18n="committee_law.responsibilities.item4">Draft and review contracts and internal regulations</li>
+        <li data-i18n="committee_law.responsibilities.item5">Monitor legal risk and ethical practices</li>
       </ul>
     </section>
   </div>
@@ -82,11 +82,15 @@
 <div id="footer"></div>
 
 <!-- Javascript Sources -->
+<script src="../i18n.js"></script>
 <script>
   fetch('../Partials/navbar.html')
     .then(res => res.text())
     .then(data => {
       document.getElementById('navbar').innerHTML = data;
+      if (window.initI18n) {
+        window.initI18n();
+      }
     });
 
   fetch('../Partials/footer.html')

@@ -11,20 +11,25 @@
   <label for="menu-toggle" class="hamburger">&#9776;</label>
 
   <ul class="navbar">
-    <li><a href="../index.html">Home</a></li>
+    <li><a href="../index.html" data-i18n="nav.home">Home</a></li>
     <li class="dropdown">
-      <a href="../about-us.html" class="dropdown-toggle">About Us <i class="fas fa-chevron-down"></i></a>
+      <a href="../about-us.html" class="dropdown-toggle"><span data-i18n="nav.about">About Us</span> <i class="fas fa-chevron-down"></i></a>
       <ul class="dropdown-menu">
-        <li><a href="../about-us.html">About Us</a></li>
-        <li><a href="../legacy.html">ANKA Legacy</a></li>
-        <li><a href="../anka-news.html">ANKA News</a></li>
+        <li><a href="../about-us.html" data-i18n="nav.about_link">About Us</a></li>
+        <li><a href="../legacy.html" data-i18n="nav.legacy">ANKA Legacy</a></li>
+        <li><a href="../anka-news.html" data-i18n="nav.news">ANKA News</a></li>
       </ul>
     </li>
-    <li><a href="../our-committies.html">Our Committees</a></li>
-    <li><a href="../contact-us.html">Contact Us</a></li>
+    <li><a href="../our-committies.html" data-i18n="nav.committees">Our Committees</a></li>
+    <li><a href="../contact-us.html" data-i18n="nav.contact">Contact Us</a></li>
     <!-- <li><a href="../online-startup-hub.html">Online Startup Hub</a></li> -->
-    <li><a href="../apply-now.html">Become a Member</a></li>
-    <li><a href="../login.html">Member Login</a></li>
+    <li><a href="../apply-now.html" data-i18n="nav.member">Become a Member</a></li>
+    <li><a href="../login.html" data-i18n="nav.login">Member Login</a></li>
+    <li class="lang-toggle" aria-label="Language selector">
+      <button type="button" class="lang-btn" data-lang="en">ENG</button>
+      <span class="lang-sep">|</span>
+      <button type="button" class="lang-btn" data-lang="tr">TR</button>
+    </li>
   </ul>
 </nav>
 

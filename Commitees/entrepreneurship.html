@@ -19,51 +19,51 @@
 <div class="container">
     <!-- Hero -->
     <section class="hero hero-entre">
-      <h1>Entrepreneurship & Business Committee</h1>
-      <p>Driving innovation and digital transformation through technology and technical support at ANKA.</p>
+      <h1 data-i18n="committee_entre.hero.title">Entrepreneurship & Business Committee</h1>
+      <p data-i18n="committee_entre.hero.body">Driving innovation and digital transformation through technology and technical support at ANKA.</p>
     </section>
 
     <!-- Team -->
     <section class="team team-entre">
-      <h2 style="color:#e74c3c; margin-bottom: 30px;">Our Team</h2>
+      <h2 style="color:#e74c3c; margin-bottom: 30px;" data-i18n="committee_entre.team.title">Our Team</h2>
       <div class="team-grid">
         <div class="team-member team-member-entre">
           <img src="../about-us/img/ömer.jpeg" alt="Başkan">
           <h3>Ömer Başer</h3>
-          <p>Chair</p>
+          <p data-i18n="committee_entre.team.member1.role">Chair</p>
         </div>
         <div class="team-member team-member-entre">
           <img src="../about-us/img/nazli.JPG" alt="Başkan Yardımcısı">
           <h3>Nazlı Üstündağ</h3>
-          <p>Vice Chair</p>
+          <p data-i18n="committee_entre.team.member2.role">Vice Chair</p>
         </div>
         <div class="team-member team-member-entre">
           <img src="../about-us/img/arda_k.JPG" alt="Komite Çalışanı">
           <h3>Arda Karataş</h3>
-          <p>Start-Up Hub Coordinator</p>
+          <p data-i18n="committee_entre.team.member3.role">Start-Up Hub Coordinator</p>
         </div>
         <div class="team-member team-member-entre">
           <img src="../about-us/img/aykut.JPG" alt="Komite Çalışanı">
           <h3>Aykut Aksu</h3>
-          <p>ANKA Journeys & Event Coordinator</p>
+          <p data-i18n="committee_entre.team.member4.role">ANKA Journeys & Event Coordinator</p>
         </div>
         <div class="team-member team-member-entre">
           <img src="../about-us/img/nilgün.jpeg" alt="Komite Çalışanı">
           <h3>Nilgün Coşkun</h3>
-          <p>GENC NETWORK coordinator </p>
+          <p data-i18n="committee_entre.team.member5.role">GENC NETWORK coordinator</p>
         </div>
       </div>
     </section>
 
     <!-- Responsibilities -->
     <section class="responsibilities responsibilities-entre">
-      <h2>Key Responsibilities</h2>
+      <h2 data-i18n="committee_entre.responsibilities.title">Key Responsibilities</h2>
       <ul>
-        <li>Support student-led startup projects through guidance and mentorship</li>
-        <li>Organize entrepreneurship-related events, competitions, and workshops</li>
-        <li>Build a network of alumni and professionals for business development</li>
-        <li>Offer resources for idea incubation and project realization</li>
-        <li>Inspire an entrepreneurial mindset within the student body</li>
+        <li data-i18n="committee_entre.responsibilities.item1">Support student-led startup projects through guidance and mentorship</li>
+        <li data-i18n="committee_entre.responsibilities.item2">Organize entrepreneurship-related events, competitions, and workshops</li>
+        <li data-i18n="committee_entre.responsibilities.item3">Build a network of alumni and professionals for business development</li>
+        <li data-i18n="committee_entre.responsibilities.item4">Offer resources for idea incubation and project realization</li>
+        <li data-i18n="committee_entre.responsibilities.item5">Inspire an entrepreneurial mindset within the student body</li>
       </ul>
     </section>
   </div>
@@ -72,11 +72,15 @@
 <div id="footer"></div>
 
 <!-- Javascript Sources -->
+<script src="../i18n.js"></script>
 <script>
   fetch('../Partials/navbar.html')
     .then(res => res.text())
     .then(data => {
       document.getElementById('navbar').innerHTML = data;
+      if (window.initI18n) {
+        window.initI18n();
+      }
     });
 
   fetch('../Partials/footer.html')

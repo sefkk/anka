@@ -461,23 +461,23 @@ footer.site-footer{
   <section class="welcome-section">
     <div class="container">
       <h1 id="welcomeMessage"></h1>
-      <p class="welcome-sub">Here you can find your MyANKA page. You can access services, applications, and special discounts only for ANKA members.</p>
+      <p class="welcome-sub" data-i18n="loggedin.subtitle">Here you can find your MyANKA page. You can access services, applications, and special discounts only for ANKA members.</p>
     </div>
 
     <div>
-      <span class="mood-question">How are you feeling today?</span>
+      <span class="mood-question" data-i18n="loggedin.mood.question">How are you feeling today?</span>
     </div>
 
     <div class="mood-wrap" aria-label="How are you feeling today questionnaire">
       <fieldset class="mood-scale">
-        <legend>How are you feeling today?</legend>
+        <legend data-i18n="loggedin.mood.question">How are you feeling today?</legend>
         <div class="mood-option"><input id="mood-1" type="checkbox" data-score="1"><label for="mood-1">1</label></div>
         <div class="mood-option"><input id="mood-2" type="checkbox" data-score="2"><label for="mood-2">2</label></div>
         <div class="mood-option"><input id="mood-3" type="checkbox" data-score="3"><label for="mood-3">3</label></div>
         <div class="mood-option"><input id="mood-4" type="checkbox" data-score="4"><label for="mood-4">4</label></div>
         <div class="mood-option"><input id="mood-5" type="checkbox" data-score="5"><label for="mood-5">5</label></div>
       </fieldset>
-      <div class="mood-thanks" aria-live="polite">Thank you for your response.</div>
+      <div class="mood-thanks" aria-live="polite" data-i18n="loggedin.mood.thanks">Thank you for your response.</div>
     </div>
   </section>
 </header>
@@ -485,7 +485,7 @@ footer.site-footer{
 <!-- ANKA News Section -->
 <section class="news-cards-section" style="padding: 60px 20px;">
   <div class="container">
-    <h2 style="text-align: center; font-size: clamp(1.6rem,3.2vw,2.2rem); margin-bottom: 2rem; background: linear-gradient(45deg, #e5925a, #ffb97a); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 700;">ANKA News</h2>
+    <h2 style="text-align: center; font-size: clamp(1.6rem,3.2vw,2.2rem); margin-bottom: 2rem; background: linear-gradient(45deg, #e5925a, #ffb97a); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 700;" data-i18n="loggedin.news.title">ANKA News</h2>
     <div class="news-cards-container" id="newsCardsContainer">
       <!-- News cards will be loaded dynamically -->
     </div>
@@ -510,12 +510,12 @@ footer.site-footer{
 <!-- Services -->
 <section class="services-section">
   <div class="container">
-    <h2>Our Services</h2>
+    <h2 data-i18n="loggedin.services.title">Our Services</h2>
     <div class="linktree-buttons" role="list">
-      <a role="listitem" href="../myrights.html"><i class="fas fa-balance-scale"></i> Legal Consultancy</a>
-      <a role="listitem" href="Talent-Pool/talent-pool.html"><i class="fas fa-user-friends"></i> ANKA Talent Pool</a>
-      <a role="listitem" href="komite-basvuru-form.html"><i class="fas fa-clipboard-check"></i> ANKA Committee Position Application</a>
-      <a role="listitem" href="special.html"><i class="fas fa-tags"></i> ANKA Special Discounts and Campaigns</a>
+      <a role="listitem" href="../myrights.html"><i class="fas fa-balance-scale"></i> <span data-i18n="loggedin.services.legal">Legal Consultancy</span></a>
+      <a role="listitem" href="Talent-Pool/talent-pool.html"><i class="fas fa-user-friends"></i> <span data-i18n="loggedin.services.talent">ANKA Talent Pool</span></a>
+      <a role="listitem" href="komite-basvuru-form.html"><i class="fas fa-clipboard-check"></i> <span data-i18n="loggedin.services.committee">ANKA Committee Position Application</span></a>
+      <a role="listitem" href="special.html"><i class="fas fa-tags"></i> <span data-i18n="loggedin.services.discounts">ANKA Special Discounts and Campaigns</span></a>
     </div>
   </div>
 </section>
@@ -523,13 +523,22 @@ footer.site-footer{
 
 <div id="footer"></div>
 
+<script src="i18n.js"></script>
 <!-- ✅ Fixed JavaScript -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+  const t = (key, fallback) =>
+    (window.getI18nString ? window.getI18nString(key) : '') || fallback;
+
   // Load navbar and footer
   fetch('Partials/inner-navbar.html')
     .then(r => r.text())
-    .then(t => { document.getElementById('navbar').innerHTML = t; });
+    .then(html => {
+      document.getElementById('navbar').innerHTML = html;
+      if (window.initI18n) {
+        window.initI18n();
+      }
+    });
 
   fetch('Partials/footer-loggedin.html')
     .then(res => res.text())
@@ -556,7 +565,11 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     const userName = sessionStorage.getItem('name');
     const welcomeElement = document.getElementById('welcomeMessage');
-    welcomeElement.textContent = userName ? `Welcome ${userName}!` : "Welcome member!";
+    const welcomeTemplate = t('loggedin.welcome', 'Welcome {name}!');
+    const welcomeFallback = t('loggedin.welcome_member', 'Welcome member!');
+    welcomeElement.textContent = userName
+      ? welcomeTemplate.replace('{name}', userName)
+      : welcomeFallback;
   }
 
   // Load News from API
@@ -574,11 +587,11 @@ document.addEventListener("DOMContentLoaded", () => {
         // If 404, backend might not be deployed or endpoint doesn't exist
         if (response.status === 404) {
           console.warn('News endpoint not found (404). Backend might need deployment.');
-          container.innerHTML = '<p style="text-align:center; color:var(--muted); padding:2rem;">News feature is being set up. Please check back later.</p>';
+          container.innerHTML = `<p style="text-align:center; color:var(--muted); padding:2rem;">${t('loggedin.news.setup', 'News feature is being set up. Please check back later.')}</p>`;
           return;
         }
         console.error('Failed to fetch news:', response.status, response.statusText);
-        container.innerHTML = '<p style="text-align:center; color:var(--muted);">Failed to load news. Please try again later.</p>';
+        container.innerHTML = `<p style="text-align:center; color:var(--muted);">${t('loggedin.news.error', 'Failed to load news. Please try again later.')}</p>`;
         return;
       }
       
@@ -587,12 +600,12 @@ document.addEventListener("DOMContentLoaded", () => {
       
       if (!Array.isArray(news)) {
         console.error('News is not an array:', news);
-        container.innerHTML = '<p style="text-align:center; color:var(--muted);">No news available.</p>';
+        container.innerHTML = `<p style="text-align:center; color:var(--muted);">${t('loggedin.news.empty', 'No news available.')}</p>`;
         return;
       }
       
       if (news.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:var(--muted);">No news available.</p>';
+        container.innerHTML = `<p style="text-align:center; color:var(--muted);">${t('loggedin.news.empty', 'No news available.')}</p>`;
         return;
       }
       
@@ -609,7 +622,7 @@ document.addEventListener("DOMContentLoaded", () => {
       attachNewsModalListeners();
     } catch (err) {
       console.error('Failed to load news:', err);
-      container.innerHTML = '<p style="text-align:center; color:var(--muted);">Failed to load news. Please try again later.</p>';
+      container.innerHTML = `<p style="text-align:center; color:var(--muted);">${t('loggedin.news.error', 'Failed to load news. Please try again later.')}</p>`;
     }
   }
 

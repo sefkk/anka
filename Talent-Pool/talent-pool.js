@@ -1,4 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const t = (key, fallback) =>
+    (window.getI18nString ? window.getI18nString(key) : '') || fallback;
+
   const jobResultsContainer = document.getElementById("job-results");
   const modal = document.getElementById("modal");
   const modalContent = document.getElementById("modal-content");
@@ -20,7 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .catch(err => {
       console.error(err);
-      jobResultsContainer.innerHTML = "<p class='no-results'>Failed to fetch companies.</p>";
+      jobResultsContainer.innerHTML = `<p class='no-results'>${t('tp.jobs.errors.fetch', 'Failed to fetch companies.')}</p>`;
     });
 
   // --- Display companies ---
@@ -28,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
     jobResultsContainer.innerHTML = "";
 
     if (!companies.length) {
-      jobResultsContainer.innerHTML = "<p class='no-results'>No results found.</p>";
+      jobResultsContainer.innerHTML = `<p class='no-results'>${t('tp.jobs.errors.empty', 'No results found.')}</p>`;
       return;
     }
 
@@ -48,32 +51,45 @@ document.addEventListener("DOMContentLoaded", () => {
         overlayImages[company.name] || "linear-gradient(90deg,#7a7a7a,#cfcfcf)"
       );
 
+      const descriptionFallback = t('tp.jobs.description_empty', 'No description available.');
+      const jobTypeLabel = t('tp.jobs.card.job_type', 'Job Type');
+      const experienceLabel = t('tp.jobs.card.experience', 'Experience');
+      const viewDetailsLabel = t('tp.jobs.card.view_details', 'View Details');
+
       card.innerHTML = `
         <div>
           <h4>${company.name}</h4>
           <p class="meta">${company.industry} | ${company.headquarters}</p>
         </div>
-        <p>${company.description_short || "No description available."}</p>
-        <p><strong>Job Type:</strong> ${company.jobtype || "N/A"}</p>
-        <p><strong>Experience:</strong> ${company.experience || "N/A"}</p>
-        <button class="btn" id="details-btn-${index}">View Details</button>
+        <p>${company.description_short || descriptionFallback}</p>
+        <p><strong>${jobTypeLabel}:</strong> ${company.jobtype || "N/A"}</p>
+        <p><strong>${experienceLabel}:</strong> ${company.experience || "N/A"}</p>
+        <button class="btn" id="details-btn-${index}">${viewDetailsLabel}</button>
       `;
       jobResultsContainer.appendChild(card);
 
       // --- View Details modal ---
       document.getElementById(`details-btn-${index}`).addEventListener("click", () => {
+        const closeLabel = t('tp.jobs.modal.close', 'Close modal');
+        const industryLabel = t('tp.jobs.modal.industry', 'Industry');
+        const hqLabel = t('tp.jobs.modal.hq', 'Headquarters');
+        const websiteLabel = t('tp.jobs.modal.website', 'Website');
+        const descriptionLabel = t('tp.jobs.modal.description', 'Description');
+        const applyLabel = t('tp.jobs.modal.apply', 'Apply');
+        const appliedLabel = t('tp.jobs.modal.applied', 'Applied');
+
         modalContent.innerHTML = `
-          <button class="close-btn-top" aria-label="Close modal">×</button>
+          <button class="close-btn-top" aria-label="${closeLabel}">×</button>
           <h4>${company.name}</h4>
-          <p><strong>Industry:</strong> ${company.industry}</p>
-          <p><strong>Headquarters:</strong> ${company.headquarters}</p>
-          <p><strong>Website:</strong> <a href="${company.website}" target="_blank">${company.website}</a></p>
-          <p><strong>Job Type:</strong> ${company.jobtype || "N/A"}</p>
-          <p><strong>Experience:</strong> ${company.experience || "N/A"}</p>
-          <p><strong>Description:</strong> ${company.description_long || company.description_short}</p>
+          <p><strong>${industryLabel}:</strong> ${company.industry}</p>
+          <p><strong>${hqLabel}:</strong> ${company.headquarters}</p>
+          <p><strong>${websiteLabel}:</strong> <a href="${company.website}" target="_blank">${company.website}</a></p>
+          <p><strong>${jobTypeLabel}:</strong> ${company.jobtype || "N/A"}</p>
+          <p><strong>${experienceLabel}:</strong> ${company.experience || "N/A"}</p>
+          <p><strong>${descriptionLabel}:</strong> ${company.description_long || company.description_short}</p>
           <div class="modal-buttons">
             <button class="btn apply-btn" id="apply-btn-${index}" ${hasApplied ? 'disabled' : ''}>
-              ${hasApplied ? 'Applied' : 'Apply'}
+              ${hasApplied ? appliedLabel : applyLabel}
             </button>
           </div>
         `;
@@ -94,7 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
 
           if (!username || !company.name) {
-            alert("Missing username or company name.");
+            alert(t('tp.jobs.apply.missing', 'Missing username or company name.'));
             return;
           }
 
@@ -108,22 +124,23 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
 
             if (response.ok) {
-              applyBtn.textContent = "Applied";
+              applyBtn.textContent = appliedLabel;
               applyBtn.disabled = true;
               if (!Array.isArray(company.applicants)) company.applicants = [];
               company.applicants.push(username); // update local state
             } else {
               if (data.message.includes("already applied") || data.applicants?.includes(username)) {
                 showAlreadyAppliedPopup();
-                applyBtn.textContent = "Applied";
+                applyBtn.textContent = appliedLabel;
                 applyBtn.disabled = true;
               } else {
-                alert(`Error: ${data.message}`);
+                const errorPrefix = t('tp.jobs.apply.error_prefix', 'Error');
+                alert(`${errorPrefix}: ${data.message}`);
               }
             }
           } catch (err) {
             console.error("Error applying:", err);
-            alert("An error occurred while applying.");
+            alert(t('tp.jobs.apply.error_generic', 'An error occurred while applying.'));
           }
         });
       });

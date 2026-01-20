@@ -19,46 +19,46 @@
 <div class="container">
     <!-- Hero -->
     <section class="hero hero-hr">
-      <h1>HR Committee</h1>
-      <p>Driving innovation and digital transformation through technology and technical support at ANKA.</p>
+      <h1 data-i18n="committee_hr.hero.title">HR Committee</h1>
+      <p data-i18n="committee_hr.hero.body">Driving innovation and digital transformation through technology and technical support at ANKA.</p>
     </section>
 
     <!-- Team -->
     <section class="team team-hr">
-      <h2 style="color:#9b59b6; margin-bottom: 30px;">Our Team</h2>
+      <h2 style="color:#9b59b6; margin-bottom: 30px;" data-i18n="committee_hr.team.title">Our Team</h2>
       <div class="team-grid">
         <div class="team-member team-member-hr">
           <img src="../about-us/img/basak_c.JPG" alt="Başkan">
           <h3>Başak Çakmakçı</h3>
-          <p>Chair</p>
+          <p data-i18n="committee_hr.team.member1.role">Chair</p>
         </div>
         <div class="team-member team-member-hr">
           <img src="../about-us/img/irmak_e.JPG" alt="Member Name" />
           <h3>Irmak Eminoğlu</h3>
-          <p>Vice Chair</p>
+          <p data-i18n="committee_hr.team.member2.role">Vice Chair</p>
         </div>
         <div class="team-member team-member-hr">
           <img src="../about-us/img/placeholder.jpg" alt="Komite Çalışanı">
           <h3>Öykü Emek</h3>
-          <p>Member Relations and Engagement Officer</p>
+          <p data-i18n="committee_hr.team.member3.role">Member Relations and Engagement Officer</p>
         </div>
         <div class="team-member team-member-hr">
           <img src="../about-us/img/placeholder.jpg" alt="Komite Çalışanı">
           <h3>Efe Rüzgar</h3>
-          <p>TalentPool Officer</p>
+          <p data-i18n="committee_hr.team.member4.role">Talent Pool Officer</p>
         </div>
       </div>
     </section>
 
     <!-- Responsibilities -->
     <section class="responsibilities responsibilities-hr">
-      <h2>Key Responsibilities</h2>
+      <h2 data-i18n="committee_hr.responsibilities.title">Key Responsibilities</h2>
       <ul>
-        <li>Oversee recruitment and onboarding of new members</li>
-        <li>Maintain member engagement and satisfaction</li>
-        <li>Organize internal community-building activities</li>
-        <li>Manage the Talent Pool and match students with job/internship opportunities</li>
-        <li>Serve as a bridge between members and executive board</li>
+        <li data-i18n="committee_hr.responsibilities.item1">Oversee recruitment and onboarding of new members</li>
+        <li data-i18n="committee_hr.responsibilities.item2">Maintain member engagement and satisfaction</li>
+        <li data-i18n="committee_hr.responsibilities.item3">Organize internal community-building activities</li>
+        <li data-i18n="committee_hr.responsibilities.item4">Manage the Talent Pool and match students with job/internship opportunities</li>
+        <li data-i18n="committee_hr.responsibilities.item5">Serve as a bridge between members and executive board</li>
       </ul>
     </section>
   </div>
@@ -67,11 +67,15 @@
 <div id="footer"></div>
 
 <!-- Javascript Sources -->
+<script src="../i18n.js"></script>
 <script>
   fetch('../Partials/navbar.html')
     .then(res => res.text())
     .then(data => {
       document.getElementById('navbar').innerHTML = data;
+      if (window.initI18n) {
+        window.initI18n();
+      }
     });
 
   fetch('../Partials/footer.html')

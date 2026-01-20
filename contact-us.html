@@ -16,24 +16,24 @@
 </header>
 
 <section class="contact-section">
-  <h2>Contact Us</h2>
-  <p class="contact-intro">Have a question, idea or just want to say hello? We'd love to hear from you.</p>
-  <p class="contact-intro">If you have an idea or project that you believe could make an impact for the ANKA community, feel free to reach out to us anytime. Without you, we're one person short!</p>
+  <h2 data-i18n="contact_page.title">Contact Us</h2>
+  <p class="contact-intro" data-i18n="contact_page.intro1">Have a question, idea or just want to say hello? We'd love to hear from you.</p>
+  <p class="contact-intro" data-i18n="contact_page.intro2">If you have an idea or project that you believe could make an impact for the ANKA community, feel free to reach out to us anytime. Without you, we're one person short!</p>
   <div class="contact-container">
     
     <!-- Contact Form -->
     <form class="contact-form" action="https://formsubmit.co/ankait.nl@gmail.com" method="POST">
-    <input type="text" name="name" placeholder="Your Name" required>
-    <input type="email" name="email" placeholder="Your Email" required>
-    <input type="text" name="subject" placeholder="Subject" required>
-    <textarea name="message" placeholder="Your Message" rows="6" required></textarea>
-    <button type="submit">Send Message</button>
+    <input type="text" name="name" placeholder="Your Name" data-i18n-placeholder="contact_page.form.name" required>
+    <input type="email" name="email" placeholder="Your Email" data-i18n-placeholder="contact_page.form.email" required>
+    <input type="text" name="subject" placeholder="Subject" data-i18n-placeholder="contact_page.form.subject" required>
+    <textarea name="message" placeholder="Your Message" data-i18n-placeholder="contact_page.form.message" rows="6" required></textarea>
+    <button type="submit" data-i18n="contact_page.form.submit">Send Message</button>
   </form>
 
     <!-- Contact Info -->
     <div class="contact-info">
-      <h3>Get in Touch</h3>
-      <p><i class="fas fa-map-marker-alt"></i> Netherlands</p>
+      <h3 data-i18n="contact_page.info.title">Get in Touch</h3>
+      <p><i class="fas fa-map-marker-alt"></i> <span data-i18n="contact_page.info.location">Netherlands</span></p>
       <p><i class="fas fa-envelope"></i> info@associationanka.org</p>
       <p><i class="fas fa-phone-alt"></i> +31 6 87985485 </p>
       <div class="social-links">
@@ -49,11 +49,15 @@
 <div id="footer"></div>
 
 <!-- Javascript Sources -->
+<script src="i18n.js"></script>
 <script>
   fetch('Partials/navbar.html')
     .then(res => res.text())
     .then(data => {
       document.getElementById('navbar').innerHTML = data;
+      if (window.initI18n) {
+        window.initI18n();
+      }
     });
 
   fetch('Partials/footer.html')

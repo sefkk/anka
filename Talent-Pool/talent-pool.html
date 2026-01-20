@@ -12,17 +12,24 @@
   <!-- Navbar -->
   <header class="navbar">
     <div class="container nav-container">
-      <h1 class="logo"><a href="../loggedIn.html">myANKA</a></h1>
+      <h1 class="logo"><a href="../loggedIn.html" data-i18n="tp.nav.brand">myANKA</a></h1>
       <input type="checkbox" id="menu-toggle-tp" class="menu-toggle-tp" />
       <label for="menu-toggle-tp" class="hamburger-tp">&#9776;</label>
       <nav class="menu">
-        <a href="../Talent-Pool/talent-pool.html">TalentPool</a>
-        <a href="../Talent-Pool/job-search.html">Find Jobs</a>
-        <a href="../Talent-Pool/my-profile.html">My Profile</a>
-        <a href="../Talent-Pool/faq.html">FAQ</a>
+        <a href="../Talent-Pool/talent-pool.html" data-i18n="tp.nav.talent">TalentPool</a>
+        <a href="../Talent-Pool/job-search.html" data-i18n="tp.nav.jobs">Find Jobs</a>
+        <a href="../Talent-Pool/my-profile.html" data-i18n="tp.nav.profile">My Profile</a>
+        <a href="../Talent-Pool/faq.html" data-i18n="tp.nav.faq">FAQ</a>
       </nav>
-      <div class="auth-links">
-        <a href="#" class="login-link" id="welcomeMessage"></a>
+      <div class="nav-right">
+        <div class="auth-links">
+          <a href="#" class="login-link" id="welcomeMessage"></a>
+        </div>
+        <div class="lang-toggle" aria-label="Language selector">
+          <button type="button" class="lang-btn" data-lang="en">ENG</button>
+          <span class="lang-sep">|</span>
+          <button type="button" class="lang-btn" data-lang="tr">TR</button>
+        </div>
       </div>
     </div>
   </header>
@@ -30,13 +37,13 @@
   <!-- Hero / Intro Section -->
   <section class="hero">
     <div class="container">
-      <h2>Find Your Dream Job</h2>
+      <h2 data-i18n="tp.hero.title">Find Your Dream Job</h2>
       <p>
-        Connect with top employers and discover opportunities that match your skills and ambitions.
+        <span data-i18n="tp.hero.body">Connect with top employers and discover opportunities that match your skills and ambitions.</span>
       </p>
       <div class="hero-buttons">
-        <a href="../Talent-Pool/job-search.html" class="btn primary">Browse Jobs</a>
-        <a href="../Talent-Pool/faq.html" class="btn secondary">Learn More</a>
+        <a href="../Talent-Pool/job-search.html" class="btn primary" data-i18n="tp.hero.cta_primary">Browse Jobs</a>
+        <a href="../Talent-Pool/faq.html" class="btn secondary" data-i18n="tp.hero.cta_secondary">Learn More</a>
       </div>
     </div>
   </section>
@@ -44,38 +51,38 @@
   <!-- Why Choose Section -->
 <section class="why-choose">
   <div class="container">
-    <h3>Why Choose ANKA Talent Pool</h3>
+    <h3 data-i18n="tp.why.title">Why Choose ANKA Talent Pool</h3>
     <div class="card-grid">
       <!-- Card 1: Job Seekers -->
       <div class="card">
-        <h4>For Job Seekers</h4>
+        <h4 data-i18n="tp.why.job_seekers.title">For Job Seekers</h4>
         <ul>
-          <li>Find opportunities that match your skills and experience</li>
-          <li>Apply with a streamlined, intuitive process</li>
-          <li>Track application status in real-time</li>
-          <li>Showcase your skills and get noticed</li>
+          <li data-i18n="tp.why.job_seekers.item1">Find opportunities that match your skills and experience</li>
+          <li data-i18n="tp.why.job_seekers.item2">Apply with a streamlined, intuitive process</li>
+          <li data-i18n="tp.why.job_seekers.item3">Track application status in real-time</li>
+          <li data-i18n="tp.why.job_seekers.item4">Showcase your skills and get noticed</li>
         </ul>
       </div>
 
       <!-- Card 2: Employers -->
       <div class="card">
-        <h4>For Employers</h4>
+        <h4 data-i18n="tp.why.employers.title">For Employers</h4>
         <ul>
-          <li>Post jobs and reach qualified candidates quickly</li>
-          <li>Powerful search and filtering tools</li>
-          <li>Manage applications efficiently</li>
-          <li>Communicate directly with promising candidates</li>
+          <li data-i18n="tp.why.employers.item1">Post jobs and reach qualified candidates quickly</li>
+          <li data-i18n="tp.why.employers.item2">Powerful search and filtering tools</li>
+          <li data-i18n="tp.why.employers.item3">Manage applications efficiently</li>
+          <li data-i18n="tp.why.employers.item4">Communicate directly with promising candidates</li>
         </ul>
       </div>
 
       <!-- Card 3: Platform Benefits -->
       <div class="card">
-        <h4>Platform Benefits</h4>
+        <h4 data-i18n="tp.why.platform.title">Platform Benefits</h4>
         <ul>
-          <li>User-friendly interface designed for productivity</li>
-          <li>Secure and reliable platform</li>
-          <li>Regular updates with new features</li>
-          <li>Dedicated support team</li>
+          <li data-i18n="tp.why.platform.item1">User-friendly interface designed for productivity</li>
+          <li data-i18n="tp.why.platform.item2">Secure and reliable platform</li>
+          <li data-i18n="tp.why.platform.item3">Regular updates with new features</li>
+          <li data-i18n="tp.why.platform.item4">Dedicated support team</li>
         </ul>
       </div>
     </div>
@@ -86,7 +93,8 @@
 <div id="footer"></div>
 
 <!-- Javascript Sources -->
-<script>
+  <script src="../i18n.js"></script>
+  <script>
   fetch('../Partials/footer-loggedin.html')
     .then(res => res.text())
     .then(data => {
@@ -131,6 +139,9 @@
         });
     });
 
+    const t = (key, fallback) =>
+      (window.getI18nString ? window.getI18nString(key) : '') || fallback;
+
     const isLoggedIn = sessionStorage.getItem('isLoggedIn');
     
     // If the user is not logged in, redirect them to the login page
@@ -143,9 +154,10 @@
 
         // Display the welcome message
         if (userName) {
-            welcomeElement.textContent = `Welcome ${userName}!`;
+            const template = t('tp.welcome', 'Welcome {name}!');
+            welcomeElement.textContent = template.replace('{name}', userName);
         } else {
-            welcomeElement.textContent = "Welcome member!";
+            welcomeElement.textContent = t('tp.welcome_member', 'Welcome member!');
         }
     }
 </script>

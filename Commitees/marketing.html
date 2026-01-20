@@ -19,24 +19,24 @@
 <div class="container">
     <!-- Hero -->
     <section class="hero hero-marketing">
-      <h1>Marketing Committee</h1>
-      <p>Crafting compelling campaigns and strategies to elevate ANKA's brand and engage our community effectively.</p>
+      <h1 data-i18n="committee_marketing.hero.title">Marketing Committee</h1>
+      <p data-i18n="committee_marketing.hero.body">Crafting compelling campaigns and strategies to elevate ANKA's brand and engage our community effectively.</p>
     </section>
 
     <!-- Team -->
     <section class="team team-marketing">
-      <h2 style="color:#f1c40f; margin-bottom: 30px;">Our Team</h2>
+      <h2 style="color:#f1c40f; margin-bottom: 30px;" data-i18n="committee_marketing.team.title">Our Team</h2>
       <div class="team-grid">
         <div class="team-member team-member-marketing">
           <!-- <img src="../Images/landscape-placeholder.svg" alt="Member Name" /> -->
           <img src="../about-us/img/elena.JPG" alt="Başkan">
           <h3>Elena Meral Gürkan</h3>
-          <p>Chair</p>
+          <p data-i18n="committee_marketing.team.member1.role">Chair</p>
         </div>
         <!-- <div class="team-member team-member-marketing">   
           <img src="../Images/landscape-placeholder.svg" alt="Başkan Yardımcısı">
           <h3>NAME SURNAME</h3>
-          <p>Vice Chair</p>
+          <p data-i18n="committee_marketing.team.member2.role">Vice Chair</p>
         </div> --> 
         <div class="team-member team-member-marketing">
           <img src="../about-us/img/ada-ruhoğlu.jpeg" alt="Başkan Yardımcısı">
@@ -46,50 +46,50 @@
         <div class="team-member team-member-marketing">
           <img src="../Images/landscape-placeholder.svg" alt="Komite Çalışanı">
           <h3>Deniz Efe Özdinç</h3>
-          <p>Canva Graphic Designer</p>
+          <p data-i18n="committee_marketing.team.member3.role">Canva Graphic Designer</p>
         </div>
         <div class="team-member team-member-marketing">
           <img src="../Images/landscape-placeholder.svg" alt="Komite Çalışanı">
           <h3>Ekin Özyürekoğlu</h3>
-          <p>Canva Tasarımcı</p>
+          <p data-i18n="committee_marketing.team.member4.role">Canva Tasarımcı</p>
         </div> 
         <div class="team-member team-member-marketing">
           <img src="../Images/landscape-placeholder.svg" alt="Komite Çalışanı">
           <h3>Efe Danışman</h3>
-          <p>Pazarlama Executive</p>
+          <p data-i18n="committee_marketing.team.member5.role">Pazarlama Executive</p>
         </div> 
         <div class="team-member team-member-marketing">
           <img src="../about-us/img/kumsal.jpeg" alt="Komite Çalışanı">
           <h3>Kumsal Deniz Çaylak</h3>
-          <p>Community Manager & Content Writer</p>
+          <p data-i18n="committee_marketing.team.member6.role">Community Manager & Content Writer</p>
         </div> 
         <div class="team-member team-member-marketing">
           <img src="../about-us/img/ediz.jpeg" alt="Komite Çalışanı">
           <h3>Ediz Akartürk</h3>
-          <p>Video Production</p>
+          <p data-i18n="committee_marketing.team.member7.role">Video Production</p>
         </div> 
         <div class="team-member team-member-marketing">
           <img src="../Images/landscape-placeholder.svg" alt="Komite Çalışanı">
           <h3>Nil Karakızlı</h3>
-          <p>Video Production</p>
+          <p data-i18n="committee_marketing.team.member8.role">Video Production</p>
         </div> 
         <div class="team-member team-member-marketing">
           <img src="../Images/landscape-placeholder.svg" alt="Komite Çalışanı">
           <h3>Azra Uzun</h3>
-          <p>Researcher</p>
+          <p data-i18n="committee_marketing.team.member9.role">Researcher</p>
         </div>
       </div>
     </section>
 
     <!-- Responsibilities -->
     <section class="responsibilities responsibilities-marketing">
-      <h2>Key Responsibilities</h2>
+      <h2 data-i18n="committee_marketing.responsibilities.title">Key Responsibilities</h2>
       <ul>
-        <li>Design and execute social media strategies to increase visibility</li>
-        <li>Create promotional materials and branding content</li>
-        <li>Collaborate with other committees for campaign consistency</li>
-        <li>Analyze audience engagement and optimize outreach efforts</li>
-        <li>Manage communication channels and visual identity of ANKA</li>
+        <li data-i18n="committee_marketing.responsibilities.item1">Design and execute social media strategies to increase visibility</li>
+        <li data-i18n="committee_marketing.responsibilities.item2">Create promotional materials and branding content</li>
+        <li data-i18n="committee_marketing.responsibilities.item3">Collaborate with other committees for campaign consistency</li>
+        <li data-i18n="committee_marketing.responsibilities.item4">Analyze audience engagement and optimize outreach efforts</li>
+        <li data-i18n="committee_marketing.responsibilities.item5">Manage communication channels and visual identity of ANKA</li>
       </ul>
     </section>
   </div>
@@ -98,11 +98,15 @@
 <div id="footer"></div>
 
 <!-- Javascript Sources -->
+<script src="../i18n.js"></script>
 <script>
   fetch('../Partials/navbar.html')
     .then(res => res.text())
     .then(data => {
       document.getElementById('navbar').innerHTML = data;
+      if (window.initI18n) {
+        window.initI18n();
+      }
     });
 
   fetch('../Partials/footer.html')
