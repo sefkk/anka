@@ -61,7 +61,15 @@ async function onSubmit(event) {
       'canNews',
       'canLegacy',
       'canUsers',
-      'canLogs'
+      'canLogs',
+      'canCommitteeIt',
+      'canCommitteeMarketing',
+      'canCommitteeEntrepreneurship',
+      'canCommitteeAcademic',
+      'canCommitteeEvent',
+      'canCommitteeHr',
+      'canCommitteeLaw',
+      'canCommitteeIntRelations'
     ];
     permissionKeys.forEach((key) => {
       const value = data[key] === true ? 'true' : 'false';

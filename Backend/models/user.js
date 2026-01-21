@@ -21,7 +21,15 @@ const userSchema = new mongoose.Schema({
   canNews: { type: Boolean, default: false },
   canLegacy: { type: Boolean, default: false },
   canUsers: { type: Boolean, default: false },
-  canLogs: { type: Boolean, default: false }
+  canLogs: { type: Boolean, default: false },
+  canCommitteeIt: { type: Boolean, default: false },
+  canCommitteeMarketing: { type: Boolean, default: false },
+  canCommitteeEntrepreneurship: { type: Boolean, default: false },
+  canCommitteeAcademic: { type: Boolean, default: false },
+  canCommitteeEvent: { type: Boolean, default: false },
+  canCommitteeHr: { type: Boolean, default: false },
+  canCommitteeLaw: { type: Boolean, default: false },
+  canCommitteeIntRelations: { type: Boolean, default: false }
 });
 
 // 3. parametre olarak koleksiyon adını belirtiyoruz

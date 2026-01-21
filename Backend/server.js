@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 const User = require('./models/user');
 const News = require('./models/news');
 const Startup = require('./models/startup');
@@ -74,6 +76,245 @@ const requireMasterAdmin = async (req, res, next) => {
   }
 };
 
+// ------------------- Committee Helpers -------------------
+const COMMITTEE_CONFIG = {
+  it: {
+    id: 'it',
+    label: 'IT Committee',
+    filePath: path.join(__dirname, '..', 'Commitees', 'it.html'),
+    i18nPrefix: 'committee_it',
+    classSuffix: 'it',
+    permission: 'canCommitteeIt'
+  },
+  marketing: {
+    id: 'marketing',
+    label: 'Marketing Committee',
+    filePath: path.join(__dirname, '..', 'Commitees', 'marketing.html'),
+    i18nPrefix: 'committee_marketing',
+    classSuffix: 'marketing',
+    permission: 'canCommitteeMarketing'
+  },
+  entrepreneurship: {
+    id: 'entrepreneurship',
+    label: 'Entrepreneurship & Business Committee',
+    filePath: path.join(__dirname, '..', 'Commitees', 'entrepreneurship.html'),
+    i18nPrefix: 'committee_entre',
+    classSuffix: 'entre',
+    permission: 'canCommitteeEntrepreneurship'
+  },
+  academic: {
+    id: 'academic',
+    label: 'Academic Support Committee',
+    filePath: path.join(__dirname, '..', 'Commitees', 'academic.html'),
+    i18nPrefix: 'committee_academic',
+    classSuffix: 'academic',
+    permission: 'canCommitteeAcademic'
+  },
+  event: {
+    id: 'event',
+    label: 'Event Planning Committee',
+    filePath: path.join(__dirname, '..', 'Commitees', 'event.html'),
+    i18nPrefix: 'committee_event',
+    classSuffix: 'event',
+    permission: 'canCommitteeEvent'
+  },
+  hr: {
+    id: 'hr',
+    label: 'HR Committee',
+    filePath: path.join(__dirname, '..', 'Commitees', 'hr.html'),
+    i18nPrefix: 'committee_hr',
+    classSuffix: 'hr',
+    permission: 'canCommitteeHr'
+  },
+  law: {
+    id: 'law',
+    label: 'Law Committee',
+    filePath: path.join(__dirname, '..', 'Commitees', 'law.html'),
+    i18nPrefix: 'committee_law',
+    classSuffix: 'law',
+    permission: 'canCommitteeLaw'
+  },
+  'int-relations': {
+    id: 'int-relations',
+    label: 'International Relations Committee',
+    filePath: path.join(__dirname, '..', 'Commitees', 'int-relations.html'),
+    i18nPrefix: 'committee_ir',
+    classSuffix: 'int-relations',
+    permission: 'canCommitteeIntRelations'
+  }
+};
+
+const I18N_PATH = path.join(__dirname, '..', 'i18n.js');
+
+const getCommitteeConfig = (id) => COMMITTEE_CONFIG[id] || null;
+
+const escapeRegExp = (value) => String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+const escapeJsString = (value) => String(value || '')
+  .replace(/\\/g, '\\\\')
+  .replace(/'/g, "\\'")
+  .replace(/\r?\n/g, '\\n');
+
+const unescapeJsString = (value) => String(value || '')
+  .replace(/\\n/g, '\n')
+  .replace(/\\'/g, "'")
+  .replace(/\\"/g, '"')
+  .replace(/\\\\/g, '\\');
+
+const escapeHtml = (value) => String(value || '')
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&#39;');
+
+const findObjectBlock = (source, label) => {
+  const labelIndex = source.indexOf(`${label}:`);
+  if (labelIndex === -1) return null;
+  const braceStart = source.indexOf('{', labelIndex);
+  if (braceStart === -1) return null;
+  let depth = 0;
+  for (let i = braceStart; i < source.length; i += 1) {
+    const char = source[i];
+    if (char === '{') depth += 1;
+    if (char === '}') {
+      depth -= 1;
+      if (depth === 0) {
+        return { start: braceStart, end: i };
+      }
+    }
+  }
+  return null;
+};
+
+const parseTranslationBlock = (blockContent) => {
+  const translations = {};
+  const entryRegex = /['"]([^'"]+)['"]\s*:\s*(['"])((?:\\.|(?!\2)[\s\S])*)\2\s*(?:,|$)/g;
+  let match;
+  while ((match = entryRegex.exec(blockContent)) !== null) {
+    translations[match[1]] = unescapeJsString(match[3]);
+  }
+  return translations;
+};
+
+const upsertTranslations = (source, label, updates) => {
+  const bounds = findObjectBlock(source, label);
+  if (!bounds) return source;
+  let blockContent = source.slice(bounds.start + 1, bounds.end);
+  Object.entries(updates).forEach(([key, value]) => {
+    const escapedValue = escapeJsString(value);
+    const keyRegex = new RegExp(`([\\s\\n])['"]${escapeRegExp(key)}['"]\\s*:\\s*(['"])(?:\\\\.|(?!\\2)[\\s\\S])*?\\2`, 'g');
+    if (keyRegex.test(blockContent)) {
+      blockContent = blockContent.replace(keyRegex, `$1'${key}': '${escapedValue}'`);
+    } else {
+      const trimmed = blockContent.replace(/\s*$/, '');
+      const trailing = blockContent.slice(trimmed.length);
+      blockContent = `${trimmed}\n      '${key}': '${escapedValue}',${trailing}`;
+    }
+  });
+  return `${source.slice(0, bounds.start + 1)}${blockContent}${source.slice(bounds.end)}`;
+};
+
+const parseCommitteeHtml = (html, config) => {
+  const members = [];
+  const responsibilities = [];
+  const teamGridMatch = html.match(/<div class="team-grid">([\s\S]*?)<\/div>\s*<\/section>/);
+  if (teamGridMatch) {
+    const teamGridHtml = teamGridMatch[1];
+    const memberRegex = /<div class="team-member[^"]*">([\s\S]*?)<\/div>/g;
+    let memberMatch;
+    while ((memberMatch = memberRegex.exec(teamGridHtml)) !== null) {
+      const memberHtml = memberMatch[1];
+      const imageMatch = memberHtml.match(/<img[^>]*src="([^"]+)"[^>]*>/);
+      const nameMatch = memberHtml.match(/<h3>([\s\S]*?)<\/h3>/);
+      const roleKeyMatch = memberHtml.match(/data-i18n="([^"]+)"/);
+      const roleTextMatch = memberHtml.match(/<p[^>]*>([\s\S]*?)<\/p>/);
+      members.push({
+        name: nameMatch ? nameMatch[1].trim() : '',
+        image: imageMatch ? imageMatch[1].trim() : '',
+        roleKey: roleKeyMatch ? roleKeyMatch[1].trim() : '',
+        roleText: roleTextMatch ? roleTextMatch[1].trim() : ''
+      });
+    }
+  }
+
+  const responsibilitiesMatch = html.match(/<section class="responsibilities[^"]*">[\s\S]*?<ul>([\s\S]*?)<\/ul>/);
+  if (responsibilitiesMatch) {
+    const listHtml = responsibilitiesMatch[1];
+    const itemRegex = /<li[^>]*data-i18n="([^"]+)"[^>]*>([\s\S]*?)<\/li>/g;
+    let itemMatch;
+    while ((itemMatch = itemRegex.exec(listHtml)) !== null) {
+      responsibilities.push({
+        key: itemMatch[1].trim(),
+        text: itemMatch[2].trim()
+      });
+    }
+  }
+
+  return { members, responsibilities };
+};
+
+const buildTeamHtml = (config, members) => {
+  return members.map((member, index) => {
+    const roleKey = `${config.i18nPrefix}.team.member${index + 1}.role`;
+    return `
+        <div class="team-member team-member-${config.classSuffix}">
+          <img src="${escapeHtml(member.image)}" alt="${escapeHtml(member.name)}">
+          <h3>${escapeHtml(member.name)}</h3>
+          <p data-i18n="${roleKey}">${escapeHtml(member.roleEn)}</p>
+        </div>`;
+  }).join('');
+};
+
+const buildResponsibilitiesHtml = (config, responsibilities) => {
+  return responsibilities.map((item, index) => {
+    const key = `${config.i18nPrefix}.responsibilities.item${index + 1}`;
+    return `
+        <li data-i18n="${key}">${escapeHtml(item.en)}</li>`;
+  }).join('');
+};
+
+const updateCommitteeHtml = (html, config, members, responsibilities) => {
+  const teamReplacement = buildTeamHtml(config, members);
+  const responsibilitiesReplacement = buildResponsibilitiesHtml(config, responsibilities);
+  let updated = html.replace(
+    /(<div class="team-grid">)([\s\S]*?)(<\/div>\s*<\/section>)/,
+    `$1${teamReplacement}$3`
+  );
+  updated = updated.replace(
+    /(<section class="responsibilities[^"]*">[\s\S]*?<ul>)([\s\S]*?)(<\/ul>)/,
+    `$1${responsibilitiesReplacement}$3`
+  );
+  return updated;
+};
+
+const requireCommitteePermission = async (req, res, next) => {
+  try {
+    const username = getAuthUsername(req);
+    const committeeId = req.params.id;
+    if (!username) {
+      return res.status(400).json({ message: "Username is required" });
+    }
+    const config = getCommitteeConfig(committeeId);
+    if (!config) {
+      return res.status(404).json({ message: "Committee not found" });
+    }
+    const user = await User.findOne({ username: String(username).trim() });
+    if (!user || user.isAdmin !== true) {
+      return res.status(403).json({ message: "Admin access required" });
+    }
+    if (user.isMaster !== true && user[config.permission] !== true) {
+      return res.status(403).json({ message: "Committee permission required" });
+    }
+    req.adminUser = user;
+    req.committeeConfig = config;
+    next();
+  } catch (err) {
+    console.error("Committee permission error:", err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 // ------------------- Test route -------------------
 app.get('/', (req, res) => {
     res.send("✅ Backend is running");
@@ -102,7 +343,15 @@ app.post('/login', async (req, res) => {
             canNews: user.canNews === true,
             canLegacy: user.canLegacy === true,
             canUsers: user.canUsers === true,
-            canLogs: user.canLogs === true
+            canLogs: user.canLogs === true,
+            canCommitteeIt: user.canCommitteeIt === true,
+            canCommitteeMarketing: user.canCommitteeMarketing === true,
+            canCommitteeEntrepreneurship: user.canCommitteeEntrepreneurship === true,
+            canCommitteeAcademic: user.canCommitteeAcademic === true,
+            canCommitteeEvent: user.canCommitteeEvent === true,
+            canCommitteeHr: user.canCommitteeHr === true,
+            canCommitteeLaw: user.canCommitteeLaw === true,
+            canCommitteeIntRelations: user.canCommitteeIntRelations === true
         };
         res.status(200).json({ 
             message: 'Login successful', 
@@ -307,7 +556,10 @@ app.post("/api/admin/users", requireAdminPermission('canUsers'), async (req, res
     const { 
       name, surname, username: newUsername, password, gender, major, uni, yob, email, cvLink,
       isAdmin, adminUsername,
-      canTalentPool, canStartups, canNews, canLegacy, canUsers, canLogs
+      canTalentPool, canStartups, canNews, canLegacy, canUsers, canLogs,
+      canCommitteeIt, canCommitteeMarketing, canCommitteeEntrepreneurship,
+      canCommitteeAcademic, canCommitteeEvent, canCommitteeHr,
+      canCommitteeLaw, canCommitteeIntRelations
     } = req.body;
     
     console.log(`Add user request - Admin: ${adminUsername}, New User: ${name} ${surname}, Username: ${newUsername}`);
@@ -345,6 +597,14 @@ app.post("/api/admin/users", requireAdminPermission('canUsers'), async (req, res
     if (canLegacy === true) userData.canLegacy = true;
     if (canUsers === true) userData.canUsers = true;
     if (canLogs === true) userData.canLogs = true;
+    if (canCommitteeIt === true) userData.canCommitteeIt = true;
+    if (canCommitteeMarketing === true) userData.canCommitteeMarketing = true;
+    if (canCommitteeEntrepreneurship === true) userData.canCommitteeEntrepreneurship = true;
+    if (canCommitteeAcademic === true) userData.canCommitteeAcademic = true;
+    if (canCommitteeEvent === true) userData.canCommitteeEvent = true;
+    if (canCommitteeHr === true) userData.canCommitteeHr = true;
+    if (canCommitteeLaw === true) userData.canCommitteeLaw = true;
+    if (canCommitteeIntRelations === true) userData.canCommitteeIntRelations = true;
     
     const newUser = new User(userData);
     await newUser.save();
@@ -360,6 +620,14 @@ app.post("/api/admin/users", requireAdminPermission('canUsers'), async (req, res
         if (canLegacy === true) grantedPermissions.push('canLegacy');
         if (canUsers === true) grantedPermissions.push('canUsers');
         if (canLogs === true) grantedPermissions.push('canLogs');
+        if (canCommitteeIt === true) grantedPermissions.push('canCommitteeIt');
+        if (canCommitteeMarketing === true) grantedPermissions.push('canCommitteeMarketing');
+        if (canCommitteeEntrepreneurship === true) grantedPermissions.push('canCommitteeEntrepreneurship');
+        if (canCommitteeAcademic === true) grantedPermissions.push('canCommitteeAcademic');
+        if (canCommitteeEvent === true) grantedPermissions.push('canCommitteeEvent');
+        if (canCommitteeHr === true) grantedPermissions.push('canCommitteeHr');
+        if (canCommitteeLaw === true) grantedPermissions.push('canCommitteeLaw');
+        if (canCommitteeIntRelations === true) grantedPermissions.push('canCommitteeIntRelations');
         
         const adminLog = new AdminLog({
           adminUsername: adminUsername.trim(),
@@ -419,7 +687,15 @@ app.patch("/api/admin/users/:username/permissions", requireMasterAdmin, async (r
       "canNews",
       "canLegacy",
       "canUsers",
-      "canLogs"
+      "canLogs",
+      "canCommitteeIt",
+      "canCommitteeMarketing",
+      "canCommitteeEntrepreneurship",
+      "canCommitteeAcademic",
+      "canCommitteeEvent",
+      "canCommitteeHr",
+      "canCommitteeLaw",
+      "canCommitteeIntRelations"
     ];
 
     const update = {};
@@ -526,6 +802,107 @@ app.post("/api/admin/check", async (req, res) => {
   } catch (err) {
     console.error("Admin check error:", err);
     res.status(500).json({ message: "Server error" });
+  }
+});
+
+// ------------------- Committee Admin API -------------------
+app.get("/api/admin/committees/:id", requireCommitteePermission, async (req, res) => {
+  try {
+    const config = req.committeeConfig;
+    const html = fs.readFileSync(config.filePath, 'utf8');
+    const i18nContent = fs.readFileSync(I18N_PATH, 'utf8');
+    const enBounds = findObjectBlock(i18nContent, 'en');
+    const trBounds = findObjectBlock(i18nContent, 'tr');
+    const enBlock = enBounds ? i18nContent.slice(enBounds.start + 1, enBounds.end) : '';
+    const trBlock = trBounds ? i18nContent.slice(trBounds.start + 1, trBounds.end) : '';
+    const translationsEn = parseTranslationBlock(enBlock);
+    const translationsTr = parseTranslationBlock(trBlock);
+
+    const parsed = parseCommitteeHtml(html, config);
+    const members = parsed.members.map((member, index) => {
+      const roleKey = member.roleKey || `${config.i18nPrefix}.team.member${index + 1}.role`;
+      return {
+        name: member.name,
+        image: member.image,
+        roleKey,
+        roleEn: translationsEn[roleKey] || member.roleText || '',
+        roleTr: translationsTr[roleKey] || ''
+      };
+    });
+    const responsibilities = parsed.responsibilities.map((item, index) => {
+      const key = item.key || `${config.i18nPrefix}.responsibilities.item${index + 1}`;
+      return {
+        key,
+        en: translationsEn[key] || item.text || '',
+        tr: translationsTr[key] || ''
+      };
+    });
+
+    res.json({ committee: { id: config.id, label: config.label }, members, responsibilities });
+  } catch (err) {
+    console.error("Failed to load committee:", err);
+    res.status(500).json({ message: "Failed to load committee", error: err.message });
+  }
+});
+
+app.patch("/api/admin/committees/:id", requireCommitteePermission, async (req, res) => {
+  try {
+    const config = req.committeeConfig;
+    const { members, responsibilities } = req.body;
+    if (!Array.isArray(members) || !Array.isArray(responsibilities)) {
+      return res.status(400).json({ message: "members and responsibilities are required arrays" });
+    }
+
+    const sanitizedMembers = members.map((member) => ({
+      name: String(member.name || '').trim(),
+      image: String(member.image || '').trim(),
+      roleEn: String(member.roleEn || '').trim(),
+      roleTr: String(member.roleTr || '').trim()
+    }));
+
+    const sanitizedResponsibilities = responsibilities.map((item) => ({
+      en: String(item.en || '').trim(),
+      tr: String(item.tr || '').trim()
+    }));
+
+    const hasInvalidMember = sanitizedMembers.some((member) => !member.name || !member.image || !member.roleEn || !member.roleTr);
+    if (hasInvalidMember) {
+      return res.status(400).json({ message: "Each member needs name, image, roleEn, and roleTr" });
+    }
+
+    const hasInvalidResponsibility = sanitizedResponsibilities.some((item) => !item.en || !item.tr);
+    if (hasInvalidResponsibility) {
+      return res.status(400).json({ message: "Each responsibility needs en and tr text" });
+    }
+
+    const html = fs.readFileSync(config.filePath, 'utf8');
+    const updatedHtml = updateCommitteeHtml(html, config, sanitizedMembers, sanitizedResponsibilities);
+    fs.writeFileSync(config.filePath, updatedHtml, 'utf8');
+
+    let i18nContent = fs.readFileSync(I18N_PATH, 'utf8');
+    const enUpdates = {};
+    const trUpdates = {};
+
+    sanitizedMembers.forEach((member, index) => {
+      const key = `${config.i18nPrefix}.team.member${index + 1}.role`;
+      enUpdates[key] = member.roleEn;
+      trUpdates[key] = member.roleTr;
+    });
+
+    sanitizedResponsibilities.forEach((item, index) => {
+      const key = `${config.i18nPrefix}.responsibilities.item${index + 1}`;
+      enUpdates[key] = item.en;
+      trUpdates[key] = item.tr;
+    });
+
+    i18nContent = upsertTranslations(i18nContent, 'en', enUpdates);
+    i18nContent = upsertTranslations(i18nContent, 'tr', trUpdates);
+    fs.writeFileSync(I18N_PATH, i18nContent, 'utf8');
+
+    res.json({ message: "Committee updated", committeeId: config.id });
+  } catch (err) {
+    console.error("Failed to update committee:", err);
+    res.status(500).json({ message: "Failed to update committee", error: err.message });
   }
 });
 

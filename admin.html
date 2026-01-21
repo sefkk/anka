@@ -406,6 +406,38 @@ body{
   transform:translateY(-1px);
 }
 
+.btn-secondary{
+  background:#f3f4f6; color:var(--text); border:2px solid var(--border);
+}
+
+.btn-secondary:hover{
+  background:#e5e7eb;
+}
+
+.committee-item{
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:1rem;
+  margin-bottom:1rem;
+  background:#fff;
+}
+
+.committee-item-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1rem;
+}
+
+.committee-item-actions{
+  display:flex;
+  justify-content:flex-end;
+  margin-top:0.75rem;
+}
+
+@media (max-width:768px){
+  .committee-item-grid{ grid-template-columns:1fr; }
+}
+
 .btn-danger{
   background:linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   color:#fff; border:2px solid transparent;
@@ -657,6 +689,9 @@ body{
     </button>
     <button class="tab-btn" data-tab="users">
       <i class="fas fa-user-plus"></i> Add Member
+    </button>
+    <button class="tab-btn" data-tab="committees">
+      <i class="fas fa-users"></i> Committees
     </button>
   </div>
 
@@ -962,7 +997,7 @@ body{
             <input type="checkbox" name="isAdmin" value="true" disabled style="width:auto; margin-right:.5rem; cursor:not-allowed;">
             Admin User
           </label>
-          <small style="display:block; color:var(--muted); font-size:.85rem; margin-top:.25rem;">
+          <small id="adminStatusNote" style="display:block; color:var(--muted); font-size:.85rem; margin-top:.25rem;">
             You don't have permission to grant admin status
           </small>
         </div>
@@ -988,14 +1023,83 @@ body{
               <input type="checkbox" name="canLogs" value="true" disabled style="width:auto; margin-right:.35rem; cursor:not-allowed;"> Logs
             </label>
           </div>
-          <small style="display:block; color:var(--muted); font-size:.85rem; margin-top:.25rem;">
+          <small id="adminPermissionsNote" style="display:block; color:var(--muted); font-size:.85rem; margin-top:.25rem;">
             You don't have permission to edit admin permissions
+          </small>
+        </div>
+        <div class="form-group">
+          <label>Committee Access</label>
+          <div style="display:flex; flex-wrap:wrap; gap:.75rem;">
+            <label class="permission-toggle disabled" style="display:inline-flex; align-items:center; gap:.35rem; cursor:not-allowed;">
+              <input type="checkbox" name="canCommitteeIt" value="true" disabled style="width:auto; margin-right:.35rem; cursor:not-allowed;"> IT Committee
+            </label>
+            <label class="permission-toggle disabled" style="display:inline-flex; align-items:center; gap:.35rem; cursor:not-allowed;">
+              <input type="checkbox" name="canCommitteeMarketing" value="true" disabled style="width:auto; margin-right:.35rem; cursor:not-allowed;"> Marketing Committee
+            </label>
+            <label class="permission-toggle disabled" style="display:inline-flex; align-items:center; gap:.35rem; cursor:not-allowed;">
+              <input type="checkbox" name="canCommitteeEntrepreneurship" value="true" disabled style="width:auto; margin-right:.35rem; cursor:not-allowed;"> Entrepreneurship Committee
+            </label>
+            <label class="permission-toggle disabled" style="display:inline-flex; align-items:center; gap:.35rem; cursor:not-allowed;">
+              <input type="checkbox" name="canCommitteeAcademic" value="true" disabled style="width:auto; margin-right:.35rem; cursor:not-allowed;"> Academic Committee
+            </label>
+            <label class="permission-toggle disabled" style="display:inline-flex; align-items:center; gap:.35rem; cursor:not-allowed;">
+              <input type="checkbox" name="canCommitteeEvent" value="true" disabled style="width:auto; margin-right:.35rem; cursor:not-allowed;"> Event Committee
+            </label>
+            <label class="permission-toggle disabled" style="display:inline-flex; align-items:center; gap:.35rem; cursor:not-allowed;">
+              <input type="checkbox" name="canCommitteeHr" value="true" disabled style="width:auto; margin-right:.35rem; cursor:not-allowed;"> HR Committee
+            </label>
+            <label class="permission-toggle disabled" style="display:inline-flex; align-items:center; gap:.35rem; cursor:not-allowed;">
+              <input type="checkbox" name="canCommitteeLaw" value="true" disabled style="width:auto; margin-right:.35rem; cursor:not-allowed;"> Law Committee
+            </label>
+            <label class="permission-toggle disabled" style="display:inline-flex; align-items:center; gap:.35rem; cursor:not-allowed;">
+              <input type="checkbox" name="canCommitteeIntRelations" value="true" disabled style="width:auto; margin-right:.35rem; cursor:not-allowed;"> International Relations Committee
+            </label>
+          </div>
+          <small id="committeePermissionsNote" style="display:block; color:var(--muted); font-size:.85rem; margin-top:.25rem;">
+            You don't have permission to edit committee access
           </small>
         </div>
         <button type="submit" class="btn btn-primary">
           <i class="fas fa-user-plus"></i> Add Member
         </button>
       </form>
+    </div>
+  </div>
+
+  <!-- Committee Editor Tab -->
+  <div id="committees" class="tab-content">
+    <div class="admin-form">
+      <h2>Committee Editor</h2>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Committee</label>
+          <select id="committeeSelect"></select>
+          <small>Only committees you have access to are listed.</small>
+        </div>
+        <div class="form-group">
+          <label>Load</label>
+          <button type="button" class="btn btn-secondary" id="loadCommitteeBtn">
+            <i class="fas fa-sync"></i> Load Committee
+          </button>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Members</label>
+        <div id="committeeMembers"></div>
+        <button type="button" class="btn btn-secondary" id="addCommitteeMember">
+          <i class="fas fa-user-plus"></i> Add Member
+        </button>
+      </div>
+      <div class="form-group">
+        <label>Key Responsibilities</label>
+        <div id="committeeResponsibilities"></div>
+        <button type="button" class="btn btn-secondary" id="addCommitteeResponsibility">
+          <i class="fas fa-plus"></i> Add Responsibility
+        </button>
+      </div>
+      <button type="button" class="btn btn-primary" id="saveCommitteeChanges">
+        <i class="fas fa-save"></i> Save Changes
+      </button>
     </div>
   </div>
 </div>
@@ -1044,7 +1148,15 @@ const permissions = {
   canNews: sessionStorage.getItem('canNews') === 'true',
   canLegacy: sessionStorage.getItem('canLegacy') === 'true',
   canUsers: sessionStorage.getItem('canUsers') === 'true',
-  canLogs: sessionStorage.getItem('canLogs') === 'true'
+  canLogs: sessionStorage.getItem('canLogs') === 'true',
+  canCommitteeIt: sessionStorage.getItem('canCommitteeIt') === 'true',
+  canCommitteeMarketing: sessionStorage.getItem('canCommitteeMarketing') === 'true',
+  canCommitteeEntrepreneurship: sessionStorage.getItem('canCommitteeEntrepreneurship') === 'true',
+  canCommitteeAcademic: sessionStorage.getItem('canCommitteeAcademic') === 'true',
+  canCommitteeEvent: sessionStorage.getItem('canCommitteeEvent') === 'true',
+  canCommitteeHr: sessionStorage.getItem('canCommitteeHr') === 'true',
+  canCommitteeLaw: sessionStorage.getItem('canCommitteeLaw') === 'true',
+  canCommitteeIntRelations: sessionStorage.getItem('canCommitteeIntRelations') === 'true'
 };
 
 if (isMaster === true) {
@@ -1054,6 +1166,38 @@ if (isMaster === true) {
   permissions.canLegacy = true;
   permissions.canUsers = true;
   permissions.canLogs = true;
+  permissions.canCommitteeIt = true;
+  permissions.canCommitteeMarketing = true;
+  permissions.canCommitteeEntrepreneurship = true;
+  permissions.canCommitteeAcademic = true;
+  permissions.canCommitteeEvent = true;
+  permissions.canCommitteeHr = true;
+  permissions.canCommitteeLaw = true;
+  permissions.canCommitteeIntRelations = true;
+}
+
+function enableAddUserPermissions() {
+  const form = document.getElementById('addUserForm');
+  if (!form) return;
+  form.querySelectorAll('input[type="checkbox"]').forEach((checkbox) => {
+    checkbox.disabled = false;
+    checkbox.style.cursor = 'pointer';
+  });
+  form.querySelectorAll('.permission-toggle').forEach((label) => {
+    label.classList.remove('disabled');
+    label.style.cursor = 'pointer';
+  });
+
+  const adminStatusNote = document.getElementById('adminStatusNote');
+  if (adminStatusNote) adminStatusNote.textContent = 'You can grant admin status.';
+  const adminPermissionsNote = document.getElementById('adminPermissionsNote');
+  if (adminPermissionsNote) adminPermissionsNote.textContent = 'Select admin section access as needed.';
+  const committeePermissionsNote = document.getElementById('committeePermissionsNote');
+  if (committeePermissionsNote) committeePermissionsNote.textContent = 'Select committee access as needed.';
+}
+
+if (isMaster === true) {
+  enableAddUserPermissions();
 }
 
 // ==================== ADMIN LOGGING SYSTEM ====================
@@ -1178,6 +1322,7 @@ if (isMaster === true && permissions.canLogs === true) {
             <option value="delete_legacy">Delete Legacy</option>
             <option value="add_user">Add User</option>
             <option value="view_applicants">View Applicants</option>
+            <option value="update_committee">Update Committee</option>
           </select>
           <input type="number" id="logLimit" value="100" min="10" max="1000" style="padding: 0.75rem 1.25rem; border-radius: 12px; border: 2px solid var(--border); background: var(--card-bg); font-size: 0.95rem; width: 120px; font-family: inherit; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);" placeholder="Limit">
           <button class="btn btn-primary" onclick="loadLogs()">
@@ -1246,12 +1391,26 @@ if (isMaster === true) {
   }
 }
 
+const committeePermissions = {
+  it: permissions.canCommitteeIt === true,
+  marketing: permissions.canCommitteeMarketing === true,
+  entrepreneurship: permissions.canCommitteeEntrepreneurship === true,
+  academic: permissions.canCommitteeAcademic === true,
+  event: permissions.canCommitteeEvent === true,
+  hr: permissions.canCommitteeHr === true,
+  law: permissions.canCommitteeLaw === true,
+  'int-relations': permissions.canCommitteeIntRelations === true
+};
+
+const hasCommitteeAccess = Object.values(committeePermissions).some(Boolean);
+
 const tabPermissions = {
   'talent-pool': permissions.canTalentPool === true,
   'startups': permissions.canStartups === true,
   'news': permissions.canNews === true,
   'legacy': permissions.canLegacy === true,
   'users': permissions.canUsers === true,
+  'committees': hasCommitteeAccess === true,
   'logs': permissions.canLogs === true && isMaster === true,
   'admin-access': isMaster === true
 };
@@ -1311,6 +1470,7 @@ document.querySelector('.admin-tabs')?.addEventListener('click', (e) => {
   else if (tabId === 'startups') loadStartups();
   else if (tabId === 'news') loadNews();
   else if (tabId === 'legacy') loadLegacy();
+  else if (tabId === 'committees') initCommitteeEditor();
   else if (tabId === 'logs' && isMaster === true) loadLogs();
   else if (tabId === 'admin-access' && isMaster === true) loadUserPermissions();
 });
@@ -1324,6 +1484,239 @@ function showAlert(message, type = 'success') {
   alertContainer.innerHTML = '';
   alertContainer.appendChild(alert);
   setTimeout(() => alert.remove(), 5000);
+}
+
+// Committee Editor
+const committeeCatalog = [
+  { id: 'it', label: 'IT Committee', permissionKey: 'canCommitteeIt' },
+  { id: 'marketing', label: 'Marketing Committee', permissionKey: 'canCommitteeMarketing' },
+  { id: 'entrepreneurship', label: 'Entrepreneurship & Business Committee', permissionKey: 'canCommitteeEntrepreneurship' },
+  { id: 'academic', label: 'Academic Support Committee', permissionKey: 'canCommitteeAcademic' },
+  { id: 'event', label: 'Event Planning Committee', permissionKey: 'canCommitteeEvent' },
+  { id: 'hr', label: 'HR Committee', permissionKey: 'canCommitteeHr' },
+  { id: 'law', label: 'Law Committee', permissionKey: 'canCommitteeLaw' },
+  { id: 'int-relations', label: 'International Relations Committee', permissionKey: 'canCommitteeIntRelations' }
+];
+
+let committeeEditorInitialized = false;
+let activeCommitteeId = null;
+let committeeState = { members: [], responsibilities: [] };
+
+function getAllowedCommittees() {
+  return committeeCatalog.filter((committee) => permissions[committee.permissionKey] === true);
+}
+
+function initCommitteeEditor() {
+  const select = document.getElementById('committeeSelect');
+  if (!select) return;
+
+  const allowedCommittees = getAllowedCommittees();
+  if (allowedCommittees.length === 0) {
+    select.innerHTML = '<option value="">No committee access</option>';
+    return;
+  }
+
+  select.innerHTML = allowedCommittees.map((committee) => (
+    `<option value="${committee.id}">${committee.label}</option>`
+  )).join('');
+
+  if (!activeCommitteeId || !allowedCommittees.find((c) => c.id === activeCommitteeId)) {
+    activeCommitteeId = allowedCommittees[0].id;
+  }
+  select.value = activeCommitteeId;
+
+  if (!committeeEditorInitialized) {
+    select.addEventListener('change', () => {
+      activeCommitteeId = select.value;
+      loadCommitteeData(activeCommitteeId);
+    });
+    document.getElementById('loadCommitteeBtn')?.addEventListener('click', () => {
+      loadCommitteeData(activeCommitteeId || select.value);
+    });
+    document.getElementById('addCommitteeMember')?.addEventListener('click', () => {
+      committeeState.members.push({ name: '', image: '', roleEn: '', roleTr: '' });
+      renderCommitteeState();
+    });
+    document.getElementById('addCommitteeResponsibility')?.addEventListener('click', () => {
+      committeeState.responsibilities.push({ en: '', tr: '' });
+      renderCommitteeState();
+    });
+    document.getElementById('saveCommitteeChanges')?.addEventListener('click', saveCommitteeChanges);
+    committeeEditorInitialized = true;
+  }
+
+  loadCommitteeData(activeCommitteeId);
+}
+
+function renderCommitteeState() {
+  const membersContainer = document.getElementById('committeeMembers');
+  const responsibilitiesContainer = document.getElementById('committeeResponsibilities');
+  if (!membersContainer || !responsibilitiesContainer) return;
+
+  membersContainer.innerHTML = committeeState.members.map((member, index) => `
+    <div class="committee-item" data-index="${index}">
+      <div class="committee-item-grid">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" data-member-field="name" value="${escapeHtml(member.name)}">
+        </div>
+        <div class="form-group">
+          <label>Image Path</label>
+          <input type="text" data-member-field="image" value="${escapeHtml(member.image)}" placeholder="../about-us/img/...">
+        </div>
+        <div class="form-group">
+          <label>Role (EN)</label>
+          <input type="text" data-member-field="roleEn" value="${escapeHtml(member.roleEn)}">
+        </div>
+        <div class="form-group">
+          <label>Role (TR)</label>
+          <input type="text" data-member-field="roleTr" value="${escapeHtml(member.roleTr)}">
+        </div>
+      </div>
+      <div class="committee-item-actions">
+        <button type="button" class="btn btn-danger btn-small" data-action="remove-member" data-index="${index}">
+          <i class="fas fa-trash"></i> Remove
+        </button>
+      </div>
+    </div>
+  `).join('');
+
+  responsibilitiesContainer.innerHTML = committeeState.responsibilities.map((item, index) => `
+    <div class="committee-item" data-index="${index}">
+      <div class="committee-item-grid">
+        <div class="form-group">
+          <label>Responsibility (EN)</label>
+          <input type="text" data-responsibility-field="en" value="${escapeHtml(item.en)}">
+        </div>
+        <div class="form-group">
+          <label>Responsibility (TR)</label>
+          <input type="text" data-responsibility-field="tr" value="${escapeHtml(item.tr)}">
+        </div>
+      </div>
+      <div class="committee-item-actions">
+        <button type="button" class="btn btn-danger btn-small" data-action="remove-responsibility" data-index="${index}">
+          <i class="fas fa-trash"></i> Remove
+        </button>
+      </div>
+    </div>
+  `).join('');
+
+  membersContainer.querySelectorAll('[data-action="remove-member"]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const index = Number(btn.getAttribute('data-index'));
+      committeeState.members.splice(index, 1);
+      renderCommitteeState();
+    });
+  });
+
+  responsibilitiesContainer.querySelectorAll('[data-action="remove-responsibility"]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const index = Number(btn.getAttribute('data-index'));
+      committeeState.responsibilities.splice(index, 1);
+      renderCommitteeState();
+    });
+  });
+}
+
+async function loadCommitteeData(committeeId) {
+  if (!committeeId) return;
+  const membersContainer = document.getElementById('committeeMembers');
+  const responsibilitiesContainer = document.getElementById('committeeResponsibilities');
+  if (membersContainer) {
+    membersContainer.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading members...</p></div>';
+  }
+  if (responsibilitiesContainer) {
+    responsibilitiesContainer.innerHTML = '<div class="empty-state"><i class="fas fa-spinner fa-spin"></i><p>Loading responsibilities...</p></div>';
+  }
+
+  try {
+    const res = await fetch(`${API_BASE}/api/admin/committees/${encodeURIComponent(committeeId)}?username=${encodeURIComponent(username)}`);
+    const data = await res.json();
+    if (!res.ok) {
+      showAlert(data.message || 'Failed to load committee', 'error');
+      return;
+    }
+    committeeState = {
+      members: Array.isArray(data.members) ? data.members.map((member) => ({
+        name: member.name || '',
+        image: member.image || '',
+        roleEn: member.roleEn || '',
+        roleTr: member.roleTr || ''
+      })) : [],
+      responsibilities: Array.isArray(data.responsibilities) ? data.responsibilities.map((item) => ({
+        en: item.en || '',
+        tr: item.tr || ''
+      })) : []
+    };
+    renderCommitteeState();
+  } catch (err) {
+    showAlert('Error loading committee: ' + err.message, 'error');
+  }
+}
+
+function collectCommitteeFormData() {
+  const members = Array.from(document.querySelectorAll('#committeeMembers .committee-item')).map((item) => ({
+    name: item.querySelector('[data-member-field="name"]')?.value.trim() || '',
+    image: item.querySelector('[data-member-field="image"]')?.value.trim() || '',
+    roleEn: item.querySelector('[data-member-field="roleEn"]')?.value.trim() || '',
+    roleTr: item.querySelector('[data-member-field="roleTr"]')?.value.trim() || ''
+  }));
+
+  const responsibilities = Array.from(document.querySelectorAll('#committeeResponsibilities .committee-item')).map((item) => ({
+    en: item.querySelector('[data-responsibility-field="en"]')?.value.trim() || '',
+    tr: item.querySelector('[data-responsibility-field="tr"]')?.value.trim() || ''
+  }));
+
+  return { members, responsibilities };
+}
+
+async function saveCommitteeChanges() {
+  if (!activeCommitteeId) {
+    showAlert('Select a committee first.', 'error');
+    return;
+  }
+  const { members, responsibilities } = collectCommitteeFormData();
+  if (members.length === 0) {
+    showAlert('Add at least one member.', 'error');
+    return;
+  }
+  const invalidMember = members.find((member) => !member.name || !member.image || !member.roleEn || !member.roleTr);
+  if (invalidMember) {
+    showAlert('Every member needs name, image, and role translations.', 'error');
+    return;
+  }
+  const invalidResponsibility = responsibilities.find((item) => !item.en || !item.tr);
+  if (invalidResponsibility) {
+    showAlert('Every responsibility needs English and Turkish text.', 'error');
+    return;
+  }
+
+  logAdminAction('update_committee', {
+    committeeId: activeCommitteeId,
+    membersCount: members.length,
+    responsibilitiesCount: responsibilities.length
+  });
+
+  try {
+    const res = await fetch(`${API_BASE}/api/admin/committees/${encodeURIComponent(activeCommitteeId)}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        adminUsername: username,
+        members,
+        responsibilities
+      })
+    });
+    const result = await res.json();
+    if (!res.ok) {
+      showAlert(result.message || 'Failed to save committee', 'error');
+      return;
+    }
+    showAlert('Committee updated successfully!', 'success');
+    loadCommitteeData(activeCommitteeId);
+  } catch (err) {
+    showAlert('Error saving committee: ' + err.message, 'error');
+  }
 }
 
 // Load Jobs
@@ -2055,7 +2448,15 @@ document.getElementById('addUserForm')?.addEventListener('submit', async (e) => 
     'canNews',
     'canLegacy',
     'canUsers',
-    'canLogs'
+    'canLogs',
+    'canCommitteeIt',
+    'canCommitteeMarketing',
+    'canCommitteeEntrepreneurship',
+    'canCommitteeAcademic',
+    'canCommitteeEvent',
+    'canCommitteeHr',
+    'canCommitteeLaw',
+    'canCommitteeIntRelations'
   ]);
   
   // Get all form values
@@ -2121,6 +2522,14 @@ document.getElementById('addUserForm')?.addEventListener('submit', async (e) => 
         if (data.canLegacy === true) grantedPermissions.push('canLegacy');
         if (data.canUsers === true) grantedPermissions.push('canUsers');
         if (data.canLogs === true) grantedPermissions.push('canLogs');
+        if (data.canCommitteeIt === true) grantedPermissions.push('canCommitteeIt');
+        if (data.canCommitteeMarketing === true) grantedPermissions.push('canCommitteeMarketing');
+        if (data.canCommitteeEntrepreneurship === true) grantedPermissions.push('canCommitteeEntrepreneurship');
+        if (data.canCommitteeAcademic === true) grantedPermissions.push('canCommitteeAcademic');
+        if (data.canCommitteeEvent === true) grantedPermissions.push('canCommitteeEvent');
+        if (data.canCommitteeHr === true) grantedPermissions.push('canCommitteeHr');
+        if (data.canCommitteeLaw === true) grantedPermissions.push('canCommitteeLaw');
+        if (data.canCommitteeIntRelations === true) grantedPermissions.push('canCommitteeIntRelations');
         
         logAdminAction('grant_admin', {
           targetUsername: data.username,
@@ -2404,8 +2813,10 @@ function renderAdminAccessList() {
     const isAdminUser = user.isAdmin === true;
     const disabledAttr = isMasterUser ? 'disabled' : '';
     const permDisabledAttr = (!isAdminUser || isMasterUser) ? 'disabled' : '';
+    const committeeDisabledAttr = isMasterUser ? 'disabled' : '';
     const adminToggleClass = isMasterUser ? 'permission-toggle disabled' : 'permission-toggle';
     const permToggleClass = (!isAdminUser || isMasterUser) ? 'permission-toggle disabled' : 'permission-toggle';
+    const committeeToggleClass = isMasterUser ? 'permission-toggle disabled' : 'permission-toggle';
 
     return `
       <div class="item-card">
@@ -2444,6 +2855,38 @@ function renderAdminAccessList() {
             <input type="checkbox" data-field="canLogs" ${user.canLogs === true ? 'checked' : ''} ${permDisabledAttr}>
             Logs
           </label>
+          <label class="${committeeToggleClass}" title="${isMasterUser ? 'You don\'t have permission to edit' : ''}">
+            <input type="checkbox" data-field="canCommitteeIt" ${user.canCommitteeIt === true ? 'checked' : ''} ${committeeDisabledAttr}>
+            IT Committee
+          </label>
+          <label class="${committeeToggleClass}" title="${isMasterUser ? 'You don\'t have permission to edit' : ''}">
+            <input type="checkbox" data-field="canCommitteeMarketing" ${user.canCommitteeMarketing === true ? 'checked' : ''} ${committeeDisabledAttr}>
+            Marketing Committee
+          </label>
+          <label class="${committeeToggleClass}" title="${isMasterUser ? 'You don\'t have permission to edit' : ''}">
+            <input type="checkbox" data-field="canCommitteeEntrepreneurship" ${user.canCommitteeEntrepreneurship === true ? 'checked' : ''} ${committeeDisabledAttr}>
+            Entrepreneurship Committee
+          </label>
+          <label class="${committeeToggleClass}" title="${isMasterUser ? 'You don\'t have permission to edit' : ''}">
+            <input type="checkbox" data-field="canCommitteeAcademic" ${user.canCommitteeAcademic === true ? 'checked' : ''} ${committeeDisabledAttr}>
+            Academic Committee
+          </label>
+          <label class="${committeeToggleClass}" title="${isMasterUser ? 'You don\'t have permission to edit' : ''}">
+            <input type="checkbox" data-field="canCommitteeEvent" ${user.canCommitteeEvent === true ? 'checked' : ''} ${committeeDisabledAttr}>
+            Event Committee
+          </label>
+          <label class="${committeeToggleClass}" title="${isMasterUser ? 'You don\'t have permission to edit' : ''}">
+            <input type="checkbox" data-field="canCommitteeHr" ${user.canCommitteeHr === true ? 'checked' : ''} ${committeeDisabledAttr}>
+            HR Committee
+          </label>
+          <label class="${committeeToggleClass}" title="${isMasterUser ? 'You don\'t have permission to edit' : ''}">
+            <input type="checkbox" data-field="canCommitteeLaw" ${user.canCommitteeLaw === true ? 'checked' : ''} ${committeeDisabledAttr}>
+            Law Committee
+          </label>
+          <label class="${committeeToggleClass}" title="${isMasterUser ? 'You don\'t have permission to edit' : ''}">
+            <input type="checkbox" data-field="canCommitteeIntRelations" ${user.canCommitteeIntRelations === true ? 'checked' : ''} ${committeeDisabledAttr}>
+            Int Relations Committee
+          </label>
           <button class="btn btn-small btn-primary" data-action="save-permissions" data-username="${escapeHtml(user.username || '')}" ${disabledAttr} title="${isMasterUser ? 'You don\'t have permission to edit' : ''}">
             <i class="fas fa-save"></i> Save
           </button>
@@ -2463,7 +2906,8 @@ function bindAdminAccessEvents() {
     checkbox.addEventListener('change', () => {
       const row = checkbox.closest('.item-card');
       if (!row) return;
-      const permCheckboxes = row.querySelectorAll('input[data-field^="can"]');
+      const permCheckboxes = Array.from(row.querySelectorAll('input[data-field^="can"]'))
+        .filter((cb) => !cb.getAttribute('data-field').startsWith('canCommittee'));
       if (!checkbox.checked) {
         permCheckboxes.forEach((cb) => {
           cb.checked = false;
@@ -2519,7 +2963,23 @@ function bindAdminAccessEvents() {
             const grantedPermissions = [];
             const revokedPermissions = [];
             
-            const permissionFields = ['isAdmin', 'canTalentPool', 'canStartups', 'canNews', 'canLegacy', 'canUsers', 'canLogs'];
+            const permissionFields = [
+              'isAdmin',
+              'canTalentPool',
+              'canStartups',
+              'canNews',
+              'canLegacy',
+              'canUsers',
+              'canLogs',
+              'canCommitteeIt',
+              'canCommitteeMarketing',
+              'canCommitteeEntrepreneurship',
+              'canCommitteeAcademic',
+              'canCommitteeEvent',
+              'canCommitteeHr',
+              'canCommitteeLaw',
+              'canCommitteeIntRelations'
+            ];
             permissionFields.forEach((field) => {
               const wasSet = currentUser[field] === true;
               const willBeSet = fields[field] === true;
@@ -2654,6 +3114,7 @@ if (initialTab === 'talent-pool') loadJobs();
 else if (initialTab === 'startups') loadStartups();
 else if (initialTab === 'news') loadNews();
 else if (initialTab === 'legacy') loadLegacy();
+else if (initialTab === 'committees') initCommitteeEditor();
 else if (initialTab === 'logs' && isMaster === true) loadLogs();
 else if (initialTab === 'admin-access' && isMaster === true) loadUserPermissions();
 </script>
