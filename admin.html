@@ -1196,10 +1196,6 @@ function enableAddUserPermissions() {
   if (committeePermissionsNote) committeePermissionsNote.textContent = 'Select committee access as needed.';
 }
 
-if (isMaster === true) {
-  enableAddUserPermissions();
-}
-
 // ==================== ADMIN LOGGING SYSTEM ====================
 // Generate unique session ID
 const sessionId = `admin_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
@@ -2912,10 +2908,20 @@ function bindAdminAccessEvents() {
         permCheckboxes.forEach((cb) => {
           cb.checked = false;
           cb.disabled = true;
+          const label = cb.closest('label');
+          if (label) {
+            label.classList.add('disabled');
+            label.title = 'You don\'t have permission to edit';
+          }
         });
       } else {
         permCheckboxes.forEach((cb) => {
           cb.disabled = false;
+          const label = cb.closest('label');
+          if (label) {
+            label.classList.remove('disabled');
+            label.title = '';
+          }
         });
       }
     });
