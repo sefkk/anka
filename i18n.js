@@ -452,7 +452,7 @@
       'nav.home': 'Ana Sayfa',
       'nav.about': 'Hakkımızda',
       'nav.about_link': 'Hakkımızda',
-      'nav.legacy': 'ANKA Mirası',
+      'nav.legacy': 'ANKA Legacy',
       'nav.news': 'ANKA Haberleri',
       'nav.committees': 'Komitelerimiz',
       'nav.contact': 'Bize Ulaşın',
@@ -479,7 +479,7 @@
       'footer_loggedin.title': 'MyANKA',
       'footer_loggedin.home': 'MyANKA Ana Sayfa',
       'footer_loggedin.legal': 'Hukuki Danışmanlık',
-      'footer_loggedin.talent': 'ANKA Yetenek Havuzu',
+      'footer_loggedin.talent': 'ANKA TalentPool',
       'footer_loggedin.committee': 'Komite Başvurusu',
       'footer_loggedin.discounts': 'Özel İndirimler',
       'contact.title': 'Bize Ulaşın',
@@ -664,13 +664,13 @@
       'committee_hr.team.member1.role': 'Başkan',
       'committee_hr.team.member2.role': 'Başkan Yardımcısı',
       'committee_hr.team.member3.role': 'Üye İlişkileri ve Etkileşim Sorumlusu',
-      'committee_hr.team.member4.role': 'Yetenek Havuzu Sorumlusu',
+      'committee_hr.team.member4.role': 'TalentPool Sorumlusu',
       'committee_hr.responsibilities.title': 'Temel Sorumluluklar',
       'committee_hr.responsibilities.item1': 'Yeni üyelerin işe alım ve oryantasyon süreçlerini yönetmek',
       'committee_hr.responsibilities.item2': 'Üye bağlılığını ve memnuniyetini sürdürmek',
       'committee_hr.responsibilities.item3': 'İç topluluk oluşturma etkinlikleri düzenlemek',
       'committee_hr.responsibilities.item4':
-        'Yetenek Havuzunu yönetmek ve öğrencileri iş/staj fırsatlarıyla eşleştirmek',
+        "TalentPool'u yönetmek ve öğrencileri iş/staj fırsatlarıyla eşleştirmek",
       'committee_hr.responsibilities.item5': 'Üyeler ile yönetim kurulu arasında köprü olmak',
       'committee_law.hero.title': 'Hukuk Komitesi',
       'committee_law.hero.body':
@@ -722,7 +722,7 @@
       'loggedin.news.title': 'ANKA Haberleri',
       'loggedin.services.title': 'Hizmetlerimiz',
       'loggedin.services.legal': 'Hukuki Danışmanlık',
-      'loggedin.services.talent': 'ANKA Yetenek Havuzu',
+      'loggedin.services.talent': 'ANKA TalentPool',
       'loggedin.services.committee': 'ANKA Komite Pozisyonu Başvurusu',
       'loggedin.services.discounts': 'ANKA Özel İndirimler ve Kampanyalar',
       'loggedin.welcome': 'Hoş geldin {name}!',
@@ -767,15 +767,15 @@
       'home.programs.title': "ANKA'yı Keşfet",
       'home.programs.subtitle':
         'Öğrencileri, yeteneği ve yeniliği desteklemek için tasarlanmış platformları keşfedin.',
-      'home.programs.card1.title': 'Yetenek Havuzu',
+      'home.programs.card1.title': 'TalentPool',
       'home.programs.card1.body': 'Öğrenci gelişimine özel iş, staj ve fırsatlar.',
       'home.programs.card2.title': 'Haberler',
       'home.programs.card2.body':
         'ANKA topluluğundan en güncel haberler, etkinlikler ve öne çıkanlar.',
-      'home.programs.card3.title': 'Miras',
+      'home.programs.card3.title': 'Legacy',
       'home.programs.card3.body': "ANKA'yı şekillendiren kişi ve hikayeleri kutlayın.",
       'home.programs.cta': 'Keşfet',
-      'legacy.hero.title': 'ANKA Mirası',
+      'legacy.hero.title': 'ANKA Legacy',
       'legacy.hero.subtitle': 'Geçmiş Üyelerimizi Onurlandırıyoruz',
       'legacy.hero.body':
         'Yıllar boyunca ANKA, topluluğumuza zamanını, emeğini ve tutkusunu veren kişilerin katkılarıyla şekillendi. Bu sayfa, ANKA’yı bugün olduğu hale getiren farklı görevlerde hizmet etmiş herkesi onurlandırır. Tarihimizi ve bu yolculuğun parçası olan değerli insanları keşfedin.',
@@ -794,13 +794,13 @@
       'legacy.subcategories.hr': 'İnsan Kaynakları Komitesi',
       'legacy.subcategories.law': 'Hukuk Komitesi',
       'legacy.subcategories.ir': 'Uluslararası İlişkiler Komitesi',
-      'legacy.messages.setup': 'Miras özelliği hazırlanıyor. Lütfen daha sonra tekrar deneyin.',
-      'legacy.messages.error': 'Miras üyeleri yüklenemedi. Lütfen daha sonra tekrar deneyin.',
+      'legacy.messages.setup': 'Legacy özelliği hazırlanıyor. Lütfen daha sonra tekrar deneyin.',
+      'legacy.messages.error': 'Legacy üyeleri yüklenemedi. Lütfen daha sonra tekrar deneyin.',
       'legacy.messages.empty': 'Gösterilecek geçmiş üye bulunamadı.',
       'legacy.messages.no_year': 'Seçilen yıl için üye bulunamadı.',
       'legacy.aria.past_member': 'Geçmiş Üye: {name}',
       'tp.nav.brand': 'myANKA',
-      'tp.nav.talent': 'Yetenek Havuzu',
+      'tp.nav.talent': 'TalentPool',
       'tp.nav.jobs': 'İş Bul',
       'tp.nav.profile': 'Profilim',
       'tp.nav.faq': 'SSS',
@@ -811,7 +811,7 @@
         'En iyi işverenlerle bağlantı kurun ve becerilerinizle hedeflerinize uygun fırsatları keşfedin.',
       'tp.hero.cta_primary': 'İşlere Göz At',
       'tp.hero.cta_secondary': 'Daha Fazla Bilgi',
-      'tp.why.title': 'Neden ANKA Yetenek Havuzu?',
+      'tp.why.title': 'Neden ANKA TalentPool?',
       'tp.why.job_seekers.title': 'İş Arayanlar İçin',
       'tp.why.job_seekers.item1': 'Becerilerinize ve deneyiminize uygun fırsatlar bulun',
       'tp.why.job_seekers.item2': 'Hızlı ve sezgisel bir başvuru süreci',
@@ -886,10 +886,10 @@
       'tp.faq.title': 'SSS',
       'tp.faq.q1': 'Talentpool ne için kullanılır?',
       'tp.faq.a1':
-        'ANKA Yetenek Havuzu, yetenekli öğrencileri ve profesyonelleri iş fırsatlarıyla buluşturmak için tasarlanmış bir platformdur. İş arayanlar ile işverenler arasında köprü görevi görür; üyelerin profil oluşturmasına, pozisyon aramasına ve ilanlara başvurmasına olanak tanır. Platform, Hollanda’daki Türk ve çok kültürlü öğrencilere özel olarak uyarlanmıştır; beceri ve kariyer hedeflerine uygun staj, yarı zamanlı ve tam zamanlı pozisyonlar bulmalarına yardımcı olur.',
+        'ANKA TalentPool, yetenekli öğrencileri ve profesyonelleri iş fırsatlarıyla buluşturmak için tasarlanmış bir platformdur. İş arayanlar ile işverenler arasında köprü görevi görür; üyelerin profil oluşturmasına, pozisyon aramasına ve ilanlara başvurmasına olanak tanır. Platform, Hollanda’daki Türk ve çok kültürlü öğrencilere özel olarak uyarlanmıştır; beceri ve kariyer hedeflerine uygun staj, yarı zamanlı ve tam zamanlı pozisyonlar bulmalarına yardımcı olur.',
       'tp.faq.q2': 'Talentpool iş arayanlar için ücretsiz mi?',
       'tp.faq.a2':
-        'Evet, ANKA Yetenek Havuzu tüm iş arayanlar için tamamen ücretsizdir. ANKA üyesi olarak profil oluşturabilir, iş ilanlarını inceleyebilir ve pozisyonlara ücretsiz başvurabilirsiniz. Platformun temel özelliklerine erişim için gizli ücretler, abonelikler veya premium paketler yoktur. Misyonumuz, öğrencilere ve profesyonellere kariyer yolculuklarında finansal engel olmadan destek olmaktır.',
+        'Evet, ANKA TalentPool tüm iş arayanlar için tamamen ücretsizdir. ANKA üyesi olarak profil oluşturabilir, iş ilanlarını inceleyebilir ve pozisyonlara ücretsiz başvurabilirsiniz. Platformun temel özelliklerine erişim için gizli ücretler, abonelikler veya premium paketler yoktur. Misyonumuz, öğrencilere ve profesyonellere kariyer yolculuklarında finansal engel olmadan destek olmaktır.',
       'tp.faq.q3': 'Bir ilana nasıl başvurulur?',
       'tp.faq.a3':
         'Bir ilana başvurmak için önce beceri, deneyim ve eğitim bilgilerinizi içeren profilinizi tamamlayın. Ardından “İş Bul” sayfasından iş türü, konum veya anahtar kelimelerle filtreleyerek ilanları inceleyin. İlginizi çeken bir pozisyona tıklayıp detayları görüntüleyin ve “Başvur” butonuna basın. Profil bilgileriniz işverene iletilir ve başvurunuzun gönderildiğine dair onay alırsınız. Seçilme şansınızı artırmak için profilinizi güncel tutmanızı öneririz.',
@@ -898,7 +898,7 @@
         'Elbette! Profil bilgilerinizi istediğiniz zaman düzenleyebilirsiniz. “Profilim” sayfasına giderek kişisel bilgilerinizi, iş deneyiminizi, eğitiminizi, becerilerinizi ve diğer bilgilerinizi güncelleyebilirsiniz. Yeni projeler tamamladığınızda, yeni beceriler kazandığınızda veya yeni yeterlilikler elde ettiğinizde profilinizi güncel tutmanızı öneririz. Güncel bir profil, işverenlere görünürlüğünüzü artırır.',
       'tp.faq.q5': 'Daha fazla sorum var, nereye başvurabilirim?',
       'tp.faq.a5':
-        'Ek sorularınız varsa veya desteğe ihtiyacınız olursa, sayfanın altındaki iletişim bölümünden bize ulaşabilirsiniz. Derneğimiz ve hizmetlerimiz hakkında daha fazla bilgi için ana ANKA web sitesini ziyaret edebilirsiniz. Acil konular veya teknik sorunlar için lütfen iletişim formunu kullanın; ekibimiz en kısa sürede size dönüş yapacaktır. Yetenek Havuzu’ndan en iyi şekilde yararlanmanız için buradayız.'
+        "Ek sorularınız varsa veya desteğe ihtiyacınız olursa, sayfanın altındaki iletişim bölümünden bize ulaşabilirsiniz. Derneğimiz ve hizmetlerimiz hakkında daha fazla bilgi için ana ANKA web sitesini ziyaret edebilirsiniz. Acil konular veya teknik sorunlar için lütfen iletişim formunu kullanın; ekibimiz en kısa sürede size dönüş yapacaktır. TalentPool'dan en iyi şekilde yararlanmanız için buradayız."
     }
   };
 
