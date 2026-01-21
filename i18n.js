@@ -159,21 +159,25 @@
       'committee_marketing.responsibilities.item5': 'Manage communication channels and visual identity of ANKA',
       'committee_entre.hero.title': 'Entrepreneurship & Business Committee',
       'committee_entre.hero.body':
-        'Driving innovation and digital transformation through technology and technical support at ANKA.',
+        'Developing future entrepreneurs and business leaders through hands-on workshops, impactful events, and real-world execution.',
       'committee_entre.team.title': 'Our Team',
       'committee_entre.team.member1.role': 'Chair',
       'committee_entre.team.member2.role': 'Vice Chair',
       'committee_entre.team.member3.role': 'Start-Up Hub Coordinator',
       'committee_entre.team.member4.role': 'ANKA Journeys & Event Coordinator',
       'committee_entre.team.member5.role': 'GENC NETWORK Coordinator',
+      'committee_entre.team.member6.role': 'ANKA Journeys & Events Associate',
+      'committee_entre.team.member7.role': 'Startup Hub Operations Associate',
       'committee_entre.responsibilities.title': 'Key Responsibilities',
-      'committee_entre.responsibilities.item1': 'Support student-led startup projects through guidance and mentorship',
+      'committee_entre.responsibilities.item1':
+        'Build a global entrepreneurship & business network of students, alumni, and professionals',
       'committee_entre.responsibilities.item2':
-        'Organize entrepreneurship-related events, competitions, and workshops',
+        'Operate the Startup Hub, enabling idea incubation, venture development, and execution',
       'committee_entre.responsibilities.item3':
-        'Build a network of alumni and professionals for business development',
-      'committee_entre.responsibilities.item4': 'Offer resources for idea incubation and project realization',
-      'committee_entre.responsibilities.item5': 'Inspire an entrepreneurial mindset within the student body',
+        'Deliver high-impact events including workshops, webinars, seminars, and competitions',
+      'committee_entre.responsibilities.item4': 'Connect members with mentors, investors, and industry experts',
+      'committee_entre.responsibilities.item5':
+        'Promote an execution-driven entrepreneurial mindset across the community',
       'committee_academic.hero.title': 'Academic Support Committee',
       'committee_academic.hero.body':
         'Driving innovation and digital transformation through technology and technical support at ANKA.',
@@ -601,21 +605,25 @@
       'committee_marketing.responsibilities.item5': "ANKA'nın iletişim kanallarını ve görsel kimliğini yönetmek",
       'committee_entre.hero.title': 'Girişimcilik ve İşletme Komitesi',
       'committee_entre.hero.body':
-        "ANKA'da teknoloji ve teknik destek aracılığıyla yenilik ve dijital dönüşümü destekler.",
+        'Uygulamalı atölyeler, etkili etkinlikler ve gerçek hayat uygulamalarıyla geleceğin girişimcilerini ve iş liderlerini yetiştirir.',
       'committee_entre.team.title': 'Ekibimiz',
       'committee_entre.team.member1.role': 'Başkan',
       'committee_entre.team.member2.role': 'Başkan Yardımcısı',
       'committee_entre.team.member3.role': 'Start-Up Hub Koordinatörü',
       'committee_entre.team.member4.role': 'ANKA Journeys ve Etkinlik Koordinatörü',
       'committee_entre.team.member5.role': 'GENC NETWORK Koordinatörü',
+      'committee_entre.team.member6.role': 'ANKA Journeys ve Etkinlikler Asistanı',
+      'committee_entre.team.member7.role': 'Startup Hub Operasyon Asistanı',
       'committee_entre.responsibilities.title': 'Temel Sorumluluklar',
-      'committee_entre.responsibilities.item1': 'Öğrenci liderliğindeki girişim projelerini mentorlukla desteklemek',
+      'committee_entre.responsibilities.item1':
+        'Öğrenciler, mezunlar ve profesyonellerden oluşan küresel bir girişimcilik ve iş ağı kurmak',
       'committee_entre.responsibilities.item2':
-        'Girişimcilik odaklı etkinlikler, yarışmalar ve atölyeler düzenlemek',
+        'Startup Hub’ı yöneterek fikir kuluçkası, girişim geliştirme ve uygulamayı mümkün kılmak',
       'committee_entre.responsibilities.item3':
-        'İş geliştirme için mezunlar ve profesyonellerden oluşan bir ağ oluşturmak',
-      'committee_entre.responsibilities.item4': 'Fikir kuluçkası ve proje hayata geçirme kaynakları sunmak',
-      'committee_entre.responsibilities.item5': 'Öğrencilerde girişimci bir zihniyet geliştirmek',
+        'Atölyeler, webinarlar, seminerler ve yarışmalar dahil yüksek etkili etkinlikler düzenlemek',
+      'committee_entre.responsibilities.item4': 'Üyeleri mentorlar, yatırımcılar ve sektör uzmanlarıyla buluşturmak',
+      'committee_entre.responsibilities.item5':
+        'Topluluk genelinde uygulama odaklı girişimci bir zihniyeti teşvik etmek',
       'committee_academic.hero.title': 'Akademik Destek Komitesi',
       'committee_academic.hero.body':
         "ANKA'da teknoloji ve teknik destek aracılığıyla yenilik ve dijital dönüşümü destekler.",
