@@ -8,7 +8,6 @@ const adminLogSchema = new mongoose.Schema({
     enum: [
       'page_enter',      // Admin paneline giriş
       'page_exit',       // Admin panelinden çıkış
-      'keypress',        // Tuş basımı
       'tab_switch',      // Tab değiştirme
       'add_job',         // İş ilanı ekleme
       'delete_job',      // İş ilanı silme
@@ -26,8 +25,6 @@ const adminLogSchema = new mongoose.Schema({
     ]
   },
   details: { type: mongoose.Schema.Types.Mixed }, // Esnek detay alanı (object, string, etc.)
-  keyPressed: String,    // Basılan tuş (keypress için)
-  keyCode: Number,       // Tuş kodu (keypress için)
   timestamp: { type: Date, default: Date.now }, // İşlem zamanı (milisaniye hassasiyeti)
   sessionId: String,     // Oturum ID'si (sayfa yüklendiğinde oluşturulur)
   ipAddress: String,     // IP adresi (opsiyonel)

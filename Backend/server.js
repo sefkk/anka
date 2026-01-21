@@ -878,7 +878,7 @@ app.get("/api/user-info", async (req, res) => {
 // ------------------- Admin Logging API -------------------
 app.post("/api/admin/logs", async (req, res) => {
   try {
-    const { adminUsername, actionType, details, keyPressed, keyCode, sessionId, ipAddress, userAgent, timestamp } = req.body;
+    const { adminUsername, actionType, details, sessionId, ipAddress, userAgent, timestamp } = req.body;
     
     // Validate required fields
     if (!adminUsername || !actionType) {
@@ -906,8 +906,6 @@ app.post("/api/admin/logs", async (req, res) => {
       adminUsername: adminUsername.trim(),
       actionType,
       details: details || {},
-      keyPressed: keyPressed || null,
-      keyCode: keyCode || null,
       sessionId: sessionId || null,
       ipAddress: logIpAddress.trim(),
       userAgent: logUserAgent,
@@ -916,10 +914,7 @@ app.post("/api/admin/logs", async (req, res) => {
     
     await adminLog.save();
     
-    // Don't log keypresses to console to avoid spam
-    if (actionType !== 'keypress') {
-      console.log(`📝 Admin Log: ${adminUsername} - ${actionType}${details ? ` - ${JSON.stringify(details).substring(0, 100)}` : ''}`);
-    }
+    console.log(`📝 Admin Log: ${adminUsername} - ${actionType}${details ? ` - ${JSON.stringify(details).substring(0, 100)}` : ''}`);
     
     res.status(201).json({ message: "Log saved successfully", logId: adminLog._id });
   } catch (err) {

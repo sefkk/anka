@@ -558,18 +558,51 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-  // Login check and welcome message
-  const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-  if (isLoggedIn !== 'true') {
-    window.location.href = 'login.html';
-  } else {
-    const userName = sessionStorage.getItem('name');
+  // Function to update welcome message dynamically
+  function updateWelcomeMessage() {
     const welcomeElement = document.getElementById('welcomeMessage');
+    if (!welcomeElement) return;
+    
+    const userName = sessionStorage.getItem('name');
     const welcomeTemplate = t('loggedin.welcome', 'Welcome {name}!');
     const welcomeFallback = t('loggedin.welcome_member', 'Welcome member!');
     welcomeElement.textContent = userName
       ? welcomeTemplate.replace('{name}', userName)
       : welcomeFallback;
+  }
+
+  // Login check and welcome message
+  const isLoggedIn = sessionStorage.getItem('isLoggedIn');
+  if (isLoggedIn !== 'true') {
+    window.location.href = 'login.html';
+  } else {
+    // Initial welcome message
+    updateWelcomeMessage();
+    
+    // Listen for language changes by monitoring language button clicks
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('lang-btn')) {
+        // Wait a bit for i18n to update, then update welcome message
+        setTimeout(updateWelcomeMessage, 100);
+      }
+    });
+    
+    // Also listen for storage events (works across tabs)
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'anka_lang') {
+        updateWelcomeMessage();
+      }
+    });
+    
+    // Monitor localStorage changes (for same-tab language changes)
+    let lastLang = localStorage.getItem('anka_lang') || 'en';
+    setInterval(() => {
+      const currentLang = localStorage.getItem('anka_lang') || 'en';
+      if (currentLang !== lastLang) {
+        lastLang = currentLang;
+        updateWelcomeMessage();
+      }
+    }, 200);
   }
 
   // Load News from API
