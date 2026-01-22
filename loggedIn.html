@@ -647,7 +647,10 @@ document.addEventListener("DOMContentLoaded", () => {
           <div class="news-card-image">
             <img src="${item.imageUrl || ''}" alt="${item.title || 'News'}">
           </div>
-          <div class="news-card-date">${item.date || ''}</div>
+          <div class="news-card-overlay">
+            <div class="news-card-title">${item.title || ''}</div>
+            <div class="news-card-date">${item.date || ''}</div>
+          </div>
         </div>
       `).join('');
       
