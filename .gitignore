@@ -13,7 +13,8 @@ node_modules/
 # Misc
 .DS_Store
 *.log
-*.lock
+# Note: package-lock.json should be committed for consistency
+# *.lock
 
 # Environment variables
 .env
