@@ -27,6 +27,24 @@ body{
   margin:0; padding:0; font-family:'Poppins',system-ui,-apple-system,sans-serif; 
   color:var(--text); background: linear-gradient(135deg, #f5f7fa 0%, #e8edf3 100%);
   line-height:1.6; min-height:100vh;
+  position: relative;
+}
+
+/* Black screen overlay for unauthorized access */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #000000;
+  z-index: 999999;
+  display: block;
+}
+
+body.admin-authorized::before {
+  display: none;
 }
 
 .container{width:min(100% - 2rem, 1400px); margin-inline:auto; padding:0 1.5rem;}
@@ -282,6 +300,10 @@ body{
 #admin-access .admin-form,
 #admin-access .items-list{
   box-shadow: none;
+}
+
+#committees{
+  background-color: #f5f7fa;
 }
 
 .permission-toggle {
@@ -1273,8 +1295,14 @@ console.log('Admin check - isAdmin boolean:', isAdmin);
 // Check admin status
 if (!isAdmin) {
   console.error('Admin access denied. isAdmin value:', isAdminValue);
-  alert('Admin access required. Redirecting to login...');
-  window.location.href = 'login.html';
+  // Keep black screen visible, then redirect
+  setTimeout(() => {
+    alert('Admin access required. Redirecting to login...');
+    window.location.href = 'login.html';
+  }, 100);
+} else {
+  // Authorized - remove black screen overlay
+  document.body.classList.add('admin-authorized');
 }
 
 // Add Logs tab if user is master admin and has logs permission

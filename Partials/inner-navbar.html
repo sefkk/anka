@@ -12,7 +12,7 @@
 
   <ul class="navbar">
     <li><a href="loggedIn.html" data-i18n="nav.myanka">MyANKA</a></li>
-    <li><a href="admin.html" data-i18n="nav.admin">Admin Panel</a></li>
+    <li id="admin-panel-li"><a href="admin.html" data-i18n="nav.admin">Admin Panel</a></li>
     <li><a href="Talent-Pool/my-profile.html" data-i18n="nav.profile">My Profile</a></li>
     <li class="lang-toggle" aria-label="Language selector">
       <button type="button" class="lang-btn" data-lang="en">ENG</button>
@@ -21,5 +21,35 @@
     </li>
   </ul>
 </nav>
+
+<script>
+// Show admin panel link only if user is admin
+(function() {
+  function checkAdminAndToggle() {
+    const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+    const adminPanelLi = document.getElementById('admin-panel-li');
+    if (adminPanelLi) {
+      if (isAdmin) {
+        adminPanelLi.style.display = '';
+      } else {
+        adminPanelLi.style.display = 'none';
+      }
+    }
+  }
+  
+  // Check immediately
+  checkAdminAndToggle();
+  
+  // Also check after a short delay in case sessionStorage isn't ready yet
+  setTimeout(checkAdminAndToggle, 100);
+  
+  // Listen for storage changes (in case admin status changes)
+  window.addEventListener('storage', function(e) {
+    if (e.key === 'isAdmin') {
+      checkAdminAndToggle();
+    }
+  });
+})();
+</script>
   
   
