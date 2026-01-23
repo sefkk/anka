@@ -33,3 +33,33 @@
   </ul>
 </nav>
 
+<script>
+(function() {
+  const nav = document.querySelector('.navbar-container');
+  if (!nav) {
+    return;
+  }
+
+  const isNestedPage = /\/(Commitees|Online_Startup_Companies|Talent-Pool)\//.test(
+    window.location.pathname
+  );
+  if (isNestedPage) {
+    return;
+  }
+
+  nav.querySelectorAll('a[href^="../"]').forEach(link => {
+    const href = link.getAttribute('href');
+    if (href) {
+      link.setAttribute('href', href.replace(/^\.\.\//, ''));
+    }
+  });
+
+  nav.querySelectorAll('img[src^="../"]').forEach(img => {
+    const src = img.getAttribute('src');
+    if (src) {
+      img.setAttribute('src', src.replace(/^\.\.\//, ''));
+    }
+  });
+})();
+</script>
+
