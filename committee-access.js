@@ -4,11 +4,6 @@
   const committeeId = document.body?.dataset?.committeeId;
   const loginUrl = window.location.pathname.includes('/Commitees/') ? '../login.html' : 'login.html';
 
-  if (!isLoggedIn) {
-    window.location.href = loginUrl;
-    return;
-  }
-
   if (!committeeId || isMaster) {
     return;
   }
@@ -23,6 +18,10 @@
     law: 'canCommitteeLaw',
     'int-relations': 'canCommitteeIntRelations'
   };
+
+  if (!isLoggedIn) {
+    return;
+  }
 
   const permissionKey = permissionMap[committeeId];
   const hasPermission = permissionKey && sessionStorage.getItem(permissionKey) === 'true';
