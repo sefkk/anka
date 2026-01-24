@@ -443,6 +443,44 @@ app.post("/api/users/change-password", async (req, res) => {
   }
 });
 
+// ------------------- Update Profile -------------------
+app.post("/api/users/update-profile", async (req, res) => {
+  try {
+    const { username, name, surname, uni, major, yob, password } = req.body;
+
+    if (!username) {
+      return res.status(400).json({ message: "username is required" });
+    }
+
+    if (!name || !surname) {
+      return res.status(400).json({ message: "name and surname are required" });
+    }
+
+    const user = await User.findOne({ username: username.trim() });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Update allowed fields
+    user.name = name.trim();
+    user.surname = surname.trim();
+    if (uni !== undefined) user.uni = uni.trim() || '';
+    if (major !== undefined) user.major = major.trim() || '';
+    if (yob !== undefined) user.yob = yob.trim() || '';
+    if (password && password.trim()) {
+      user.password = password.trim();
+    }
+
+    await user.save();
+
+    const { password: _, ...safeUser } = user.toObject();
+    res.status(200).json({ message: "Profile updated successfully", user: safeUser });
+  } catch (err) {
+    console.error("❌ Profile update error:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
+
 // ------------------- Company model -------------------
 const companySchema = new mongoose.Schema({
     name: String,
