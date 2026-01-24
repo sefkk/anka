@@ -255,9 +255,23 @@
       transition: border-color 0.3s ease;
     }
 
-    .password-modal-form input:focus {
+    .password-modal-form input:focus,
+    .password-modal-form select:focus {
       outline: none;
       border-color: #fd9e5e;
+    }
+
+    .password-modal-form select {
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 15px;
+      font-family: 'Poppins', sans-serif;
+      background: white;
+      color: #333;
+      transition: border-color 0.3s ease;
+      cursor: pointer;
+      width: 100%;
     }
 
     .password-modal-buttons {
@@ -408,6 +422,16 @@
         <div class="form-group">
           <label for="editMajor" data-i18n="tp.profile.labels.major">Major</label>
           <input type="text" id="editMajor" name="major">
+        </div>
+        <div class="form-group">
+          <label for="editGender" data-i18n="tp.profile.labels.gender">Gender</label>
+          <select id="editGender" name="gender">
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+            <option value="Prefer not to say">Prefer not to say</option>
+          </select>
         </div>
         <div class="form-group">
           <label for="editYob" data-i18n="tp.profile.labels.yob">Year of Birth</label>
@@ -597,6 +621,7 @@
         document.getElementById("editSurname").value = currentUserData.surname || '';
         document.getElementById("editUni").value = currentUserData.uni || '';
         document.getElementById("editMajor").value = currentUserData.major || '';
+        document.getElementById("editGender").value = currentUserData.gender || '';
         document.getElementById("editYob").value = currentUserData.yob || '';
         document.getElementById("editPassword").value = '';
       }
@@ -631,6 +656,7 @@
       const surname = document.getElementById("editSurname").value.trim();
       const uni = document.getElementById("editUni").value.trim();
       const major = document.getElementById("editMajor").value.trim();
+      const gender = document.getElementById("editGender").value.trim();
       const yob = document.getElementById("editYob").value.trim();
       const password = document.getElementById("editPassword").value.trim();
 
@@ -664,6 +690,7 @@
         
         if (uni && uni.length > 0) updateData.uni = uni;
         if (major && major.length > 0) updateData.major = major;
+        if (gender && gender.length > 0) updateData.gender = gender;
         if (yob && yob.length > 0) updateData.yob = yob;
         if (password && password.length > 0) updateData.password = password;
 

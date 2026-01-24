@@ -446,7 +446,7 @@ app.post("/api/users/change-password", async (req, res) => {
 // ------------------- Update Profile -------------------
 app.post("/api/users/update-profile", async (req, res) => {
   try {
-    const { username, name, surname, uni, major, yob, password } = req.body;
+    const { username, name, surname, uni, major, gender, yob, password } = req.body;
 
     if (!username) {
       return res.status(400).json({ message: "username is required" });
@@ -466,6 +466,7 @@ app.post("/api/users/update-profile", async (req, res) => {
     user.surname = surname.trim();
     if (uni !== undefined) user.uni = uni.trim() || '';
     if (major !== undefined) user.major = major.trim() || '';
+    if (gender !== undefined) user.gender = gender.trim() || '';
     if (yob !== undefined) user.yob = yob.trim() || '';
     if (password && password.trim()) {
       user.password = password.trim();
