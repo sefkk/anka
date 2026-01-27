@@ -619,8 +619,6 @@ footer.site-footer{
 </head>
 <body>
   <!-- Discount Code Pop-up -->
-  <!-- COMMENTED OUT - Will be enabled when codes are ready to show -->
-  <!--
   <div class="discount-popup-overlay" id="discountPopup">
     <div class="discount-popup-card">
       <button class="close-btn" id="closeDiscountPopup">&times;</button>
@@ -631,7 +629,6 @@ footer.site-footer{
       <button class="reveal-btn" id="revealCodeBtn">Reveal</button>
     </div>
   </div>
-  -->
 
 <!-- Fixed, translucent navbar wrapper -->
 <header>
@@ -642,23 +639,6 @@ footer.site-footer{
     <div class="container">
       <h1 id="welcomeMessage"></h1>
       <p class="welcome-sub" data-i18n="loggedin.subtitle">Here you can find your MyANKA page. You can access services, applications, and special discounts only for ANKA members.</p>
-      <!-- COMMENTED OUT - Discount Code Display - Will be enabled when codes are ready to show -->
-      <!--
-      <div style="margin-top: 1.5rem; padding: 1rem 1.5rem; background: rgba(255, 255, 255, 0.9); border-radius: 12px; border: 2px solid rgba(226, 135, 74, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
-          <i class="fas fa-ticket-alt" style="color: var(--brand-2); font-size: 1.2rem;"></i>
-          <div style="text-align: center;">
-            <strong style="color: var(--brand-2); font-size: 0.9rem; display: block; margin-bottom: 0.25rem;">ANKA Turkish Night Bilet İndirim Kodunuz!</strong>
-            <div class="discount-code-container" style="margin: 1rem 0; padding: 1rem; background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%); border-radius: 8px; border: 2px dashed #e0e0e0; min-height: 60px; display: flex; align-items: center; justify-content: center;">
-              <div class="discount-code" id="discountCodeWelcome" style="font-size: 1.5rem; font-weight: 700; letter-spacing: 0.2em; color: var(--brand-2); font-family: 'Courier New', monospace; display: none;">Loading...</div>
-            </div>
-            <button class="reveal-btn" id="revealCodeBtnWelcome" style="padding: 10px 24px; background: var(--gradient-1); color: white; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(226, 135, 74, 0.3); font-family: 'Poppins', sans-serif;">
-              Reveal
-            </button>
-          </div>
-        </div>
-      </div>
-      -->
     </div>
 
     <div>
@@ -727,78 +707,96 @@ footer.site-footer{
 <!-- ✅ Fixed JavaScript -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
-  // COMMENTED OUT - Discount Code Pop-up functionality
-  // Will be enabled when codes are ready to show
-  /*
   // Discount Code Pop-up
   const discountPopup = document.getElementById('discountPopup');
   const closeDiscountPopup = document.getElementById('closeDiscountPopup');
   const revealCodeBtn = document.getElementById('revealCodeBtn');
   const discountCode = document.getElementById('discountCode');
   
-  // Show pop-up on page load (check if already shown in session)
-  const popupShown = sessionStorage.getItem('discountPopupShown');
-  if (!popupShown) {
-    setTimeout(() => {
-      discountPopup.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }, 500); // Show after 500ms delay
+  // Function to load and check ticket code
+  async function checkAndShowTicketCode() {
+    const username = sessionStorage.getItem('username');
+    if (!username) return;
+
+    try {
+      const response = await fetch(`https://anka-vkrl.onrender.com/api/users?username=${encodeURIComponent(username)}`);
+      if (response.ok) {
+        const user = await response.json();
+        const hasTicketCode = user.ticketCode && user.ticketCode.trim() && user.ticketCode.trim() !== 'N/A';
+        
+        if (hasTicketCode) {
+          // User has ticket code - show pop-up
+          const popupShown = sessionStorage.getItem('discountPopupShown');
+          if (!popupShown) {
+            setTimeout(() => {
+              discountPopup.classList.add('active');
+              document.body.style.overflow = 'hidden';
+            }, 500); // Show after 500ms delay
+          }
+          
+          // Update discount code
+          if (discountCode) {
+            discountCode.textContent = user.ticketCode.trim();
+          }
+        } else {
+          // User doesn't have ticket code - hide pop-up completely
+          if (discountPopup) {
+            discountPopup.style.display = 'none';
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Failed to load ticket code:', err);
+      // Hide pop-up on error
+      if (discountPopup) {
+        discountPopup.style.display = 'none';
+      }
+    }
   }
   
   // Reveal code button
-  revealCodeBtn.addEventListener('click', () => {
-    discountCode.classList.add('revealed');
-    revealCodeBtn.classList.add('revealed');
-    revealCodeBtn.textContent = 'Code Revealed!';
-    revealCodeBtn.disabled = true;
-  });
+  if (revealCodeBtn) {
+    revealCodeBtn.addEventListener('click', () => {
+      if (discountCode) {
+        discountCode.classList.add('revealed');
+      }
+      revealCodeBtn.classList.add('revealed');
+      revealCodeBtn.textContent = 'Code Revealed!';
+      revealCodeBtn.disabled = true;
+    });
+  }
   
   // Close pop-up
-  closeDiscountPopup.addEventListener('click', () => {
-    discountPopup.classList.remove('active');
-    document.body.style.overflow = '';
-    sessionStorage.setItem('discountPopupShown', 'true');
-  });
-  
-  // Close when clicking outside
-  discountPopup.addEventListener('click', (e) => {
-    if (e.target === discountPopup) {
+  if (closeDiscountPopup) {
+    closeDiscountPopup.addEventListener('click', () => {
       discountPopup.classList.remove('active');
       document.body.style.overflow = '';
       sessionStorage.setItem('discountPopupShown', 'true');
-    }
-  });
+    });
+  }
+  
+  // Close when clicking outside
+  if (discountPopup) {
+    discountPopup.addEventListener('click', (e) => {
+      if (e.target === discountPopup) {
+        discountPopup.classList.remove('active');
+        document.body.style.overflow = '';
+        sessionStorage.setItem('discountPopupShown', 'true');
+      }
+    });
+  }
   
   // Close on Escape key
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && discountPopup.classList.contains('active')) {
+    if (e.key === 'Escape' && discountPopup && discountPopup.classList.contains('active')) {
       discountPopup.classList.remove('active');
       document.body.style.overflow = '';
       sessionStorage.setItem('discountPopupShown', 'true');
     }
   });
   
-  // Function to show discount popup (can be called from button)
-  function showDiscountPopup() {
-    discountPopup.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    // Reset reveal state when opening popup
-    discountCode.classList.remove('revealed');
-    revealCodeBtn.classList.remove('revealed');
-    revealCodeBtn.textContent = 'Reveal';
-    revealCodeBtn.disabled = false;
-    // Reload ticket code to ensure it's up to date
-    loadTicketCode();
-  }
-  
-  // Button in ANKA News section to show discount code
-  const showDiscountCodeBtn = document.getElementById('showDiscountCodeBtn');
-  if (showDiscountCodeBtn) {
-    showDiscountCodeBtn.addEventListener('click', () => {
-      showDiscountPopup();
-    });
-  }
-  */
+  // Check and show ticket code on page load
+  checkAndShowTicketCode();
   const t = (key, fallback) =>
     (window.getI18nString ? window.getI18nString(key) : '') || fallback;
 
@@ -830,64 +828,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-  // COMMENTED OUT - Function to load and display ticket code
-  // Will be enabled when codes are ready to show
-  /*
-  // Function to load and display ticket code
-  async function loadTicketCode() {
-    const username = sessionStorage.getItem('username');
-    const discountCode = document.getElementById('discountCode');
-    const discountCodeWelcome = document.getElementById('discountCodeWelcome');
-    
-    if (!username) {
-      if (discountCode) discountCode.textContent = 'N/A';
-      if (discountCodeWelcome) discountCodeWelcome.textContent = 'N/A';
-      return;
-    }
-
-    try {
-      const response = await fetch(`https://anka-vkrl.onrender.com/api/users?username=${encodeURIComponent(username)}`);
-      if (response.ok) {
-        const user = await response.json();
-        const ticketCode = (user.ticketCode && user.ticketCode.trim()) ? user.ticketCode.trim() : 'N/A';
-        
-        // Update discount code pop-up
-        if (discountCode) {
-          discountCode.textContent = ticketCode;
-        }
-        
-        // Store ticket code for welcome section reveal button
-        if (discountCodeWelcome) {
-          discountCodeWelcome.textContent = ticketCode;
-        }
-      } else {
-        if (discountCode) discountCode.textContent = 'N/A';
-        if (discountCodeWelcome) discountCodeWelcome.textContent = 'N/A';
-      }
-    } catch (err) {
-      console.error('Failed to load ticket code:', err);
-      if (discountCode) discountCode.textContent = 'N/A';
-      if (discountCodeWelcome) discountCodeWelcome.textContent = 'N/A';
-    }
-  }
-  
-  // Reveal code button for welcome section
-  const revealCodeBtnWelcome = document.getElementById('revealCodeBtnWelcome');
-  const discountCodeWelcome = document.getElementById('discountCodeWelcome');
-  
-  if (revealCodeBtnWelcome && discountCodeWelcome) {
-    revealCodeBtnWelcome.addEventListener('click', () => {
-      discountCodeWelcome.classList.add('revealed');
-      discountCodeWelcome.style.display = 'block';
-      revealCodeBtnWelcome.classList.add('revealed');
-      revealCodeBtnWelcome.textContent = 'Code Revealed!';
-      revealCodeBtnWelcome.disabled = true;
-      revealCodeBtnWelcome.style.background = '#e0e0e0';
-      revealCodeBtnWelcome.style.color = '#666';
-      revealCodeBtnWelcome.style.cursor = 'default';
-    });
-  }
-  */
 
   // Function to update welcome message dynamically
   function updateWelcomeMessage() {
@@ -1046,10 +986,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Load news on page load
   loadNews();
-  
-  // COMMENTED OUT - Load ticket code on page load
-  // Will be enabled when codes are ready to show
-  // loadTicketCode();
 });
 </script>
 </body>
