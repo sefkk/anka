@@ -826,6 +826,36 @@ app.patch("/api/admin/users/:username/permissions", requireMasterAdmin, async (r
   }
 });
 
+// ------------------- Update Ticket Code (Master Admin Only) -------------------
+app.patch("/api/admin/users/:username/ticket-code", requireMasterAdmin, async (req, res) => {
+  try {
+    const targetUsername = String(req.params.username || "").trim();
+    if (!targetUsername) {
+      return res.status(400).json({ message: "Target username is required" });
+    }
+
+    const { ticketCode } = req.body;
+    
+    if (ticketCode === undefined) {
+      return res.status(400).json({ message: "ticketCode is required" });
+    }
+
+    const user = await User.findOne({ username: targetUsername });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.ticketCode = ticketCode ? ticketCode.trim() : '';
+    await user.save();
+
+    const { password, ...safeUser } = user.toObject();
+    res.json({ message: "Ticket code updated successfully", user: safeUser });
+  } catch (err) {
+    console.error("❌ Failed to update ticket code:", err.message);
+    res.status(500).json({ message: "Failed to update ticket code", error: err.message });
+  }
+});
+
 // ------------------- Check Admin Status -------------------
 app.post("/api/admin/check", async (req, res) => {
   try {

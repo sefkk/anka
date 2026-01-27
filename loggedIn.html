@@ -66,6 +66,169 @@ a, button, .linktree-buttons a, #navbar, .site-footer{
   *{animation:none !important; transition:none !important}
 }
 
+/* ------- Discount Code Pop-up ------- */
+.discount-popup-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 10000;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.discount-popup-overlay.active {
+  display: flex;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.discount-popup-card {
+  background: white;
+  border-radius: 20px;
+  padding: 2.5rem;
+  max-width: 450px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  position: relative;
+  animation: slideUp 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+  text-align: center;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.discount-popup-card .close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: #999;
+  cursor: pointer;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.discount-popup-card .close-btn:hover {
+  background: #f5f5f5;
+  color: #333;
+}
+
+.discount-popup-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--brand-2);
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+.discount-code-container {
+  margin: 2rem 0;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%);
+  border-radius: 12px;
+  border: 2px dashed #e0e0e0;
+  min-height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.discount-code {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--brand-2);
+  font-family: 'Courier New', monospace;
+  display: none;
+  overflow: hidden;
+  position: relative;
+}
+
+.discount-code.revealed {
+  display: block !important;
+  animation: codeReveal 0.8s ease-out;
+}
+
+@keyframes codeReveal {
+  from {
+    opacity: 0;
+    transform: translateX(-80%);
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.reveal-btn {
+  padding: 14px 32px;
+  background: var(--gradient-1);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(226, 135, 74, 0.3);
+  font-family: 'Poppins', sans-serif;
+}
+
+.reveal-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(226, 135, 74, 0.4);
+}
+
+.reveal-btn:active {
+  transform: translateY(0);
+}
+
+.reveal-btn.revealed {
+  background: #e0e0e0;
+  color: #666;
+  cursor: default;
+}
+
+.reveal-btn.revealed:hover {
+  transform: none;
+  box-shadow: 0 4px 15px rgba(226, 135, 74, 0.3);
+}
+
+#showDiscountCodeBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(226, 135, 74, 0.4);
+}
+
+#showDiscountCodeBtn:active {
+  transform: translateY(0);
+}
+
 /* ------- Top Bar (Fixed, translucent, blurred) ------- */
 .site-topbar{
   inset:0 0 auto 0; z-index:100;
@@ -455,6 +618,20 @@ footer.site-footer{
 </style>
 </head>
 <body>
+  <!-- Discount Code Pop-up -->
+  <!-- COMMENTED OUT - Will be enabled when codes are ready to show -->
+  <!--
+  <div class="discount-popup-overlay" id="discountPopup">
+    <div class="discount-popup-card">
+      <button class="close-btn" id="closeDiscountPopup">&times;</button>
+      <h2 class="discount-popup-title">ANKA Turkish Night Bilet İndirim Kodunuz!</h2>
+      <div class="discount-code-container">
+        <div class="discount-code" id="discountCode">Loading...</div>
+      </div>
+      <button class="reveal-btn" id="revealCodeBtn">Reveal</button>
+    </div>
+  </div>
+  -->
 
 <!-- Fixed, translucent navbar wrapper -->
 <header>
@@ -465,6 +642,23 @@ footer.site-footer{
     <div class="container">
       <h1 id="welcomeMessage"></h1>
       <p class="welcome-sub" data-i18n="loggedin.subtitle">Here you can find your MyANKA page. You can access services, applications, and special discounts only for ANKA members.</p>
+      <!-- COMMENTED OUT - Discount Code Display - Will be enabled when codes are ready to show -->
+      <!--
+      <div style="margin-top: 1.5rem; padding: 1rem 1.5rem; background: rgba(255, 255, 255, 0.9); border-radius: 12px; border: 2px solid rgba(226, 135, 74, 0.3); box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+        <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem; flex-wrap: wrap;">
+          <i class="fas fa-ticket-alt" style="color: var(--brand-2); font-size: 1.2rem;"></i>
+          <div style="text-align: center;">
+            <strong style="color: var(--brand-2); font-size: 0.9rem; display: block; margin-bottom: 0.25rem;">ANKA Turkish Night Bilet İndirim Kodunuz!</strong>
+            <div class="discount-code-container" style="margin: 1rem 0; padding: 1rem; background: linear-gradient(135deg, #f9f9f9 0%, #f0f0f0 100%); border-radius: 8px; border: 2px dashed #e0e0e0; min-height: 60px; display: flex; align-items: center; justify-content: center;">
+              <div class="discount-code" id="discountCodeWelcome" style="font-size: 1.5rem; font-weight: 700; letter-spacing: 0.2em; color: var(--brand-2); font-family: 'Courier New', monospace; display: none;">Loading...</div>
+            </div>
+            <button class="reveal-btn" id="revealCodeBtnWelcome" style="padding: 10px 24px; background: var(--gradient-1); color: white; border: none; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(226, 135, 74, 0.3); font-family: 'Poppins', sans-serif;">
+              Reveal
+            </button>
+          </div>
+        </div>
+      </div>
+      -->
     </div>
 
     <div>
@@ -485,10 +679,13 @@ footer.site-footer{
   </section>
 </header>
 
+
 <!-- ANKA News Section -->
 <section class="news-cards-section" style="padding: 60px 20px;">
   <div class="container">
-    <h2 style="text-align: center; font-size: clamp(1.6rem,3.2vw,2.2rem); margin-bottom: 2rem; background: linear-gradient(45deg, #e5925a, #ffb97a); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 700;" data-i18n="loggedin.news.title">ANKA News</h2>
+    <div style="display: flex; justify-content: center; align-items: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+      <h2 style="text-align: center; font-size: clamp(1.6rem,3.2vw,2.2rem); margin: 0; background: linear-gradient(45deg, #e5925a, #ffb97a); -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 700;" data-i18n="loggedin.news.title">ANKA News</h2>
+    </div>
     <div class="news-cards-container" id="newsCardsContainer">
       <!-- News cards will be loaded dynamically -->
     </div>
@@ -530,6 +727,78 @@ footer.site-footer{
 <!-- ✅ Fixed JavaScript -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+  // COMMENTED OUT - Discount Code Pop-up functionality
+  // Will be enabled when codes are ready to show
+  /*
+  // Discount Code Pop-up
+  const discountPopup = document.getElementById('discountPopup');
+  const closeDiscountPopup = document.getElementById('closeDiscountPopup');
+  const revealCodeBtn = document.getElementById('revealCodeBtn');
+  const discountCode = document.getElementById('discountCode');
+  
+  // Show pop-up on page load (check if already shown in session)
+  const popupShown = sessionStorage.getItem('discountPopupShown');
+  if (!popupShown) {
+    setTimeout(() => {
+      discountPopup.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }, 500); // Show after 500ms delay
+  }
+  
+  // Reveal code button
+  revealCodeBtn.addEventListener('click', () => {
+    discountCode.classList.add('revealed');
+    revealCodeBtn.classList.add('revealed');
+    revealCodeBtn.textContent = 'Code Revealed!';
+    revealCodeBtn.disabled = true;
+  });
+  
+  // Close pop-up
+  closeDiscountPopup.addEventListener('click', () => {
+    discountPopup.classList.remove('active');
+    document.body.style.overflow = '';
+    sessionStorage.setItem('discountPopupShown', 'true');
+  });
+  
+  // Close when clicking outside
+  discountPopup.addEventListener('click', (e) => {
+    if (e.target === discountPopup) {
+      discountPopup.classList.remove('active');
+      document.body.style.overflow = '';
+      sessionStorage.setItem('discountPopupShown', 'true');
+    }
+  });
+  
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && discountPopup.classList.contains('active')) {
+      discountPopup.classList.remove('active');
+      document.body.style.overflow = '';
+      sessionStorage.setItem('discountPopupShown', 'true');
+    }
+  });
+  
+  // Function to show discount popup (can be called from button)
+  function showDiscountPopup() {
+    discountPopup.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    // Reset reveal state when opening popup
+    discountCode.classList.remove('revealed');
+    revealCodeBtn.classList.remove('revealed');
+    revealCodeBtn.textContent = 'Reveal';
+    revealCodeBtn.disabled = false;
+    // Reload ticket code to ensure it's up to date
+    loadTicketCode();
+  }
+  
+  // Button in ANKA News section to show discount code
+  const showDiscountCodeBtn = document.getElementById('showDiscountCodeBtn');
+  if (showDiscountCodeBtn) {
+    showDiscountCodeBtn.addEventListener('click', () => {
+      showDiscountPopup();
+    });
+  }
+  */
   const t = (key, fallback) =>
     (window.getI18nString ? window.getI18nString(key) : '') || fallback;
 
@@ -560,6 +829,65 @@ document.addEventListener("DOMContentLoaded", () => {
           if (yearEl) yearEl.textContent = new Date().getFullYear();
         });
     });
+
+  // COMMENTED OUT - Function to load and display ticket code
+  // Will be enabled when codes are ready to show
+  /*
+  // Function to load and display ticket code
+  async function loadTicketCode() {
+    const username = sessionStorage.getItem('username');
+    const discountCode = document.getElementById('discountCode');
+    const discountCodeWelcome = document.getElementById('discountCodeWelcome');
+    
+    if (!username) {
+      if (discountCode) discountCode.textContent = 'N/A';
+      if (discountCodeWelcome) discountCodeWelcome.textContent = 'N/A';
+      return;
+    }
+
+    try {
+      const response = await fetch(`https://anka-vkrl.onrender.com/api/users?username=${encodeURIComponent(username)}`);
+      if (response.ok) {
+        const user = await response.json();
+        const ticketCode = (user.ticketCode && user.ticketCode.trim()) ? user.ticketCode.trim() : 'N/A';
+        
+        // Update discount code pop-up
+        if (discountCode) {
+          discountCode.textContent = ticketCode;
+        }
+        
+        // Store ticket code for welcome section reveal button
+        if (discountCodeWelcome) {
+          discountCodeWelcome.textContent = ticketCode;
+        }
+      } else {
+        if (discountCode) discountCode.textContent = 'N/A';
+        if (discountCodeWelcome) discountCodeWelcome.textContent = 'N/A';
+      }
+    } catch (err) {
+      console.error('Failed to load ticket code:', err);
+      if (discountCode) discountCode.textContent = 'N/A';
+      if (discountCodeWelcome) discountCodeWelcome.textContent = 'N/A';
+    }
+  }
+  
+  // Reveal code button for welcome section
+  const revealCodeBtnWelcome = document.getElementById('revealCodeBtnWelcome');
+  const discountCodeWelcome = document.getElementById('discountCodeWelcome');
+  
+  if (revealCodeBtnWelcome && discountCodeWelcome) {
+    revealCodeBtnWelcome.addEventListener('click', () => {
+      discountCodeWelcome.classList.add('revealed');
+      discountCodeWelcome.style.display = 'block';
+      revealCodeBtnWelcome.classList.add('revealed');
+      revealCodeBtnWelcome.textContent = 'Code Revealed!';
+      revealCodeBtnWelcome.disabled = true;
+      revealCodeBtnWelcome.style.background = '#e0e0e0';
+      revealCodeBtnWelcome.style.color = '#666';
+      revealCodeBtnWelcome.style.cursor = 'default';
+    });
+  }
+  */
 
   // Function to update welcome message dynamically
   function updateWelcomeMessage() {
@@ -718,6 +1046,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Load news on page load
   loadNews();
+  
+  // COMMENTED OUT - Load ticket code on page load
+  // Will be enabled when codes are ready to show
+  // loadTicketCode();
 });
 </script>
 </body>

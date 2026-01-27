@@ -2876,6 +2876,20 @@ function renderAdminAccessList() {
           <p><strong>Username:</strong> ${escapeHtml(user.username || '')}</p>
           ${user.email ? `<p><strong>Email:</strong> ${escapeHtml(user.email)}</p>` : ''}
           <p><strong>Master:</strong> ${isMasterUser ? 'Yes' : 'No'}</p>
+          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(0,0,0,.1);">
+            <label style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; margin-bottom: 0.5rem;">
+              <i class="fas fa-ticket-alt"></i> Ticket Code:
+            </label>
+            <input 
+              type="text" 
+              data-field="ticketCode" 
+              data-username="${escapeHtml(user.username || '')}"
+              value="${escapeHtml(user.ticketCode || '')}" 
+              placeholder="Enter ticket code"
+              style="padding: 0.5rem; border: 2px solid var(--border); border-radius: 6px; width: 100%; max-width: 200px; font-size: 0.9rem;"
+              class="ticket-code-input"
+            >
+          </div>
         </div>
         <div class="item-actions">
           <label class="${adminToggleClass}" title="${isMasterUser ? 'You don\'t have permission to edit' : ''}">
@@ -2947,6 +2961,60 @@ function renderAdminAccessList() {
   }).join('');
 
   bindAdminAccessEvents();
+  bindTicketCodeEvents();
+}
+
+// Bind ticket code input events
+function bindTicketCodeEvents() {
+  const container = document.getElementById('adminAccessList');
+  if (!container) return;
+
+  container.querySelectorAll('.ticket-code-input').forEach((input) => {
+    // Remove existing listeners by cloning
+    const newInput = input.cloneNode(true);
+    input.parentNode.replaceChild(newInput, input);
+    
+    // Add debounced change listener
+    let timeout;
+    newInput.addEventListener('input', () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        const username = newInput.getAttribute('data-username');
+        const ticketCode = newInput.value.trim();
+        if (username) {
+          updateTicketCode(username, ticketCode);
+        }
+      }, 500); // Wait 500ms after user stops typing
+    });
+  });
+}
+
+// Update ticket code function
+async function updateTicketCode(targetUsername, ticketCode) {
+  if (!targetUsername) return;
+  
+  try {
+    const response = await fetch(`${API_BASE}/api/admin/users/${encodeURIComponent(targetUsername)}/ticket-code?username=${encodeURIComponent(username)}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ticketCode: ticketCode.trim() })
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+      // Update cache
+      const userIndex = adminUsersCache.findIndex(u => u.username === targetUsername);
+      if (userIndex !== -1) {
+        adminUsersCache[userIndex].ticketCode = ticketCode.trim();
+      }
+      showAlert('Ticket code updated successfully!', 'success');
+    } else {
+      showAlert(result.message || 'Failed to update ticket code', 'error');
+    }
+  } catch (err) {
+    console.error('Error updating ticket code:', err);
+    showAlert('Error updating ticket code', 'error');
+  }
 }
 
 function bindAdminAccessEvents() {

@@ -29,7 +29,8 @@ const userSchema = new mongoose.Schema({
   canCommitteeEvent: { type: Boolean, default: false },
   canCommitteeHr: { type: Boolean, default: false },
   canCommitteeLaw: { type: Boolean, default: false },
-  canCommitteeIntRelations: { type: Boolean, default: false }
+  canCommitteeIntRelations: { type: Boolean, default: false },
+  ticketCode: { type: String, default: '' } // Ticket code for events
 });
 
 // 3. parametre olarak koleksiyon adını belirtiyoruz
