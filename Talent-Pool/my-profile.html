@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Profile - ANKA Hub</title>
-  <link rel="stylesheet" href="../Talent-Pool/talent-pool-css.css">
+  <link rel="stylesheet" href="../Talent-Pool/talent-pool-css.css"> 
+  <link rel="stylesheet" href="../style.css">
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <!-- Favicon -->
@@ -324,29 +325,32 @@
 <body>
 
   <!-- Navbar -->
-  <header class="navbar">
-    <div class="container nav-container">
-      <h1 class="logo"><a href="../loggedIn.html" data-i18n="tp.nav.brand">myANKA</a></h1>
-      <input type="checkbox" id="menu-toggle-tp" class="menu-toggle-tp" />
-      <label for="menu-toggle-tp" class="hamburger-tp">&#9776;</label>
-      <nav class="menu">
-        <a href="../Talent-Pool/talent-pool.html" data-i18n="tp.nav.talent">TalentPool</a>
-        <a href="../Talent-Pool/job-search.html" data-i18n="tp.nav.jobs">Find Jobs</a>
-        <a href="../Talent-Pool/my-profile.html" class="active" data-i18n="tp.nav.profile">My Profile</a>
-        <a href="../Talent-Pool/faq.html" data-i18n="tp.nav.faq">FAQ</a>
-      </nav>
-      <div class="nav-right">
-        <div class="auth-links">
-          <a href="#" class="login-link" id="welcomeMessage"></a>
-        </div>
-        <div class="lang-toggle" aria-label="Language selector">
-          <button type="button" class="lang-btn" data-lang="en">ENG</button>
-          <span class="lang-sep">|</span>
-          <button type="button" class="lang-btn" data-lang="tr">TR</button>
-        </div>
+  <div class="myanka-navbar">
+    <nav class="navbar-container">
+      <div class="navbar-logo">
+        <a href="../index.html">
+          <img src="../Images/anka-logo-name.png" alt="Logo" />
+        </a>
       </div>
-    </div>
-  </header>
+    
+      <!-- Hamburger Toggle -->
+      <input type="checkbox" id="menu-toggle" class="menu-toggle" />
+      <label for="menu-toggle" class="hamburger">&#9776;</label>
+  
+    <ul class="navbar">
+      <li><a href="../Talent-Pool/talent-pool.html" data-i18n="tp.nav.talent">TalentPool</a></li>
+      <li><a href="loggedIn.html" data-i18n="nav.myanka">MyANKA</a></li>
+      <li id="admin-panel-li"><a href="admin.html" data-i18n="nav.admin">Admin Panel</a></li>
+      <li><a href="Talent-Pool/my-profile.html" data-i18n="nav.profile">My Profile</a></li>
+      <li class="lang-toggle" aria-label="Language selector">
+        <button type="button" class="lang-btn" data-lang="en">ENG</button>
+        <span class="lang-sep">|</span>
+        <button type="button" class="lang-btn" data-lang="tr">TR</button>
+      </li>
+    </ul>
+  </nav>
+  </div>
+
 
   <!-- Profile Content -->
   <section class="profile-container">
@@ -519,7 +523,17 @@
                tuzukLink.setAttribute('href', '../docs/tuzuk2025.pdf');
              }
            });
-       });
+
+          /*
+          fetch('..Partials/inner-navbar.html')
+            .then(r => r.text())
+            .then(html => {
+            document.getElementById('navbar').innerHTML = html;
+            if (window.initI18n) {
+              window.initI18n();
+            }
+          });
+          */
 
     // Session check
     const isLoggedIn = sessionStorage.getItem('isLoggedIn');

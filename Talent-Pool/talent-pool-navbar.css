@@ -1,0 +1,144 @@
+.navbar {
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 15px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .nav-right {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    justify-content: flex-end;
+  }
+  .logo {
+    margin: 0;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo a{
+    color: #fd9e5e;
+    text-decoration: none;
+    transition: color 0.5s ease, transform 0.5s ease, box-shadow 0.5s ease;
+    font-weight: 700;
+    font-size: 26px;
+    display: inline-block;
+  }
+  
+  .logo a:hover {
+    color: #ffd87e;
+    transform: scale(1.05);
+  }
+  .menu {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    margin: 0 10px 0 150px;
+  }
+  
+  .menu a {
+    margin-right: 25px;
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+    transition: color 0.3s;
+  }
+  
+  .menu a:hover {
+    color: #fd9e5e;
+  }
+  .menu-toggle-tp {
+    display: none;
+  }
+  
+  .hamburger-tp {
+    display: none;
+    font-size: 28px;
+    cursor: pointer;
+    color: #555;
+    margin-left: auto;
+  }
+  @media(max-width:768px) {
+
+    .hamburger-tp {
+      display: block;
+    }
+  
+    .menu {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background-color: #fff;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      border-radius: 0 0 10px 10px;
+      padding: 10px 0;
+      z-index: 1000;
+    }
+    .menu a:first-child {
+        border-top: none;
+      }
+  
+    .nav-container {
+      position: relative;
+      flex-wrap: wrap;
+    }
+  
+    .menu-toggle-tp:checked ~ .menu {
+      display: flex;
+    }
+  
+    .menu a {
+      padding: 14px 20px;
+      border-top: 1px solid #eee;
+      width: 100%;
+      margin-right: 0;
+      display: block;
+    }
+  }
+  .lang-btn {
+    border: 1px solid #e6e6e6;
+    background: #fff;
+    color: #333;
+    padding: 6px 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  }
+  
+  .lang-btn.active {
+    background-color: #fff1e6;
+    color: #000;
+    border-color: #f2d3be;
+  }
+  
+  .lang-sep {
+    color: #999;
+    font-size: 0.85rem;
+  }
+  
+  @media (max-width: 900px) {
+    .lang-toggle {
+      margin-top: 8px;
+    }
+  
+    .nav-right {
+      width: 100%;
+      justify-content: flex-end;
+    }
+  }

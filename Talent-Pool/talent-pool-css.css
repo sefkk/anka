@@ -19,7 +19,7 @@ body {
   padding: 0 20px;
 }
 
-/* Navbar */
+/* Navbar 
 .navbar {
   background: #fff;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -66,8 +66,8 @@ body {
   color: #ffd87e;
   transform: scale(1.05);
 }
-
-/* Keep existing menu styles */
+*/
+/* Keep existing menu styles 
 .menu {
   display: flex;
   align-items: center;
@@ -230,7 +230,7 @@ body {
   font-size: 15px;
 }
 
-/* Hamburger Menu for Talent Pool */
+/* Hamburger Menu for Talent Pool 
 .menu-toggle-tp {
   display: none;
 }
@@ -252,7 +252,7 @@ body {
   .hero p {
     font-size: 16px;
   }
-  
+  /*
   .hamburger-tp {
     display: block;
   }
@@ -275,7 +275,7 @@ body {
     position: relative;
   }
   
-  /* Show menu when checkbox is checked - menu is a sibling that comes after checkbox */
+  /* Show menu when checkbox is checked - menu is a sibling that comes after checkbox 
   .menu-toggle-tp:checked ~ .menu {
     display: flex;
   }
@@ -296,7 +296,7 @@ body {
     position: relative;
     flex-wrap: wrap;
   }
-  
+  */
   .card-grid {
     gap: 25px;
   }
@@ -905,7 +905,7 @@ ul{
   }
 }
 
-/* Language toggle */
+/* Language toggle 
 .lang-toggle {
   display: flex;
   align-items: center;
