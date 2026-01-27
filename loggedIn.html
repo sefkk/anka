@@ -764,28 +764,24 @@ document.addEventListener("DOMContentLoaded", () => {
             }
           }
           
-          // If code was previously revealed, update button state and show on welcome section
-          if (codeRevealed) {
-            if (revealCodeBtn) {
-              revealCodeBtn.classList.add('revealed');
-              revealCodeBtn.textContent = 'Code Revealed!';
-              revealCodeBtn.disabled = true;
-            }
-            
-            // Show code on welcome section
-            if (ticketCodeDisplay) {
-              ticketCodeDisplay.style.display = 'block';
-            }
-            if (discountCodeWelcome) {
-              discountCodeWelcome.textContent = ticketCode;
+          // Always show code on welcome section if ticketCode exists
+          if (ticketCodeDisplay) {
+            ticketCodeDisplay.style.display = 'block';
+          }
+          if (discountCodeWelcome) {
+            discountCodeWelcome.textContent = ticketCode;
+            // If revealed, add revealed class for styling
+            if (codeRevealed) {
               discountCodeWelcome.classList.add('revealed');
-              discountCodeWelcome.style.display = 'block';
             }
-          } else {
-            // Code not revealed yet - hide welcome section display
-            if (ticketCodeDisplay) {
-              ticketCodeDisplay.style.display = 'none';
-            }
+            discountCodeWelcome.style.display = 'block';
+          }
+          
+          // Pop-up reveal button state (only affects pop-up)
+          if (codeRevealed && revealCodeBtn) {
+            revealCodeBtn.classList.add('revealed');
+            revealCodeBtn.textContent = 'Code Revealed!';
+            revealCodeBtn.disabled = true;
           }
         } else {
           // User doesn't have ticket code - hide pop-up and display completely
